@@ -16,7 +16,7 @@ export default function ThemeToggleButton() {
     setIsDarkMode(initialTheme);
     setHasMounted(true);
     document.documentElement.classList.add("dark");
-    window.localStorage.setItem("skillswap-theme", "dark");
+    window.localStorage.setItem("taskify-theme", "dark");
   }, []);
 
   useEffect(() => {
@@ -25,7 +25,7 @@ export default function ThemeToggleButton() {
     }
 
     document.documentElement.classList.add("dark");
-    window.localStorage.setItem("skillswap-theme", "dark");
+    window.localStorage.setItem("taskify-theme", "dark");
   }, [hasMounted]);
 
   const toggleTheme = () => {

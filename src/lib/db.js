@@ -1,7 +1,7 @@
 import { MongoClient, ObjectId } from "mongodb";
 
 const uri = process.env.MONGO_DB_URI;
-const authDbName = process.env.AUTH_DB_NAME || "skill-swap";
+const authDbName = process.env.AUTH_DB_NAME;
 const appDbName = process.env.APP_DB_NAME || authDbName;
 
 if (!uri) {

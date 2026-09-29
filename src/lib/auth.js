@@ -4,7 +4,7 @@ import { MongoClient } from "mongodb";
 import { mongodbAdapter } from "better-auth/adapters/mongodb";
 
 const uri = process.env.MONGO_DB_URI;
-const authDbName = process.env.AUTH_DB_NAME || "skill-swap";
+const authDbName = process.env.AUTH_DB_NAME || "taskify";
 
 if (!uri) {
   throw new Error("Missing MONGO_DB_URI environment variable");
@@ -28,7 +28,7 @@ const createMongoClient = () => {
   }
 
   const client = new MongoClient(uri, {
-    appName: "TaskHiveAuth",
+    appName: "TaskifyAuth",
   });
   const clientPromise = client.connect();
 
@@ -87,7 +87,7 @@ export const auth = betterAuth({
       strategy: "jwt",
     },
     cookie: {
-      name: "taskhive_session",
+      name: "taskify_session",
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: process.env.NODE_ENV === "production" ? "lax" : "lax",
@@ -112,3 +112,4 @@ export const auth = betterAuth({
     },
   },
 });
+

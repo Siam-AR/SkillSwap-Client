@@ -39,7 +39,7 @@ export default function Footer() {
               </div>
               <div>
                 <h2 className="text-xl font-black tracking-tight text-white">
-                  SkillSwap
+                  Taskify
                 </h2>
                 <p className="text-sm text-slate-400">
                   Freelance micro-task marketplace
@@ -83,7 +83,7 @@ export default function Footer() {
           <div>
             <h3 className="mb-4 text-lg font-semibold text-white">Contact</h3>
             <div className="space-y-3 text-sm text-slate-400">
-              <p>Email: hello@skillswap.com</p>
+              <p>Email: hello@taskify.com</p>
               <p>WhatsApp: +880 1885 373186</p>
               <p>Dhaka, Bangladesh</p>
             </div>
@@ -91,7 +91,7 @@ export default function Footer() {
         </div>
 
         <div className="flex flex-col gap-3 border-t border-white/10 pt-6 text-sm text-slate-500 sm:flex-row sm:items-center sm:justify-between">
-          <p>© {new Date().getFullYear()} SkillSwap. All rights reserved.</p>
+          <p>© {new Date().getFullYear()} Taskify. All rights reserved.</p>
           <div className="flex flex-wrap gap-4">
             <Link href="/" className="transition hover:text-sky-400">
               Home

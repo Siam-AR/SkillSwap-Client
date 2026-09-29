@@ -85,7 +85,7 @@ function SignUpContent() {
             <main className="mx-auto grid min-h-screen max-w-6xl items-center gap-8 px-4 py-10 sm:px-6 lg:grid-cols-[0.95fr_1.05fr] lg:px-8">
                 <Card className={`rounded-[2rem] border p-8 ${pageTheme.card}`}>
                     <div className="space-y-2 text-center">
-                        <p className="text-sm font-semibold uppercase tracking-[0.2em] text-sky-600 dark:text-sky-400">Join SkillSwap</p>
+                        <p className="text-sm font-semibold uppercase tracking-[0.2em] text-sky-600 dark:text-sky-400">Join Taskify</p>
                         <h1 className="text-3xl font-black text-slate-950 dark:text-white sm:text-4xl">Create your account</h1>
                         <p className="text-sm text-slate-600 dark:text-slate-300">Pick a role and get started with the marketplace.</p>
                     </div>

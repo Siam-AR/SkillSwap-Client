@@ -39,7 +39,7 @@ const Navbar = () => {
     setIsDarkMode(initialTheme);
     setHasMounted(true);
     document.documentElement.classList.add("dark");
-    window.localStorage.setItem("skillswap-theme", "dark");
+    window.localStorage.setItem("taskify-theme", "dark");
   }, []);
 
   useEffect(() => {
@@ -48,7 +48,7 @@ const Navbar = () => {
     }
 
     document.documentElement.classList.add("dark");
-    window.localStorage.setItem("skillswap-theme", "dark");
+    window.localStorage.setItem("taskify-theme", "dark");
   }, [hasMounted]);
 
   const toggleTheme = () => {
@@ -128,7 +128,7 @@ const Navbar = () => {
           </div>
           <div className="leading-tight">
             <p className="text-xl font-bold tracking-tight sm:text-2xl">
-              SkillSwap
+              Taskify
             </p>
             <p
               className={`text-xs font-medium ${isDarkMode ? "text-slate-400" : "text-slate-500"}`}

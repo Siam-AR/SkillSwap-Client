@@ -1,7 +1,7 @@
 import { MongoClient } from "mongodb";
 
 const uri = process.env.MONGO_DB_URI;
-const authDbName = process.env.AUTH_DB_NAME || "skill-swap";
+const authDbName = process.env.AUTH_DB_NAME || "taskify";
 
 if (!uri) {
   throw new Error("Missing MONGO_DB_URI environment variable");
@@ -15,7 +15,7 @@ let clientPromise;
 
 if (!globalThis._betterAuthMongoClientPromise) {
   const client = new MongoClient(uri, {
-    appName: "TaskHiveAuth",
+    appName: "TaskifyAuth",
   });
   globalThis._betterAuthMongoClientPromise = client.connect();
 }
@@ -26,3 +26,4 @@ export async function getAuthDb() {
   const client = await clientPromise;
   return client.db(authDbName);
 }
+

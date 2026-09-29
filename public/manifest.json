@@ -1,0 +1,9 @@
+{
+  "name": "Taskify \u2014 Freelance Micro-Task Marketplace",
+  "short_name": "Taskify",
+  "description": "Taskify is a freelance micro-task marketplace built to match clients with freelancers for quick, one-time jobs.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#0ea5e9"
+}
