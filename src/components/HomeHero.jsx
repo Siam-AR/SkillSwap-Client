@@ -13,15 +13,15 @@ const categories = [
 
 export default function HomeHero() {
   return (
-    <section className="relative flex w-full flex-col items-center justify-center overflow-hidden -mt-[80px] min-h-[650px] lg:min-h-[750px] pt-32 pb-16">
+    <section className="relative flex w-full flex-col items-center justify-end overflow-hidden -mt-[80px] h-screen min-h-[700px] pb-20 lg:pb-28">
       <img 
-        src="/images/hero-image-1.webp" 
+        src="/images/hero-image-1.jpg" 
         alt="Hero Background" 
-        className="absolute inset-0 z-0 h-full w-full object-cover object-[center_130%]" 
+        className="absolute inset-0 z-0 h-full w-full object-cover object-center" 
       />
       <div className="absolute inset-0 z-10 bg-slate-900/30 backdrop-brightness-90"></div>
       
-      <div className="relative z-20 mx-auto w-full max-w-5xl px-4 text-center mt-10">
+      <div className="relative z-20 mx-auto w-full max-w-5xl px-4 text-center mt-auto">
         <h1 className="text-4xl font-bold tracking-tight text-white sm:text-5xl md:text-6xl mb-6">
           Your Project, Our Talent
         </h1>
@@ -52,13 +52,13 @@ export default function HomeHero() {
           </button>
         </div>
 
-        <div className="mt-16 flex flex-wrap justify-center gap-6 md:gap-10">
+        <div className="mt-16 flex w-full flex-row flex-nowrap items-start justify-start md:justify-center overflow-x-auto whitespace-nowrap gap-4 md:gap-6 lg:gap-8 pb-4">
           {categories.map((cat) => (
-            <div key={cat.name} className="group flex cursor-pointer flex-col items-center gap-3">
-              <div className="flex h-14 w-14 items-center justify-center rounded-full border border-white/30 bg-white/10 text-white transition-all group-hover:bg-white/20 group-hover:border-white/50">
+            <div key={cat.name} className="group flex shrink-0 cursor-pointer flex-col items-center gap-3">
+              <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full border border-white/30 bg-white/10 text-white transition-all group-hover:bg-white/20 group-hover:border-white/50">
                 <cat.icon className="h-6 w-6" />
               </div>
-              <span className="w-24 text-center text-xs font-medium text-white/80 transition-colors group-hover:text-white">
+              <span className="w-24 shrink-0 text-center text-xs font-medium text-white/80 transition-colors group-hover:text-white">
                 {cat.name}
               </span>
             </div>
