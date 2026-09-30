@@ -11,10 +11,10 @@ function HomePage({ data }) {
   const { latestTasks, topFreelancers, stats } = data;
 
   return (
-    <main className="space-y-10">
+    <main className="flex flex-col">
       <Navbar />
-      <div className="container mx-auto py-4 md:py-6 lg:py-1">
-        <HomeHero />
+      <HomeHero />
+      <div className="container mx-auto py-10 space-y-16">
         <LatestTasks tasks={latestTasks} />
         <TopFreelancers freelancers={topFreelancers} />
         <HowItWorks></HowItWorks>

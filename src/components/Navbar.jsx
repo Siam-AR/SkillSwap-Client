@@ -28,6 +28,22 @@ const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [avatarError, setAvatarError] = useState(false);
   const [showProfileCard, setShowProfileCard] = useState(false);
+  
+  const [isScrolled, setIsScrolled] = useState(false);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 20);
+    };
+    
+    // Check initial scroll
+    handleScroll();
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   useEffect(() => {
     if (typeof window === "undefined") {
@@ -67,54 +83,61 @@ const Navbar = () => {
     window.location.href = "/";
   };
 
+  const isHome = pathname === "/";
+  const useTransparentTop = isHome && !isScrolled;
+
   const themeClasses = useMemo(
     () => ({
-      shell: isDarkMode
-        ? "bg-slate-950 text-slate-100"
-        : "bg-white text-slate-900",
-      panel: isDarkMode ? "bg-slate-900/90" : "bg-white/95",
+      shell: useTransparentTop
+        ? "bg-transparent text-white border-transparent"
+        : "bg-[#009689]/80 backdrop-blur-md border-b border-white/10 shadow-lg text-white",
+      panel: isDarkMode ? "bg-slate-900/95" : "bg-white/95",
       profileCard: isDarkMode
         ? "border-slate-700 bg-slate-900 text-slate-100"
         : "border-slate-200 bg-white text-slate-900",
-      link: (active) =>
-        [
-          "relative rounded-full px-3 py-2 text-sm font-medium transition-colors duration-200",
-          active
-            ? isDarkMode
-              ? "text-sky-300"
-              : "text-sky-700"
-            : isDarkMode
-              ? "text-slate-300 hover:text-sky-300"
-              : "text-slate-600 hover:text-sky-700",
-        ].join(" "),
-      button: isDarkMode
-        ? "bg-slate-900 text-slate-100 hover:text-sky-200"
-        : "bg-white text-slate-700 hover:text-sky-700",
-      primaryButton:
-        "border-0 bg-gradient-to-r from-sky-500 to-blue-600 text-white shadow-lg shadow-sky-500/25 hover:from-sky-400 hover:to-blue-500",
-      mobileItem: (active) =>
-        [
-          "rounded-2xl px-4 py-3 text-sm font-medium transition-colors",
-          active
-            ? isDarkMode
-              ? "bg-sky-500/15 text-sky-300"
-              : "bg-sky-50 text-sky-700"
-            : isDarkMode
-              ? "text-slate-300 hover:bg-slate-800 hover:text-sky-200"
-              : "text-slate-600 hover:bg-slate-50 hover:text-sky-700",
-        ].join(" "),
+      link: (active) => [
+        "relative rounded-full px-3 py-2 text-sm font-medium transition-colors duration-200",
+        useTransparentTop
+          ? "text-white/90 hover:text-white"
+          : "text-white/90 hover:text-white"
+      ].join(" "),
+      button: useTransparentTop
+        ? "bg-transparent text-white border-white hover:bg-white/10"
+        : "bg-transparent text-white border-white hover:bg-white/10",
+      primaryButton: useTransparentTop
+        ? "border-0 bg-[#009689] text-white hover:bg-[#008f80]"
+        : "border-0 bg-white text-[#009689] shadow-sm hover:bg-slate-100",
+      mobileItem: (active) => [
+        "rounded-2xl px-4 py-3 text-sm font-medium transition-colors",
+        active
+          ? isDarkMode
+            ? "bg-[#009689]/15 text-[#009689]"
+            : "bg-[#009689]/10 text-[#009689]"
+          : isDarkMode
+            ? "text-slate-300 hover:bg-slate-800 hover:text-[#009689]"
+            : "text-slate-600 hover:bg-slate-50 hover:text-[#009689]",
+      ].join(" "),
+      themeToggle: useTransparentTop
+        ? "text-white border-transparent hover:bg-white/10"
+        : "text-white border-white/20 hover:bg-white/10",
+      brandText: useTransparentTop
+        ? "text-white/80"
+        : "text-white/80",
+      titleText: useTransparentTop
+        ? "text-white"
+        : "text-white",
     }),
-    [isDarkMode],
+    [isDarkMode, useTransparentTop],
   );
 
   return (
     <header
-      className={`sticky top-0 z-50 backdrop-blur-xl transition-colors ${themeClasses.shell}`}
+      className={`sticky top-0 z-50 transition-colors duration-300 ${themeClasses.shell}`}
       suppressHydrationWarning
     >
       <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-4 sm:px-6 lg:px-8">
         <Link href="/" className="group flex items-center gap-3">
-          <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-linear-to-br from-sky-500 via-blue-500 to-cyan-400 text-white shadow-lg shadow-sky-500/30 transition-transform duration-200 group-hover:-translate-y-0.5">
+          <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-sky-500 via-blue-500 to-cyan-400 text-white shadow-lg shadow-sky-500/30 transition-transform duration-200 group-hover:-translate-y-0.5">
             <svg
               viewBox="0 0 24 24"
               className="h-6 w-6"
@@ -127,11 +150,11 @@ const Navbar = () => {
             </svg>
           </div>
           <div className="leading-tight">
-            <p className="text-xl font-bold tracking-tight sm:text-2xl">
+            <p className={`text-xl font-bold tracking-tight sm:text-2xl transition-colors duration-300 ${themeClasses.titleText}`}>
               Taskify
             </p>
             <p
-              className={`text-xs font-medium ${isDarkMode ? "text-slate-400" : "text-slate-500"}`}
+              className={`text-xs font-medium transition-colors duration-300 ${themeClasses.brandText}`}
             >
               Freelance micro-tasks
             </p>
@@ -147,7 +170,7 @@ const Navbar = () => {
             >
               {item.label}
               {isActive(item.href) ? (
-                <span className="absolute inset-x-3 -bottom-1 h-1 rounded-full bg-linear-to-r from-sky-500 to-blue-500" />
+                <span className="absolute inset-x-3 -bottom-1 h-1 rounded-full bg-white" />
               ) : null}
             </Link>
           ))}
@@ -179,7 +202,7 @@ const Navbar = () => {
             }
             aria-hidden="true"
             tabIndex={-1}
-            className="invisible pointer-events-none flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-slate-300 bg-transparent transition hover:bg-slate-100 dark:border-slate-600 dark:hover:bg-slate-800"
+            className={`invisible pointer-events-none flex h-9 w-9 shrink-0 items-center justify-center rounded-full border transition ${themeClasses.themeToggle}`}
           >
             {isDarkMode ? (
               <FiMoon className="h-5 w-5 shrink-0" />
@@ -194,7 +217,7 @@ const Navbar = () => {
                 <button
                   type="button"
                   onClick={() => setShowProfileCard((prev) => !prev)}
-                  className="flex items-center gap-2 rounded-full pr-2 transition hover:bg-slate-50 dark:hover:bg-slate-800"
+                  className="flex items-center gap-2 rounded-full pr-2 transition hover:bg-white/10 text-white"
                 >
                   <div className="flex h-9 w-9 items-center justify-center overflow-hidden rounded-full bg-sky-100 text-sky-700 dark:bg-slate-800 dark:text-sky-200">
                     {avatarSrc && !avatarError ? (
@@ -246,7 +269,7 @@ const Navbar = () => {
                 type="button"
                 onClick={handleLogout}
                 aria-label="Logout"
-                className="inline-flex h-9 w-9 items-center justify-center rounded-full text-rose-600 transition hover:bg-rose-50 dark:text-rose-400 dark:hover:bg-rose-500/10"
+                className="inline-flex h-9 w-9 items-center justify-center rounded-full transition text-white hover:bg-white/10 hover:text-white"
               >
                 <FiLogOut className="h-4 w-4" />
               </button>
@@ -258,7 +281,7 @@ const Navbar = () => {
                   className={themeClasses.button}
                   radius="full"
                   size="sm"
-                  variant="bordered"
+                  variant={useTransparentTop ? "light" : "bordered"}
                 >
                   Login
                 </Button>
@@ -294,7 +317,7 @@ const Navbar = () => {
       <div
         className={`overflow-hidden border-t transition-[max-height,opacity] duration-300 lg:hidden ${
           isMenuOpen ? "max-h-96 opacity-100" : "max-h-0 opacity-0"
-        } ${isDarkMode ? "border-slate-800" : "border-sky-100"} ${themeClasses.panel}`}
+        } ${isDarkMode ? "border-slate-800" : "border-slate-200"} ${themeClasses.panel}`}
       >
         <div className="mx-auto flex max-w-7xl flex-col gap-2 px-4 py-4 sm:px-6 lg:px-8">
           {navItems.map((item) => (
@@ -339,7 +362,7 @@ const Navbar = () => {
             <div className="grid grid-cols-2 gap-3 pt-2">
               <Link href="/auth/signin" onClick={() => setIsMenuOpen(false)}>
                 <Button
-                  className={themeClasses.button + " w-full"}
+                  className="w-full bg-white text-slate-700 hover:text-[#00A896] dark:bg-slate-900 dark:text-slate-100 dark:hover:text-[#00A896] border border-slate-300 dark:border-slate-700"
                   radius="full"
                   size="sm"
                   variant="bordered"
@@ -349,7 +372,7 @@ const Navbar = () => {
               </Link>
               <Link href="/auth/signup" onClick={() => setIsMenuOpen(false)}>
                 <Button
-                  className={themeClasses.primaryButton + " w-full"}
+                  className="w-full border-0 bg-[#00A896] text-white hover:bg-[#008f80]"
                   radius="full"
                   size="sm"
                 >
