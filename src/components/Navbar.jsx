@@ -137,17 +137,8 @@ const Navbar = () => {
     >
       <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-4 sm:px-6 lg:px-8">
         <Link href="/" className="group flex items-center gap-3">
-          <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-sky-500 via-blue-500 to-cyan-400 text-white shadow-lg shadow-sky-500/30 transition-transform duration-200 group-hover:-translate-y-0.5">
-            <svg
-              viewBox="0 0 24 24"
-              className="h-6 w-6"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="1.8"
-            >
-              <path d="M6 7.5h12a1.5 1.5 0 0 1 1.5 1.5v8.5A1.5 1.5 0 0 1 18 19H6a1.5 1.5 0 0 1-1.5-1.5V9A1.5 1.5 0 0 1 6 7.5Z" />
-              <path d="M9 7.5V6a3 3 0 0 1 6 0v1.5" />
-            </svg>
+          <div className="flex h-12 w-12 items-center justify-center transition-transform duration-200 group-hover:-translate-y-0.5">
+            <Image src="/logo.svg" alt="Taskify Logo" width={48} height={48} className="h-full w-full object-contain" />
           </div>
           <div className="leading-tight">
             <p className={`text-xl font-bold tracking-tight sm:text-2xl transition-colors duration-300 ${themeClasses.titleText}`}>

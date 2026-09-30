@@ -1,0 +1,23 @@
+<svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Clean App Tile Background -->
+  <rect width="40" height="40" rx="10" fill="white" stroke="#E2E8F0" stroke-width="1"/>
+  
+  <!-- Bold 'T' Letter in Deep Teal/Slate -->
+  <path d="M11 12H29V17H22.5V30H17.5V17H11V12Z" fill="#0F172A"/>
+  
+  <!-- Dynamic Sweeping Accent Swooshes -->
+  <path d="M14 26C18 24 22 26 27 15C25 18 21 21 15 22C14.5 22 14 24 14 26Z" fill="url(#swoosh_grad_1)"/>
+  <path d="M12 30C16 28 20 29 27 18C25 21 21 24 13 25C12.5 25 12 28 12 30Z" fill="url(#swoosh_grad_2)" fill-opacity="0.6"/>
+
+  <!-- Gradients -->
+  <defs>
+    <linearGradient id="swoosh_grad_1" x1="14" y1="26" x2="27" y2="15" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#009689"/>
+      <stop offset="1" stop-color="#5EEAD4"/>
+    </linearGradient>
+    <linearGradient id="swoosh_grad_2" x1="12" y1="30" x2="27" y2="18" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#00BFA5"/>
+      <stop offset="1" stop-color="#2DD4BF"/>
+    </linearGradient>
+  </defs>
+</svg>

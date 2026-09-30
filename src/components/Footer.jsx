@@ -34,8 +34,8 @@ export default function Footer() {
         <div className="grid gap-10 lg:grid-cols-[1.2fr_0.8fr_0.8fr]">
           <div>
             <div className="mb-4 flex items-center gap-3">
-              <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-sky-500 font-black text-white shadow-lg shadow-sky-500/20">
-                S
+              <div className="flex h-11 w-11 items-center justify-center">
+                <img src="/logo.svg" alt="Taskify Logo" className="h-full w-full object-contain" />
               </div>
               <div>
                 <h2 className="text-xl font-black tracking-tight text-white">
