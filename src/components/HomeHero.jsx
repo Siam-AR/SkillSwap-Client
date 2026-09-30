@@ -13,10 +13,15 @@ const categories = [
 
 export default function HomeHero() {
   return (
-    <section className="relative flex w-full flex-col items-center justify-center bg-[url('/images/hero-image-1.webp')] bg-cover bg-center -mt-[80px] pt-[80px] pb-24 md:pb-32 md:pt-[120px]">
-      <div className="absolute inset-0 bg-gradient-to-r from-black/40 via-black/20 to-black/40"></div>
+    <section className="relative flex w-full flex-col items-center justify-center overflow-hidden -mt-[80px] min-h-[650px] lg:min-h-[750px] pt-32 pb-16">
+      <img 
+        src="/images/hero-image-1.webp" 
+        alt="Hero Background" 
+        className="absolute inset-0 z-0 h-full w-full object-cover object-[center_130%]" 
+      />
+      <div className="absolute inset-0 z-10 bg-slate-900/30 backdrop-brightness-90"></div>
       
-      <div className="relative z-10 mx-auto w-full max-w-5xl px-4 text-center">
+      <div className="relative z-20 mx-auto w-full max-w-5xl px-4 text-center mt-10">
         <h1 className="text-4xl font-bold tracking-tight text-white sm:text-5xl md:text-6xl mb-6">
           Your Project, Our Talent
         </h1>
