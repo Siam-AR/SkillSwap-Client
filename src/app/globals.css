@@ -9,12 +9,10 @@
     }
 }
 
-.landing-bg {
+/* .landing-bg {
   background-color: #FFFFFF;
   background-image: 
-    /* True top-left to bottom-right diagonal white corridor with teal corners */
     linear-gradient(135deg, rgba(0, 150, 137, 0.3) 0%, rgba(255, 255, 255, 0.95) 35%, rgba(255, 255, 255, 0.95) 65%, rgba(94, 234, 212, 0.25) 100%),
-    /* Your exact radial glowing layers */
     radial-gradient(circle at 100% 0%, rgba(0, 150, 137, 0.35) 0%, rgba(94, 234, 212, 0.18) 35%, transparent 65%),
     radial-gradient(circle at 0% 100%, rgba(13, 148, 136, 0.3) 0%, rgba(45, 212, 191, 0.15) 35%, transparent 65%),
     radial-gradient(circle at 0% 0%, rgba(204, 251, 241, 0.5) 0%, transparent 40%),
@@ -22,4 +20,20 @@
   background-size: cover;
   background-position: center;
   background-attachment: fixed;
+} */
+
+
+.landing-bg {
+    background-color: #FFFFFF;
+    background-image:
+        /* Flipped diagonal angle: bottom-left to top-right corridor */
+        linear-gradient(45deg, rgba(0, 150, 137, 0.3) 0%, rgba(255, 255, 255, 0.95) 35%, rgba(255, 255, 255, 0.95) 65%, rgba(94, 234, 212, 0.25) 100%),
+        /* Your exact radial glowing layers */
+        radial-gradient(circle at 100% 0%, rgba(0, 150, 137, 0.35) 0%, rgba(94, 234, 212, 0.18) 35%, transparent 65%),
+        radial-gradient(circle at 0% 100%, rgba(13, 148, 136, 0.3) 0%, rgba(45, 212, 191, 0.15) 35%, transparent 65%),
+        radial-gradient(circle at 0% 0%, rgba(204, 251, 241, 0.5) 0%, transparent 40%),
+        radial-gradient(circle at 100% 100%, rgba(204, 251, 241, 0.5) 0%, transparent 40%);
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
 }
