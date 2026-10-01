@@ -22,7 +22,7 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`${inter.className} min-h-screen flex flex-col`} suppressHydrationWarning>
+      <body className={`${inter.className} min-h-screen flex flex-col antialiased landing-bg`} suppressHydrationWarning>
         <main className="flex-grow">
           {children}
         </main>

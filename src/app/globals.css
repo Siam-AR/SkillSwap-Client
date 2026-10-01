@@ -1,2 +1,20 @@
 @import "tailwindcss";
 @import "@heroui/styles"; 
+
+@layer base {
+  body {
+    background-color: #F0FDF9;
+    color: #1A1A1A;
+    overflow-x: hidden;
+  }
+}
+
+.landing-bg {
+  background: 
+    radial-gradient(circle at top right, rgba(0, 150, 137, 0.20), transparent 65%), 
+    radial-gradient(circle at bottom left, rgba(94, 234, 212, 0.18), transparent 65%), 
+    #F8FAFC;
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+}
