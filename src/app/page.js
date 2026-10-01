@@ -1,7 +1,7 @@
 import Navbar from "@/components/Navbar";
 import { getHomepageData } from "@/lib/db";
 import HomeHero from "@/components/HomeHero";
-import LatestTasks from "@/components/LatestTasks";
+import FeatureServices from "@/components/FeatureServices";
 import TopFreelancers from "@/components/TopFreelancers";
 import HowItWorks from "@/components/HowItWorks";
 import StatsSection from "@/components/StatsSection";
@@ -15,7 +15,7 @@ function HomePage({ data }) {
       <Navbar />
       <HomeHero />
       <div className="container mx-auto py-10 space-y-16">
-        <LatestTasks tasks={latestTasks} />
+        <FeatureServices tasks={JSON.parse(JSON.stringify(latestTasks))} />
         <TopFreelancers freelancers={topFreelancers} />
         <HowItWorks></HowItWorks>
         <StatsSection stats={stats} />

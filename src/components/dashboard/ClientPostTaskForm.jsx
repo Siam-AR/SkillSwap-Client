@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Button, FieldError, Form, Input, Label, TextArea, TextField } from "@heroui/react";
 import { FiCheckCircle, FiAlertCircle } from "react-icons/fi";
 import { createTask } from "@/lib/api";
+import { CustomUploadButton } from "@/components/CustomUploadButton";
 
 const categories = ["Design", "Writing", "Development", "Marketing", "Other"];
 
@@ -16,12 +17,13 @@ export default function ClientPostTaskForm() {
     description: "",
     budget: "",
     deadline: "",
+    imageUrl: "",
   });
   const [successMessage, setSuccessMessage] = useState("");
   const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
 
   const resetForm = () => {
-    setFormValues({ title: "", category: "", description: "", budget: "", deadline: "" });
+    setFormValues({ title: "", category: "", description: "", budget: "", deadline: "", imageUrl: "" });
     setStatusMessage({ type: "idle", text: "" });
   };
 
@@ -38,6 +40,7 @@ export default function ClientPostTaskForm() {
       description: String(formValues.description || "").trim(),
       budget: Number(formValues.budget || 0),
       deadline: String(formValues.deadline || "").trim(),
+      imageUrl: formValues.imageUrl,
     };
 
     if (!payload.title || !payload.category || !payload.description || !payload.deadline || !payload.budget) {
@@ -176,6 +179,36 @@ export default function ClientPostTaskForm() {
             />
             <FieldError />
           </TextField>
+        </div>
+
+        <div className="flex flex-col gap-2">
+          <Label>Banner Image (Optional)</Label>
+          <div className="rounded-2xl border border-slate-200 p-4 dark:border-slate-800 flex flex-col items-center justify-center gap-4">
+            {formValues.imageUrl ? (
+              <div className="relative w-full overflow-hidden rounded-xl">
+                <img src={formValues.imageUrl} alt="Banner Preview" className="h-48 w-full object-cover" />
+                <button
+                  type="button"
+                  onClick={() => updateField("imageUrl", "")}
+                  className="absolute right-2 top-2 rounded-full bg-slate-900/50 p-1.5 text-white hover:bg-slate-900/80 transition"
+                >
+                  <FiAlertCircle className="h-4 w-4" /> {/* Use as a clear icon for now or just text */}
+                  Clear
+                </button>
+              </div>
+            ) : (
+              <CustomUploadButton
+                onUploadComplete={(res) => {
+                  if (res && res[0]) {
+                    updateField("imageUrl", res[0].url);
+                  }
+                }}
+                onUploadError={(error) => {
+                  setStatusMessage({ type: "error", text: `Upload failed: ${error.message}` });
+                }}
+              />
+            )}
+          </div>
         </div>
 
         <div className="flex flex-wrap items-center gap-3">
