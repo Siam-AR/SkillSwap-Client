@@ -11,6 +11,7 @@
 
 .landing-bg {
   background: 
+    linear-gradient(135deg, rgba(255, 255, 255, 0.6) 0%, rgba(248, 250, 252, 0.2) 50%, transparent 100%),
     radial-gradient(circle at top right, rgba(0, 150, 137, 0.20), transparent 65%), 
     radial-gradient(circle at bottom left, rgba(94, 234, 212, 0.18), transparent 65%), 
     #F8FAFC;
