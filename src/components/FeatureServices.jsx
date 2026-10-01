@@ -71,7 +71,13 @@ export default function FeatureServices({ tasks }) {
                       {task.category || "General"}
                     </span>
                     <div className="flex items-center gap-1 text-xs font-semibold text-slate-700 dark:text-slate-200">
-                      <FaStar className="text-amber-400" /> 4.9 <span className="text-slate-400">(482)</span>
+                      {task.client?.reviewCount > 0 ? (
+                        <>
+                          <FaStar className="text-amber-400" /> {task.client.rating} <span className="text-slate-400">({task.client.reviewCount})</span>
+                        </>
+                      ) : (
+                        <span className="text-slate-400 font-normal">No reviews yet</span>
+                      )}
                     </div>
                   </div>
 
@@ -83,8 +89,8 @@ export default function FeatureServices({ tasks }) {
                     <div className="flex items-center gap-2">
                       <div className="h-6 w-6 overflow-hidden rounded-full bg-slate-200 dark:bg-slate-700">
                         <img
-                          src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${task.client?.name || "Client"}`}
-                          alt="Avatar"
+                          src={task.client?.image || `https://api.dicebear.com/7.x/avataaars/svg?seed=${task.client?.name || "Client"}`}
+                          alt={task.client?.name || "Client"}
                           className="h-full w-full object-cover"
                         />
                       </div>

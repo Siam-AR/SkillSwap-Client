@@ -22,25 +22,57 @@ function normalizePage(page) {
   return Number.isNaN(parsedPage) || parsedPage < 1 ? 1 : parsedPage;
 }
 
-async function attachClientInfo(tasks, authDb) {
+async function attachClientInfo(tasks, authDb, reviewsCollection) {
   const usersCollection = authDb.collection("user");
-  const clientEmails = [...new Set(tasks.map((task) => task.client_email).filter(Boolean))];
+  const clientEmails = [...new Set(tasks.map((task) => task.client_email || task.clientEmail).filter(Boolean))];
 
   const clientUsers = clientEmails.length
     ? await usersCollection
         .find({ email: { $in: clientEmails } })
-        .project({ email: 1, name: 1 })
+        .project({ email: 1, name: 1, image: 1, avatar: 1 })
         .toArray()
     : [];
 
   const clientByEmail = new Map(clientUsers.map((user) => [user.email, user]));
 
-  return tasks.map((task) => ({
-    ...task,
-    client: clientByEmail.get(task.client_email) || {
-      name: task.client_email || "Unknown client",
-    },
-  }));
+  let reviewStats = {};
+  if (reviewsCollection && clientEmails.length > 0) {
+    const reviewDocs = await reviewsCollection.find({ 
+      $or: [
+        { reviewee_email: { $in: clientEmails } },
+        { revieweeEmail: { $in: clientEmails } }
+      ]
+    }).toArray();
+    
+    reviewStats = reviewDocs.reduce((acc, review) => {
+      const key = review.reviewee_email || review.revieweeEmail;
+      if (!key) return acc;
+      const current = acc[key] || { total: 0, count: 0 };
+      acc[key] = {
+        total: current.total + Number(review.rating || 0),
+        count: current.count + 1,
+      };
+      return acc;
+    }, {});
+  }
+
+  return tasks.map((task) => {
+    const email = task.client_email || task.clientEmail;
+    const clientData = clientByEmail.get(email) || {};
+    const stats = reviewStats[email] || { total: 0, count: 0 };
+    const averageRating = stats.count ? Number((stats.total / stats.count).toFixed(1)) : 0;
+    
+    return {
+      ...task,
+      client: {
+        name: clientData.name || email || "Unknown client",
+        email: email,
+        image: clientData.image || clientData.avatar || null,
+        rating: averageRating,
+        reviewCount: stats.count,
+      },
+    };
+  });
 }
 
 export async function getHomepageData() {
@@ -59,7 +91,7 @@ export async function getHomepageData() {
     .limit(6)
     .toArray();
 
-  const latestTasksWithClient = await attachClientInfo(latestTasks, authDb);
+  const latestTasksWithClient = await attachClientInfo(latestTasks, authDb, reviewsCollection);
 
   const freelancerUsers = await usersCollection
     .find({ role: { $regex: /^freelancer$/i } })
@@ -181,7 +213,7 @@ export async function getBrowseTasks({ search = "", category = "", page = 1, lim
     .limit(normalizedLimit)
     .toArray();
 
-  const tasksWithClient = await attachClientInfo(tasks, authDb);
+  const tasksWithClient = await attachClientInfo(tasks, authDb, appDb.collection("reviews"));
   const categories = (await tasksCollection.distinct("category")).filter(Boolean).sort();
 
   return {
