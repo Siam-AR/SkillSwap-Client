@@ -47,10 +47,20 @@ export default function FeatureServices({ tasks }) {
       </div>
 
       {/* Grid */}
-      <div className="mt-10 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="mt-10 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
         {filteredTasks.length > 0 ? (
-          filteredTasks.slice(0, 8).map((task) => (
-            <Link key={task._id} href={`/task/${task._id}`} className="group block">
+          filteredTasks.slice(0, 8).map((task, i) => (
+            <Link 
+              key={task._id} 
+              href={`/task/${task._id}`} 
+              className={`group ${
+                i < 4 
+                  ? "block" 
+                  : i < 6 
+                  ? "block md:hidden lg:block" 
+                  : "block md:hidden xl:block"
+              }`}
+            >
               <div className="flex h-full flex-col overflow-hidden rounded-xl border border-teal-100 bg-white/90 backdrop-blur-sm shadow-sm transition-all hover:border-teal-300 hover:shadow-md">
                 {/* Image Box */}
                 <div className="relative h-48 w-full bg-slate-100">
