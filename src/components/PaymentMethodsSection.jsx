@@ -38,30 +38,30 @@ export default function PaymentMethodsSection() {
           Multiple Payment <span className="text-[#009689]">Methods</span>
         </h2>
         <p className="text-sm sm:text-base text-neutral-600 text-center max-w-3xl mx-auto mt-4 leading-relaxed font-medium px-4">
-          We accept Visa, Mastercard, American Express, Bkash, Nagad, Rocket, and more, so you are never stuck at checkout. Deposits are instant, and you can start with as little as $1, which means there is no reason to wait before placing your first order.
+          We accept all major credit and debit cards including Visa, Mastercard, American Express, and Discover powered securely by Stripe. Deposits are instant and protected by industry-standard security
         </p>
       </div>
 
       {/* Visual Canvas & Semicircle Arc Layout */}
       <div className="relative w-full max-w-5xl mx-auto mt-6 h-[260px] sm:h-[300px] md:h-[340px] flex flex-col items-center justify-end overflow-hidden select-none">
-        
+
         {/* Background World Map */}
         <div className="absolute inset-x-0 top-0 sm:top-4 h-full max-h-[420px] pointer-events-none -z-10 flex items-center justify-center">
-          <Image alt="Global Coverage" className="object-contain opacity-90 brightness-95 saturate-125" fill priority sizes="(max-width: 768px) 100vw, 1000px" src="/images/world-map.svg"/>
+          <Image alt="Global Coverage" className="object-contain opacity-90 brightness-95 saturate-125" fill priority sizes="(max-width: 768px) 100vw, 1000px" src="/images/world-map.svg" />
         </div>
 
         {/* Concentric Arc Graphic Layers */}
         <div className="absolute -bottom-16 sm:-bottom-24 lg:-bottom-28 left-1/2 -translate-x-1/2 w-full max-w-4xl flex items-center justify-center pointer-events-none z-0">
-          
+
           {/* Outer Glow Arch (Ring 1) - Translucent teal gradient fill with fine border */}
           <div className="w-[560px] sm:w-[660px] md:w-[800px] aspect-square rounded-full border border-teal-300/60 bg-gradient-to-t from-teal-200/40 via-teal-100/20 to-transparent absolute bottom-0 translate-y-1/2 flex items-center justify-center">
-            
+
             {/* Middle White Ribbon Track (Ring 2) - Clean semi-opaque white with crisp borders */}
             <div className="w-[83%] aspect-square rounded-full border-t border-b border-teal-300/80 bg-white/95 shadow-[0_0_20px_rgba(255,255,255,0.8)] flex items-center justify-center">
-              
+
               {/* Inner Arch (Ring 3) - Smooth fading center dome */}
               <div className="w-[77%] aspect-square rounded-full border-t border-teal-300/60 bg-gradient-to-b from-[#F0FDF9]/90 to-white" />
-              
+
             </div>
           </div>
 
@@ -107,7 +107,7 @@ export default function PaymentMethodsSection() {
 
       {/* Large Bottom Watermark Text */}
       <div className="w-full overflow-hidden relative z-20 -mt-4 sm:-mt-6 mb-2 flex justify-center">
-        <h3 
+        <h3
           className="!font-nevera text-[clamp(2rem,6.5vw,90px)] font-normal uppercase text-center tracking-tight bg-gradient-to-r from-teal-600/20 via-[#009689]/15 to-teal-600/20 bg-clip-text text-transparent select-none pointer-events-none px-4"
           style={{ fontFamily: "'Nevera', sans-serif" }}
         >
