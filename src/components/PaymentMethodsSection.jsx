@@ -107,12 +107,14 @@ export default function PaymentMethodsSection() {
       </div>
 
       {/* Large Bottom Watermark Text */}
-      <h3 
-        className="!font-nevera text-5xl sm:text-7xl md:text-8xl lg:text-[110px] xl:text-[128px] font-normal uppercase text-center tracking-[-0.02em] leading-[1.4] bg-gradient-to-r from-teal-600/20 via-[#009689]/15 to-teal-600/20 bg-clip-text text-transparent select-none pointer-events-none -mt-4 sm:-mt-6 mb-2 whitespace-nowrap relative z-20"
-        style={{ fontFamily: "'Nevera', sans-serif" }}
-      >
-        MULTIPLE PAYMENTS
-      </h3>
+      <div className="w-full overflow-hidden relative z-20 -mt-4 sm:-mt-6 mb-2 flex justify-center">
+        <h3 
+          className="!font-nevera text-[clamp(2rem,6.5vw,90px)] font-normal uppercase text-center tracking-tight bg-gradient-to-r from-teal-600/20 via-[#009689]/15 to-teal-600/20 bg-clip-text text-transparent select-none pointer-events-none px-4"
+          style={{ fontFamily: "'Nevera', sans-serif" }}
+        >
+          MULTIPLE PAYMENTS
+        </h3>
+      </div>
     </section>
   );
 }
