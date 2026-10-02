@@ -7,12 +7,9 @@ import { motion } from "framer-motion";
 
 export default function CTASection() {
     return (
-        <section className="w-full relative z-10 py-16 lg:py-24 overflow-hidden">
+        <section className="w-full relative z-10 pt-16 lg:pt-24 pb-0 mb-0 bg-white overflow-hidden">
             {/* Full Bleed Background with Taskify Teal Corner Waves */}
-            <div
-                className="absolute inset-y-0 bg-white -z-20 overflow-hidden"
-                style={{ width: "100vw", left: "calc(-50vw + 50%)" }}
-            >
+            <div className="absolute inset-0 w-full h-full pointer-events-none -z-20">
                 {/* Top Left Wave - Taskify Teal Palette */}
                 <svg
                     className="absolute top-0 left-0 w-[240px] sm:w-[380px] lg:w-[520px] h-[240px] sm:h-[380px] lg:h-[520px] pointer-events-none opacity-80"
@@ -36,7 +33,7 @@ export default function CTASection() {
                 </svg>
             </div>
 
-            <div className="max-w-4xl mx-auto px-4 sm:px-6 relative z-10 text-center">
+            <div className="max-w-4xl mx-auto px-4 sm:px-6 pb-16 lg:pb-24 relative z-10 text-center">
                 <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     whileInView={{ opacity: 1, y: 0 }}

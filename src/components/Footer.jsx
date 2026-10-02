@@ -11,7 +11,7 @@ export default function Footer() {
   };
 
   return (
-    <footer className="relative bg-[#0B1320] border-t border-slate-800/80 overflow-hidden mt-16">
+    <footer className="relative bg-[#0B1320] border-t border-slate-800/80 overflow-hidden">
       {/* Ambient Teal Lighting */}
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-3/4 max-w-3xl h-24 bg-gradient-to-b from-teal-500/10 to-transparent blur-2xl pointer-events-none" />
 
