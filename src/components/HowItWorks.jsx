@@ -93,16 +93,16 @@ export default function HowItWorks() {
 
               {/* Dot Pattern Decor */}
               {step.cornerDecor === "top-left" && (
-                <div className="absolute top-4 left-4 grid grid-cols-4 gap-1.5 pointer-events-none opacity-40">
+                <div className="absolute top-4 left-4 grid grid-cols-4 gap-1.5 pointer-events-none opacity-80">
                   {Array.from({ length: 32 }).map((_, i) => (
-                    <span key={i} className="w-1 h-1 rounded-full bg-[#5EEAD4]" />
+                    <span key={i} className="w-1 h-1 rounded-full bg-[#009689]" />
                   ))}
                 </div>
               )}
               {step.cornerDecor === "bottom-right" && (
-                <div className="absolute bottom-4 right-4 grid grid-cols-4 gap-1.5 pointer-events-none opacity-40">
+                <div className="absolute bottom-4 right-4 grid grid-cols-4 gap-1.5 pointer-events-none opacity-80">
                   {Array.from({ length: 32 }).map((_, i) => (
-                    <span key={i} className="w-1 h-1 rounded-full bg-[#5EEAD4]" />
+                    <span key={i} className="w-1 h-1 rounded-full bg-[#009689]" />
                   ))}
                 </div>
               )}

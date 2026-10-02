@@ -47,7 +47,7 @@
       
       <!-- Dynamic Sweeping Accent Swooshes -->
       <path d="M14 26C18 24 22 26 27 15C25 18 21 21 15 22C14.5 22 14 24 14 26Z" fill="url(#swoosh_grad_1)"/>
-      <path d="M12 30C16 28 20 29 27 18C25 21 21 24 13 25C12.5 25 12 28 12 30Z" fill="url(#swoosh_grad_2)" fill-opacity="0.6"/>
+      <path d="M12 30C16 28 20 29 27 18C25 21 21 24 13 25C12.5 25 12 30Z" fill="url(#swoosh_grad_2)" fill-opacity="0.6"/>
     </g>
   </g>
 
