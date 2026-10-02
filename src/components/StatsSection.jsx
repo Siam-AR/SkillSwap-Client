@@ -77,37 +77,42 @@ export default function StatsSection({ stats }) {
   };
 
   return (
-    <section className="relative z-20 pt-10 sm:pt-16 max-w-7xl mx-auto px-4 w-full">
-      <motion.div 
-        variants={containerVariants}
-        initial="hidden"
-        whileInView="show"
-        viewport={{ once: true, margin: "-50px" }}
-        className="grid gap-6 sm:gap-8 md:grid-cols-3 bg-white border border-slate-100 rounded-[2rem] p-6 sm:p-8 shadow-[0_8px_30px_rgba(0,150,137,0.06)]"
-      >
-        {items.map((item) => (
-          <motion.div
-            key={item.label}
-            variants={itemVariants}
-            className="flex items-center gap-5 p-2 rounded-2xl hover:bg-slate-50 transition-colors duration-300"
-          >
-            {/* ICON BOX */}
-            <div className="flex-shrink-0 h-12 w-12 rounded-xl flex items-center justify-center border border-teal-100 bg-teal-50 text-[#009689]">
-              <item.icon className="w-6 h-6" strokeWidth={2.25} />
-            </div>
+    <section className="w-full relative z-20 py-10 sm:py-16 bg-white border-y border-slate-100 shadow-[0_8px_30px_rgba(0,150,137,0.04)]">
+      <div className="w-full max-w-6xl mx-auto px-8 sm:px-12 lg:px-16">
+        <motion.div
+          variants={containerVariants}
+          initial="hidden"
+          whileInView="show"
+          viewport={{ once: true, margin: "-50px" }}
+          className="grid grid-cols-1 md:grid-cols-3 gap-6 items-center"
+        >
+          {items.map((item) => (
+            <motion.div
+              key={item.label}
+              variants={itemVariants}
+              className="flex items-center justify-center w-full"
+            >
+              {/* Fixed width content block prevents wide text from distorting column centers */}
+              <div className="flex items-center gap-4 sm:gap-5 p-2 rounded-2xl hover:bg-slate-50 transition-colors duration-300 w-[240px] sm:w-[260px]">
+                {/* ICON BOX */}
+                <div className="flex-shrink-0 h-12 w-12 rounded-xl flex items-center justify-center border border-teal-100 bg-teal-50 text-[#009689]">
+                  <item.icon className="w-6 h-6" strokeWidth={2.25} />
+                </div>
 
-            {/* TEXT (Label on top, Number on bottom) */}
-            <div className="flex flex-col items-start gap-1">
-              <p className="text-sm font-medium text-slate-500">
-                {item.label}
-              </p>
-              <p className="text-4xl sm:text-5xl font-extrabold text-slate-950 tracking-tight">
-                <CountUp value={item.value} isCurrency={item.isCurrency} />
-              </p>
-            </div>
-          </motion.div>
-        ))}
-      </motion.div>
+                {/* TEXT */}
+                <div className="flex flex-col items-start gap-1 min-w-0">
+                  <p className="text-sm font-medium text-slate-500 whitespace-nowrap">
+                    {item.label}
+                  </p>
+                  <p className="text-4xl sm:text-5xl font-extrabold text-slate-950 tracking-tight whitespace-nowrap">
+                    <CountUp value={item.value} isCurrency={item.isCurrency} />
+                  </p>
+                </div>
+              </div>
+            </motion.div>
+          ))}
+        </motion.div>
+      </div>
     </section>
   );
 }
