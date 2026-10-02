@@ -4,6 +4,7 @@ import HomeHero from "@/components/HomeHero";
 import FeatureServices from "@/components/FeatureServices";
 import TopFreelancers from "@/components/TopFreelancers";
 import HowItWorks from "@/components/HowItWorks";
+import PaymentMethodsSection from "@/components/PaymentMethodsSection";
 import StatsSection from "@/components/StatsSection";
 import Footer from "@/components/Footer";
 
@@ -18,6 +19,7 @@ function HomePage({ data }) {
         <FeatureServices tasks={JSON.parse(JSON.stringify(latestTasks))} />
         <TopFreelancers freelancers={topFreelancers} />
         <HowItWorks></HowItWorks>
+        <PaymentMethodsSection />
         <StatsSection stats={stats} />
       </div>
       <Footer></Footer>

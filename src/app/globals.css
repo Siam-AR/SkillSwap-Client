@@ -1,6 +1,10 @@
+@import url('https://fonts.cdnfonts.com/css/nevera-132852');
 @import "tailwindcss";
 @import "@heroui/styles";
 
+@theme {
+  --font-nevera: "Nevera", sans-serif;
+}
 @layer base {
     body {
         background-color: #F0FDF9;
@@ -8,6 +12,11 @@
         overflow-x: hidden;
     }
 }
+
+.font-nevera {
+  font-family: 'Nevera', sans-serif !important;
+}
+
 
 /* .landing-bg {
   background-color: #FFFFFF;
