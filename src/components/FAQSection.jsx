@@ -49,50 +49,52 @@ export default function FAQSection() {
             return (
               <div
                 key={index}
-                className="group relative"
+                className="relative"
                 onMouseEnter={() => setActiveIndex(index)}
                 onMouseLeave={() => setActiveIndex(null)}
                 onClick={() => setActiveIndex(isActive ? null : index)}
               >
                 <div
-                  className={`bg-white/80 backdrop-blur-md border rounded-2xl p-5 sm:p-6 transition-all duration-300 cursor-pointer 
+                  className={`backdrop-blur-md border rounded-2xl p-5 sm:p-6 transition-all duration-700 ease-out cursor-pointer 
                   ${isActive 
-                    ? "border-[#2CA99F]/70 shadow-[0_8px_25px_rgba(0,150,137,0.08)]" 
-                    : "border-slate-200/80 hover:border-slate-300"
+                    ? "bg-gradient-to-r from-[#009689] to-[#2CA99F] border-[#009689] shadow-lg shadow-teal-900/15 -translate-y-0.5" 
+                    : "bg-white/80 border-slate-200/80"
                   }`}
                 >
                   <div className="flex items-center justify-between gap-4">
-                    <h3 className="font-semibold text-slate-900 text-base sm:text-lg">
+                    <h3 className={`font-semibold text-base sm:text-lg transition-colors duration-700 ease-out ${isActive ? "text-white" : "text-slate-900"}`}>
                       {faq.question}
                     </h3>
                     <div 
-                      className={`flex-shrink-0 flex items-center justify-center w-8 h-8 rounded-full transition-colors duration-300
-                      ${isActive ? "bg-teal-50" : "bg-slate-50 group-hover:bg-slate-100"}`}
+                      className={`flex-shrink-0 flex items-center justify-center w-8 h-8 rounded-full transition-colors duration-700 ease-out
+                      ${isActive ? "bg-white/20" : "bg-teal-50/60"}`}
                     >
                       <ChevronDown 
-                        className={`w-5 h-5 transition-transform duration-300 
-                        ${isActive ? "text-[#009689] rotate-180" : "text-slate-400 group-hover:text-slate-600"}`} 
+                        className={`w-5 h-5 transition-transform duration-700 ease-out 
+                        ${isActive ? "text-white rotate-180" : "text-teal-600"}`} 
                       />
                     </div>
                   </div>
 
-                  <AnimatePresence>
-                    {isActive && (
-                      <motion.div
-                        initial={{ height: 0, opacity: 0 }}
-                        animate={{ height: "auto", opacity: 1 }}
-                        exit={{ height: 0, opacity: 0 }}
-                        transition={{ duration: 0.3, ease: "easeInOut" }}
-                        className="overflow-hidden"
-                      >
-                        <div className="border-t border-slate-100/80 mt-4 pt-3">
-                          <p className="text-slate-600 text-sm sm:text-base leading-relaxed">
-                            {faq.answer}
-                          </p>
-                        </div>
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
+                  <motion.div
+                    initial={{ height: 0, opacity: 0 }}
+                    animate={{ 
+                      height: isActive ? "auto" : 0, 
+                      opacity: isActive ? 1 : 0 
+                    }}
+                    exit={{ height: 0, opacity: 0 }}
+                    transition={{
+                      height: { duration: 0.65, ease: [0.16, 1, 0.3, 1] },
+                      opacity: { duration: 0.55, ease: "easeInOut" }
+                    }}
+                    className="overflow-hidden"
+                  >
+                    <div className={`mt-4 pt-3 border-t transition-colors duration-700 ease-out ${isActive ? "border-white/20" : "border-slate-100/80"}`}>
+                      <p className={`text-sm sm:text-base leading-relaxed transition-colors duration-700 ease-out ${isActive ? "text-teal-50" : "text-slate-600"}`}>
+                        {faq.answer}
+                      </p>
+                    </div>
+                  </motion.div>
                 </div>
               </div>
             );
