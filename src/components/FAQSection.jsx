@@ -28,7 +28,11 @@ const faqs = [
 ];
 
 export default function FAQSection() {
-  const [activeIndex, setActiveIndex] = useState(null);
+  const [openIndex, setOpenIndex] = useState(null);
+
+  const toggleFAQ = (index) => {
+    setOpenIndex((prev) => (prev === index ? null : index));
+  };
 
   return (
     <section className="w-full py-16 sm:py-24 relative z-10 bg-transparent">
@@ -44,63 +48,60 @@ export default function FAQSection() {
         {/* FAQ Items Container */}
         <div className="space-y-4">
           {faqs.map((faq, index) => {
-            const isActive = activeIndex === index;
+            const isOpen = openIndex === index;
 
             return (
-              <div
-                key={index}
-                className="relative"
-                onMouseEnter={() => setActiveIndex(index)}
-                onMouseLeave={() => setActiveIndex(null)}
-                onClick={() => setActiveIndex(isActive ? null : index)}
-              >
-                <div
-                  className={`backdrop-blur-md border rounded-2xl p-5 sm:p-6 transition-all duration-700 ease-out cursor-pointer 
-                  ${isActive 
+              <div key={index} className="relative">
+                <button
+                  type="button"
+                  aria-expanded={isOpen}
+                  onClick={() => toggleFAQ(index)}
+                  className={`w-full text-left backdrop-blur-md border rounded-2xl p-5 sm:p-6 transition-all duration-700 ease-out cursor-pointer 
+                  ${isOpen 
                     ? "bg-gradient-to-r from-[#009689] to-[#2CA99F] border-[#009689] shadow-lg shadow-teal-900/15 -translate-y-0.5" 
-                    : "bg-white/80 border-slate-200/80"
+                    : "bg-white/80 border-slate-200/80 hover:border-slate-300"
                   }`}
                 >
                   <div className="flex items-center justify-between gap-4">
-                    <h3 className={`font-semibold text-base sm:text-lg transition-colors duration-700 ease-out ${isActive ? "text-white" : "text-slate-900"}`}>
+                    <h3 className={`font-semibold text-base sm:text-lg transition-colors duration-700 ease-out ${isOpen ? "text-white" : "text-slate-900"}`}>
                       {faq.question}
                     </h3>
                     <div 
                       className={`flex-shrink-0 flex items-center justify-center w-8 h-8 rounded-full transition-colors duration-700 ease-out
-                      ${isActive ? "bg-white/20" : "bg-teal-50/60"}`}
+                      ${isOpen ? "bg-white/20" : "bg-teal-50/60"}`}
                     >
                       <ChevronDown 
                         className={`w-5 h-5 transition-transform duration-700 ease-out 
-                        ${isActive ? "text-white rotate-180" : "text-teal-600"}`} 
+                        ${isOpen ? "text-white rotate-180" : "text-teal-600"}`} 
                       />
                     </div>
                   </div>
 
-                  <motion.div
-                    initial={{ height: 0, opacity: 0 }}
-                    animate={{ 
-                      height: isActive ? "auto" : 0, 
-                      opacity: isActive ? 1 : 0 
-                    }}
-                    exit={{ height: 0, opacity: 0 }}
-                    transition={{
-                      height: { duration: 0.65, ease: [0.16, 1, 0.3, 1] },
-                      opacity: { duration: 0.55, ease: "easeInOut" }
-                    }}
-                    className="overflow-hidden"
-                  >
-                    <div className={`mt-4 pt-3 border-t transition-colors duration-700 ease-out ${isActive ? "border-white/20" : "border-slate-100/80"}`}>
-                      <p className={`text-sm sm:text-base leading-relaxed transition-colors duration-700 ease-out ${isActive ? "text-teal-50" : "text-slate-600"}`}>
-                        {faq.answer}
-                      </p>
-                    </div>
-                  </motion.div>
-                </div>
+                  <AnimatePresence initial={false}>
+                    {isOpen && (
+                      <motion.div
+                        initial={{ height: 0, opacity: 0 }}
+                        animate={{ height: "auto", opacity: 1 }}
+                        exit={{ height: 0, opacity: 0 }}
+                        transition={{
+                          height: { duration: 0.65, ease: [0.16, 1, 0.3, 1] },
+                          opacity: { duration: 0.55, ease: "easeInOut" }
+                        }}
+                        className="overflow-hidden"
+                      >
+                        <div className={`mt-4 pt-3 border-t transition-colors duration-700 ease-out border-white/20`}>
+                          <p className={`text-sm sm:text-base leading-relaxed transition-colors duration-700 ease-out text-teal-50`}>
+                            {faq.answer}
+                          </p>
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </button>
               </div>
             );
           })}
         </div>
-
       </div>
     </section>
   );
