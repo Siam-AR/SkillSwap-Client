@@ -7,6 +7,7 @@ import LatestTasksSection from "@/components/LatestTasksSection";
 import HowItWorks from "@/components/HowItWorks";
 import PaymentMethodsSection from "@/components/PaymentMethodsSection";
 import StatsSection from "@/components/StatsSection";
+import FAQSection from "@/components/FAQSection";
 import Footer from "@/components/Footer";
 
 function HomePage({ data }) {
@@ -20,10 +21,18 @@ function HomePage({ data }) {
       <div className="container mx-auto py-10 space-y-16">
         <FeatureServices tasks={JSON.parse(JSON.stringify(latestTasks))} />
         <TopFreelancers freelancers={JSON.parse(JSON.stringify(topFreelancers))} />
-        <LatestTasksSection tasks={JSON.parse(JSON.stringify(latestTasks))} />
-        <HowItWorks></HowItWorks>
-        <PaymentMethodsSection />
       </div>
+
+      <div className="w-full flex flex-col gap-16 pb-16">
+        <HowItWorks></HowItWorks>
+        <LatestTasksSection tasks={JSON.parse(JSON.stringify(latestTasks))} />
+        <div className="container mx-auto">
+          <PaymentMethodsSection />
+        </div>
+      </div>
+      
+      <FAQSection />
+      
       <Footer></Footer>
     </main>
   );

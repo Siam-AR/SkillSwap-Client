@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { Heart, Clock, MapPin, Star, ArrowRight } from "lucide-react";
+import { Clock, MapPin, ArrowRight } from "lucide-react";
 
 function formatTimeAgo(dateString) {
   if (!dateString) return "Recently";
@@ -42,7 +42,7 @@ export default function LatestTasksSection({ tasks }) {
 
   return (
     <section className="w-full">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
         
         {/* Header */}
         <div className="flex flex-col items-center text-center gap-3">
@@ -57,90 +57,82 @@ export default function LatestTasksSection({ tasks }) {
           </p>
         </div>
 
-        {/* Grid */}
+        {/* Grid - 2 Column Wide Format */}
         <motion.div 
           variants={containerVariants}
           initial="hidden"
           whileInView="show"
           viewport={{ once: true, margin: "-50px" }}
-          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6"
+          className="grid grid-cols-1 lg:grid-cols-2 gap-5"
         >
           {displayTasks.map((task) => {
             const timeAgo = formatTimeAgo(task.createdAt);
+            const proposalsCount = task.proposalsCount || 0;
 
             return (
               <motion.div key={task._id} variants={cardVariants} className="h-full">
-                <div className="group bg-white border border-slate-200/80 rounded-2xl p-5 sm:p-6 hover:shadow-xl hover:border-teal-300/60 hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between h-full">
-                  
-                  <div className="flex flex-col gap-4">
-                    {/* Top Row: Title & Bookmark */}
-                    <div className="flex items-start justify-between gap-3">
-                      <Link href={`/task/${task._id}`} className="min-w-0">
-                        <h3 className="text-lg font-semibold text-slate-900 group-hover:text-[#009689] transition-colors line-clamp-2">
-                          {task.title}
-                        </h3>
-                      </Link>
-                      <button className="flex-shrink-0 flex items-center justify-center h-9 w-9 rounded-full bg-slate-50 hover:bg-rose-50 text-slate-400 hover:text-rose-500 transition-colors">
-                        <Heart className="w-4 h-4" />
-                      </button>
-                    </div>
-
-                    {/* Metadata Row */}
-                    <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-xs font-medium text-slate-500">
-                      <div className="flex items-center gap-1.5">
-                        <Clock className="w-3.5 h-3.5" />
-                        <span>{timeAgo}</span>
-                      </div>
-                      <div className="flex items-center gap-1.5">
-                        <MapPin className="w-3.5 h-3.5" />
-                        <span>Remote</span>
-                      </div>
-                      <div className="flex items-center gap-1.5">
-                        <Star className="w-3.5 h-3.5 text-amber-400 fill-amber-400" />
-                        <span>{task.client?.rating || "New"}</span>
-                      </div>
-                    </div>
-
-                    {/* Description */}
-                    <p className="text-sm text-slate-600 line-clamp-2">
-                      {task.description || "No description provided."}
-                    </p>
-
-                    {/* Tags */}
-                    <div className="flex flex-wrap gap-2">
-                      {task.skills && task.skills.slice(0, 3).map((skill) => (
-                        <span key={skill} className="bg-teal-50/60 text-[#009689] border border-teal-100 text-xs px-2.5 py-1 rounded-md font-medium">
-                          {skill}
+                <Link href={`/task/${task._id}`} className="block h-full group">
+                  <div className="relative bg-white/90 backdrop-blur-sm border border-slate-200/80 border-l-[4px] border-l-transparent rounded-2xl p-6 transition-all duration-300 hover:border-[#2CA99F] hover:shadow-[0_12px_30px_rgba(0,150,137,0.08)] hover:-translate-y-0.5 flex flex-col justify-between h-full">
+                    
+                    <div>
+                      {/* Top Row: Header & Budget Badge */}
+                      <div className="flex items-start justify-between gap-3">
+                        <span className="bg-teal-50 text-[#009689] font-medium text-xs px-2.5 py-1 rounded-md">
+                          {task.category || "General"}
                         </span>
-                      ))}
-                      {task.skills && task.skills.length > 3 && (
-                        <span className="bg-slate-50 text-slate-600 border border-slate-200 text-xs px-2 py-1 rounded-md font-medium">
-                          +{task.skills.length - 3}
-                        </span>
-                      )}
-                    </div>
-                  </div>
+                        
+                        <div className="bg-slate-900 text-white text-sm font-bold px-3 py-1 rounded-full group-hover:bg-[#009689] transition-colors shrink-0">
+                          ${task.budget} Fixed
+                        </div>
+                      </div>
 
-                  {/* Card Footer & Pricing */}
-                  <div className="mt-5 border-t border-slate-100 pt-4">
-                    <div className="flex items-center justify-between mb-4">
-                      <span className="text-xs font-medium text-slate-500">
-                        Proposals: <strong className="text-slate-700">{task.proposalsCount || 0}</strong>
-                      </span>
-                      <div className="text-right">
-                        <span className="text-lg font-bold text-slate-900">${task.budget}</span>
-                        <span className="text-xs font-semibold text-slate-500">/fixed</span>
+                      {/* Middle Area: Title, Metadata & Snippet */}
+                      <h3 className="text-lg font-bold text-slate-900 group-hover:text-[#009689] transition-colors line-clamp-1 mt-4">
+                        {task.title}
+                      </h3>
+
+                      {/* Meta Strip */}
+                      <div className="flex flex-wrap items-center gap-1.5 text-xs font-medium text-slate-500 mt-2">
+                        <div className="flex items-center gap-1">
+                          <Clock className="w-3.5 h-3.5" />
+                          <span>{timeAgo}</span>
+                        </div>
+                        <span className="text-slate-300 mx-0.5">•</span>
+                        <div className="flex items-center gap-1">
+                          <MapPin className="w-3.5 h-3.5" />
+                          <span>Remote</span>
+                        </div>
+                        <span className="text-slate-300 mx-0.5">•</span>
+                        <span>
+                          {proposalsCount} {proposalsCount === 1 ? "proposal" : "proposals"}
+                        </span>
+                      </div>
+
+                      {/* Description */}
+                      <p className="text-sm text-slate-500 line-clamp-2 mt-3 leading-relaxed">
+                        {task.description || "No description provided for this task."}
+                      </p>
+                    </div>
+
+                    {/* Bottom Action Row */}
+                    <div className="flex items-center justify-between mt-6 pt-5 border-t border-slate-100">
+                      {/* Left: Skill Tags */}
+                      <div className="flex flex-wrap gap-2">
+                        {task.skills && task.skills.slice(0, 3).map((skill) => (
+                          <span key={skill} className="bg-slate-50 text-slate-600 border border-slate-200 text-xs px-2.5 py-1 rounded-md font-medium">
+                            {skill}
+                          </span>
+                        ))}
+                      </div>
+
+                      {/* Right: Quick Apply Link */}
+                      <div className="text-sm font-semibold text-[#009689] flex items-center gap-1 group-hover:gap-2 transition-all shrink-0 pl-4">
+                        Quick Apply <ArrowRight className="w-4 h-4" />
                       </div>
                     </div>
                     
-                    <Link href={`/task/${task._id}`} className="block w-full">
-                      <button className="bg-[#2CA99F] hover:bg-[#238B81] text-white font-semibold py-2.5 rounded-xl w-full text-center transition-colors shadow-sm flex items-center justify-center gap-2 group-button">
-                        Apply Now
-                      </button>
-                    </Link>
                   </div>
-                  
-                </div>
+                </Link>
               </motion.div>
             );
           })}
