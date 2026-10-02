@@ -3,6 +3,7 @@ import { getHomepageData } from "@/lib/db";
 import HomeHero from "@/components/HomeHero";
 import FeatureServices from "@/components/FeatureServices";
 import TopFreelancers from "@/components/TopFreelancers";
+import LatestTasksSection from "@/components/LatestTasksSection";
 import HowItWorks from "@/components/HowItWorks";
 import PaymentMethodsSection from "@/components/PaymentMethodsSection";
 import StatsSection from "@/components/StatsSection";
@@ -19,6 +20,7 @@ function HomePage({ data }) {
       <div className="container mx-auto py-10 space-y-16">
         <FeatureServices tasks={JSON.parse(JSON.stringify(latestTasks))} />
         <TopFreelancers freelancers={JSON.parse(JSON.stringify(topFreelancers))} />
+        <LatestTasksSection tasks={JSON.parse(JSON.stringify(latestTasks))} />
         <HowItWorks></HowItWorks>
         <PaymentMethodsSection />
       </div>
