@@ -78,12 +78,19 @@ export default function TopFreelancers({ freelancers }) {
         </div>
 
         {/* Pricing Indicator */}
-        {freelancer.hourlyRate && (
-          <div className="text-right">
-            <p className="text-[10px] font-semibold uppercase tracking-wider text-slate-400">Starts at</p>
-            <p className="text-sm font-bold text-slate-900">${freelancer.hourlyRate}<span className="text-xs font-medium text-slate-500">/hr</span></p>
-          </div>
-        )}
+        <div className="text-right">
+          <p className="text-[10px] font-semibold uppercase tracking-wider text-slate-400">Starts at</p>
+          <p className="text-sm font-bold text-slate-900">
+            {freelancer.hourlyRate ? (
+              <>
+                ${freelancer.hourlyRate}
+                <span className="text-xs font-medium text-slate-500">/hr</span>
+              </>
+            ) : (
+              <span className="text-xs font-medium text-slate-400">Rate not set</span>
+            )}
+          </p>
+        </div>
       </div>
 
       {/* Skills */}

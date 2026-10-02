@@ -95,7 +95,7 @@ export async function getHomepageData() {
 
   const freelancerUsers = await usersCollection
     .find({ role: { $regex: /^freelancer$/i } })
-    .project({ name: 1, email: 1, image: 1, skills: 1 })
+    .project({ name: 1, email: 1, image: 1, skills: 1, hourlyRate: 1 })
     .toArray();
 
   const reviewDocs = await reviewsCollection.find({}).toArray();
