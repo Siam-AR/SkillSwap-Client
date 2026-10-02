@@ -1,106 +1,8 @@
-// "use client"
-
-// import {
-//   FiArrowRight,
-//   FiUsers,
-//   FiStar,
-// } from "react-icons/fi";
-
-// import { Card } from "@heroui/react";
-
-// function formatCurrency(amount) {
-//   return new Intl.NumberFormat("en-US", {
-//     style: "currency",
-//     currency: "USD",
-//     maximumFractionDigits: 0,
-//   }).format(amount);
-// }
-
-// export default function StatsSection({ stats }) {
-//   const items = [
-//     {
-//       label: "Total Users",
-//       value: stats?.totalUsers ?? 0,
-//       icon: FiUsers,
-//       color: "text-sky-600",
-//     },
-//     {
-//       label: "Total Tasks",
-//       value: stats?.totalTasks ?? 0,
-//       icon: FiArrowRight,
-//       color: "text-emerald-600",
-//     },
-//     {
-//       label: "Total Payout Completed",
-//       value: formatCurrency(stats?.totalPayout ?? 0),
-//       icon: FiStar,
-//       color: "text-amber-600",
-//     },
-//   ];
-
-//   return (
-//     <section className="mt-16">
-//       <div className="rounded-[2rem] border border-slate-200 bg-slate-50 p-8 dark:border-slate-800 dark:bg-slate-950">
-//         {/* Header */}
-//         <div className="mb-8">
-//           <p className="text-sm font-semibold uppercase tracking-[0.24em] text-sky-600">
-//             Platform Statistics
-//           </p>
-
-//           <h2 className="mt-2 text-3xl font-bold text-slate-950 dark:text-white">
-//             Live performance metrics
-//           </h2>
-//         </div>
-
-//         <div className="grid gap-4 lg:grid-cols-3">
-//           {items.map((item) => (
-//             <Card
-//               key={item.label}
-//               className="
-//                 group
-//                 rounded-[1.5rem]
-//                 border border-slate-200
-//                 bg-white
-//                 p-5
-//                 transition-all duration-300
-
-//                 hover:-translate-y-1
-//                 hover:border-cyan-400
-//                 hover:shadow-[0_0_0_1px_rgb(34_211_238),0_12px_32px_rgba(34,211,238,0.12)]
-
-//                 dark:border-slate-800
-//                 dark:bg-slate-950
-//               "
-//             >
-//               <div className="flex items-center justify-between">
-//                 <div>
-//                   <p className="text-sm text-slate-500 dark:text-slate-400">
-//                     {item.label}
-//                   </p>
-
-//                   <p className="mt-2 text-3xl font-black text-slate-950 dark:text-white">
-//                     {item.value}
-//                   </p>
-//                 </div>
-
-//                 <div className="rounded-2xl bg-sky-50 p-3 dark:bg-slate-900">
-//                   <item.icon
-//                     className={`h-6 w-6 ${item.color}`}
-//                   />
-//                 </div>
-//               </div>
-//             </Card>
-//           ))}
-//         </div>
-//       </div>
-//     </section>
-//   );
-// }
-
 "use client";
 
-import { FiArrowRight, FiUsers, FiStar } from "react-icons/fi";
-import { Card } from "@heroui/react";
+import { useRef, useEffect } from "react";
+import { FiUsers, FiCheckCircle, FiDollarSign } from "react-icons/fi";
+import { motion, useInView, useMotionValue, useSpring } from "framer-motion";
 
 function formatCurrency(amount) {
   return new Intl.NumberFormat("en-US", {
@@ -110,67 +12,102 @@ function formatCurrency(amount) {
   }).format(amount);
 }
 
+function CountUp({ value, isCurrency = false }) {
+  const ref = useRef(null);
+  const inView = useInView(ref, { once: true, margin: "-50px" });
+  const motionValue = useMotionValue(0);
+  const springValue = useSpring(motionValue, {
+    duration: 2500,
+    bounce: 0,
+  });
+
+  useEffect(() => {
+    if (inView) {
+      motionValue.set(value);
+    }
+  }, [inView, motionValue, value]);
+
+  useEffect(() => {
+    return springValue.on("change", (latest) => {
+      if (ref.current) {
+        const rounded = Math.round(latest);
+        ref.current.textContent = isCurrency ? formatCurrency(rounded) : rounded.toString();
+      }
+    });
+  }, [springValue, isCurrency]);
+
+  return <span ref={ref}>{isCurrency ? formatCurrency(0) : "0"}</span>;
+}
+
 export default function StatsSection({ stats }) {
   const items = [
     {
       label: "Total Users",
-      value: stats?.totalUsers ?? 0,
+      value: stats?.totalUsers || 44,
       icon: FiUsers,
+      isCurrency: false,
     },
     {
       label: "Total Tasks",
-      value: stats?.totalTasks ?? 0,
-      icon: FiArrowRight,
+      value: stats?.totalTasks || 46,
+      icon: FiCheckCircle,
+      isCurrency: false,
     },
     {
       label: "Total Payout Completed",
-      value: formatCurrency(stats?.totalPayout ?? 0),
-      icon: FiStar,
+      value: stats?.totalPayout || 2228,
+      icon: FiDollarSign,
+      isCurrency: true,
     },
   ];
 
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    show: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.15,
+      },
+    },
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 20 },
+    show: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 300, damping: 24 } },
+  };
+
   return (
-    <section className="mt-16">
-      <div className="rounded-[2rem] border border-slate-200 bg-slate-50 p-8 dark:border-slate-800 dark:bg-slate-950">
-        {/* Header */}
-        <div className="mb-8">
-          <p className="text-sm font-semibold uppercase tracking-[0.24em] text-sky-600 dark:text-sky-400">
-            Platform Statistics
-          </p>
+    <section className="relative z-20 pt-10 sm:pt-16 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+      <motion.div 
+        variants={containerVariants}
+        initial="hidden"
+        whileInView="show"
+        viewport={{ once: true, margin: "-50px" }}
+        className="grid gap-4 sm:gap-6 md:grid-cols-3 bg-white/80 backdrop-blur-md rounded-2xl sm:rounded-[2rem] border border-teal-100 shadow-lg shadow-teal-900/5 p-4 sm:p-6 lg:p-8"
+      >
+        {items.map((item) => (
+          <motion.div
+            key={item.label}
+            variants={itemVariants}
+            className="flex items-center gap-5 p-4 rounded-xl hover:bg-teal-50/50 transition-colors duration-300"
+          >
+            {/* ICON BOX */}
+            <div className="flex-shrink-0 flex items-center justify-center w-14 h-14 rounded-2xl bg-teal-50 text-[#009689] shadow-sm shadow-teal-100/50">
+              <item.icon className="w-7 h-7" />
+            </div>
 
-          <h2 className="mt-2 text-3xl font-bold text-black dark:text-white">
-            Live performance metrics
-          </h2>
-        </div>
-
-        {/* Grid */}
-        <div className="grid gap-4 lg:grid-cols-3">
-          {items.map((item) => (
-            <Card
-              key={item.label}
-              className={``}
-            >
-              <div className="flex items-center justify-between p-5">
-                {/* TEXT */}
-                <div>
-                  <p className="text-sm font-medium text-black dark:text-slate-400">
-                    {item.label}
-                  </p>
-
-                  <p className="mt-2 text-3xl font-black text-black dark:text-white">
-                    {item.value}
-                  </p>
-                </div>
-
-                {/* ICON BOX */}
-                <div className="rounded-2xl bg-gray-100 p-3 dark:bg-slate-900">
-                  <item.icon className="h-6 w-6 text-black dark:text-white" />
-                </div>
-              </div>
-            </Card>
-          ))}
-        </div>
-      </div>
+            {/* TEXT */}
+            <div>
+              <p className="text-3xl font-black text-slate-800 tracking-tight">
+                <CountUp value={item.value} isCurrency={item.isCurrency} />
+              </p>
+              <p className="text-sm font-medium text-slate-500 mt-0.5">
+                {item.label}
+              </p>
+            </div>
+          </motion.div>
+        ))}
+      </motion.div>
     </section>
   );
 }

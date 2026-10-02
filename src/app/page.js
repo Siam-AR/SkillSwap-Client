@@ -15,12 +15,12 @@ function HomePage({ data }) {
     <main className="flex flex-col">
       <Navbar />
       <HomeHero />
+      <StatsSection stats={stats} />
       <div className="container mx-auto py-10 space-y-16">
         <FeatureServices tasks={JSON.parse(JSON.stringify(latestTasks))} />
         <TopFreelancers freelancers={topFreelancers} />
         <HowItWorks></HowItWorks>
         <PaymentMethodsSection />
-        <StatsSection stats={stats} />
       </div>
       <Footer></Footer>
     </main>
