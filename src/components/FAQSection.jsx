@@ -34,17 +34,11 @@ export default function FAQSection() {
     <section className="w-full py-16 sm:py-24 relative z-10 bg-transparent">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         
-        {/* Header */}
         <div className="flex flex-col items-center text-center mb-12">
-          <p className="text-xs sm:text-sm font-semibold uppercase tracking-wider text-[#009689] mb-3">
-            FREQUENTLY ASKED QUESTIONS
-          </p>
-          <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight mb-4">
-            Got Questions? We've Got Answers
+          <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900 text-center tracking-tight">
+            Frequently Asked <span className="text-[#009689]">Questions</span>
           </h2>
-          <p className="text-slate-500 max-w-xl mx-auto text-center text-base sm:text-lg">
-            Everything you need to know about getting work done and hiring top talent securely on Taskify.
-          </p>
+          <p className="mt-3 text-slate-600 text-center text-sm sm:text-base max-w-xl mx-auto">Everything you need to know about getting work done and hiring top talent securely on Taskify.</p>
         </div>
 
         {/* FAQ Items Container */}
