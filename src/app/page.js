@@ -8,6 +8,7 @@ import HowItWorks from "@/components/HowItWorks";
 import PaymentMethodsSection from "@/components/PaymentMethodsSection";
 import StatsSection from "@/components/StatsSection";
 import FAQSection from "@/components/FAQSection";
+import CTASection from "@/components/CTASection";
 import Footer from "@/components/Footer";
 
 function HomePage({ data }) {
@@ -30,9 +31,8 @@ function HomePage({ data }) {
           <PaymentMethodsSection />
         </div>
       </div>
-      
       <FAQSection />
-      
+      <CTASection />
       <Footer></Footer>
     </main>
   );
