@@ -1,6 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
-import { FiStar } from "react-icons/fi";
+import { FiStar, FiArrowRight } from "react-icons/fi";
 import { Card } from "@heroui/react";
 
 export default function TopFreelancers({ freelancers }) {
@@ -41,43 +41,57 @@ export default function TopFreelancers({ freelancers }) {
         "
       >
       {/* Top */}
-      <div className="flex items-start gap-3">
-        {/* Avatar */}
-        <div className="rounded-full bg-gradient-to-br from-teal-400 via-[#009689] to-teal-600 p-[2px]">
-          <div className="relative h-14 w-14 overflow-hidden rounded-full bg-slate-100">
-            {freelancer.image ? (
-              <Image
-                src={freelancer.image}
-                alt={freelancer.name}
-                fill
-                className="object-cover"
-              />
-            ) : (
-              <div className="grid h-full place-items-center text-lg font-bold text-slate-700">
-                {freelancer.name?.charAt(0)}
+      <div className="flex items-start justify-between gap-3">
+        <div className="flex items-center gap-3">
+          {/* Avatar */}
+          <div className="relative">
+            <div className="rounded-full bg-gradient-to-br from-teal-400 via-[#009689] to-teal-600 p-[2px]">
+              <div className="relative h-12 w-12 overflow-hidden rounded-full bg-slate-100">
+                {freelancer.image ? (
+                  <Image
+                    src={freelancer.image}
+                    alt={freelancer.name}
+                    fill
+                    className="object-cover"
+                  />
+                ) : (
+                  <div className="grid h-full place-items-center text-lg font-bold text-slate-700">
+                    {freelancer.name?.charAt(0)}
+                  </div>
+                )}
               </div>
+            </div>
+          </div>
+
+          {/* Info */}
+          <div className="min-w-0 flex-1">
+            <h3 className="truncate text-base font-semibold text-slate-900">
+              {freelancer.name}
+            </h3>
+
+            {freelancer.title && (
+              <p className="text-xs text-slate-500">
+                {freelancer.title}
+              </p>
             )}
           </div>
         </div>
 
-        {/* Info */}
-        <div className="min-w-0 flex-1">
-          <h3 className="truncate text-base font-semibold text-slate-900">
-            {freelancer.name}
-          </h3>
-
-          <p className="mt-1 text-xs text-slate-500">
-            Available for work
-          </p>
-        </div>
+        {/* Pricing Indicator */}
+        {freelancer.hourlyRate && (
+          <div className="text-right">
+            <p className="text-[10px] font-semibold uppercase tracking-wider text-slate-400">Starts at</p>
+            <p className="text-sm font-bold text-slate-900">${freelancer.hourlyRate}<span className="text-xs font-medium text-slate-500">/hr</span></p>
+          </div>
+        )}
       </div>
 
       {/* Skills */}
-      <div className="mt-4 flex flex-wrap gap-2">
-        {freelancer.skills?.slice(0, 2).map((skill) => (
+      <div className="mt-5 flex flex-wrap gap-2">
+        {freelancer.skills?.slice(0, 3).map((skill) => (
           <span
             key={skill}
-            className="rounded-full bg-slate-100 px-2.5 py-1 text-xs font-medium text-slate-700"
+            className="rounded-full border border-teal-100 bg-teal-50 px-2.5 py-1 text-[11px] font-semibold text-teal-700"
           >
             {skill}
           </span>
@@ -86,16 +100,23 @@ export default function TopFreelancers({ freelancers }) {
 
       {/* Stats */}
       <div className="mt-5 flex items-center justify-between border-t border-slate-100 pt-4">
-        <div className="inline-flex items-center gap-1.5 rounded-full bg-amber-50 px-3 py-1 text-xs font-semibold text-amber-700">
-          <FiStar className="h-3.5 w-3.5 fill-current" />
-          {freelancer.rating || 0}
-          <span className="opacity-70">
-            ({freelancer.reviewCount})
-          </span>
+        <div className="flex items-center gap-3">
+          <div className="inline-flex items-center gap-1 rounded-full bg-amber-50 px-2 py-1 text-xs font-semibold text-amber-700">
+            <FiStar className="h-3.5 w-3.5 fill-current" />
+            {freelancer.rating || 0}
+            <span className="opacity-70">
+              ({freelancer.reviewCount})
+            </span>
+          </div>
+
+          <div className="hidden text-xs font-semibold text-slate-500 sm:block">
+            {freelancer.finishedJobs} jobs done
+          </div>
         </div>
 
-        <div className="rounded-full bg-teal-50 px-3 py-1 text-xs font-semibold text-[#009689]">
-          {freelancer.finishedJobs} jobs
+        {/* Hover Interaction Arrow */}
+        <div className="flex items-center gap-1 text-xs font-bold text-[#009689] opacity-0 transition-all duration-300 group-hover:opacity-100 group-hover:translate-x-1">
+          View Profile <FiArrowRight className="h-3.5 w-3.5" />
         </div>
       </div>
       </Card>
