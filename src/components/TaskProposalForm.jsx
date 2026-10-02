@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useSession } from "@/lib/auth-client";
+import { Clock, Send, Lock, CheckCircle2, DollarSign } from "lucide-react";
 
 const DEFAULT_SERVER = process.env.NEXT_PUBLIC_SERVER_URL || "http://localhost:5000";
 
@@ -23,15 +24,16 @@ async function apiFetch(path, opts = {}) {
   return data;
 }
 
-export default function TaskProposalForm({ taskId }) {
+export default function TaskProposalForm({ taskId, taskBudget }) {
   const { data: sessionData, isPending } = useSession();
   const [user, setUser] = useState(null);
   const [hasSubmitted, setHasSubmitted] = useState(false);
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
   const [feedback, setFeedback] = useState(null);
+  
   const [form, setForm] = useState({
-    expectedAmount: "",
+    expectedAmount: taskBudget ? String(taskBudget) : "",
     estimatedDays: "",
     coverLetter: "",
   });
@@ -106,86 +108,123 @@ export default function TaskProposalForm({ taskId }) {
   };
 
   if (loading || isPending) {
-    return <div className="mt-6 rounded-2xl bg-slate-50 p-4 text-sm text-slate-600 dark:bg-slate-900 dark:text-slate-400">Checking your access...</div>;
+    return <div className="mt-6 rounded-2xl bg-slate-50 border border-slate-100 p-4 text-sm text-slate-500 text-center">Checking your access...</div>;
   }
 
   const normalizedRole = String(user?.role || sessionData?.user?.role || "").trim();
 
   if (!user || normalizedRole !== "Freelancer") {
     return (
-      <div className="mt-6 rounded-2xl bg-sky-50 p-4 text-sm text-sky-700 dark:bg-slate-900 dark:text-sky-300">
-        Please sign in as a freelancer to submit a proposal.
+      <div className="bg-white rounded-2xl border border-slate-200/90 p-6 shadow-sm">
+        <h3 className="text-xl font-extrabold text-slate-900 mb-2">Submit a Proposal</h3>
+        <p className="text-sm text-slate-500 mb-6">Pitch your turnaround time and bid to the client.</p>
+        <div className="rounded-xl bg-slate-50 border border-slate-200 p-4 text-sm text-slate-600 text-center font-medium">
+          Please sign in as a freelancer to submit a proposal.
+        </div>
       </div>
     );
   }
 
   if (hasSubmitted) {
     return (
-      <div className="mt-6 rounded-2xl bg-emerald-50 p-4 text-sm text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-400">
-        Your proposal is already on the list for this task.
+      <div className="bg-white rounded-2xl border border-slate-200/90 p-6 shadow-sm">
+        <h3 className="text-xl font-extrabold text-slate-900 mb-2">Submit a Proposal</h3>
+        <div className="mt-4 rounded-xl bg-emerald-50 border border-emerald-200 p-6 text-center flex flex-col items-center">
+          <CheckCircle2 className="w-8 h-8 text-emerald-500 mb-2" />
+          <h4 className="font-semibold text-emerald-800 text-base">Proposal Submitted</h4>
+          <p className="text-sm text-emerald-600 mt-1">Your proposal is already on the list for this task.</p>
+        </div>
       </div>
     );
   }
 
   return (
-    <form onSubmit={handleSubmit} className="mt-6 space-y-4">
-      <div>
-        <label className="mb-2 block text-sm font-medium text-slate-700 dark:text-slate-300">Task ID</label>
-        <input value={taskId} readOnly className="w-full rounded-2xl border border-slate-300 bg-slate-50 px-4 py-3 outline-none dark:border-slate-700 dark:bg-slate-900" />
-      </div>
+    <div className="bg-white rounded-2xl border border-slate-200/90 p-6 sm:p-7 shadow-lg shadow-slate-200/40">
+      <h3 className="text-xl font-extrabold text-slate-900">Submit a Proposal</h3>
+      <p className="text-xs sm:text-sm text-slate-500 mt-1">Pitch your turnaround time and bid to the client.</p>
 
-      <div>
-        <label className="mb-2 block text-sm font-medium text-slate-700 dark:text-slate-300">Freelancer Email</label>
-        <input value={user?.email || ""} readOnly className="w-full rounded-2xl border border-slate-300 bg-slate-50 px-4 py-3 outline-none dark:border-slate-700 dark:bg-slate-900" />
-      </div>
-
-      <div>
-        <label className="mb-2 block text-sm font-medium text-slate-700 dark:text-slate-300">Proposed Budget (USD)</label>
-        <input
-          name="expectedAmount"
-          type="number"
-          min="1"
-          required
-          value={form.expectedAmount}
-          onChange={(event) => setForm((current) => ({ ...current, expectedAmount: event.target.value }))}
-          className="w-full rounded-2xl border border-slate-300 px-4 py-3 outline-none focus:border-sky-500 dark:border-slate-700 dark:bg-slate-900"
-        />
-      </div>
-
-      <div>
-        <label className="mb-2 block text-sm font-medium text-slate-700 dark:text-slate-300">Estimated Days</label>
-        <input
-          name="estimatedDays"
-          type="number"
-          min="1"
-          required
-          value={form.estimatedDays}
-          onChange={(event) => setForm((current) => ({ ...current, estimatedDays: event.target.value }))}
-          className="w-full rounded-2xl border border-slate-300 px-4 py-3 outline-none focus:border-sky-500 dark:border-slate-700 dark:bg-slate-900"
-        />
-      </div>
-
-      <div>
-        <label className="mb-2 block text-sm font-medium text-slate-700 dark:text-slate-300">Cover Note Message</label>
-        <textarea
-          name="coverLetter"
-          rows="5"
-          required
-          value={form.coverLetter}
-          onChange={(event) => setForm((current) => ({ ...current, coverLetter: event.target.value }))}
-          className="w-full rounded-2xl border border-slate-300 px-4 py-3 outline-none focus:border-sky-500 dark:border-slate-700 dark:bg-slate-900"
-        />
-      </div>
-
-      {feedback ? (
-        <div className={`rounded-2xl p-3 text-sm ${feedback.type === "success" ? "bg-emerald-50 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-400" : "bg-rose-50 text-rose-700 dark:bg-rose-950/40 dark:text-rose-400"}`}>
-          {feedback.message}
+      {/* Logged-in Freelancer Preview */}
+      <div className="bg-slate-50 border border-slate-200/80 rounded-xl p-3 flex items-center gap-3 my-5">
+        <div className="bg-gradient-to-tr from-[#009689] to-[#2CA99F] text-white font-bold w-10 h-10 rounded-full flex items-center justify-center text-sm shrink-0">
+          {String((user?.name || user?.email || "F").charAt(0)).toUpperCase()}
         </div>
-      ) : null}
+        <div className="overflow-hidden">
+          <p className="font-semibold text-slate-900 text-sm truncate">{user?.name || user?.email}</p>
+          <p className="text-xs text-slate-500">Applying as Freelancer</p>
+        </div>
+      </div>
 
-      <button type="submit" disabled={submitting} className="w-full rounded-2xl bg-sky-600 px-5 py-3 text-sm font-semibold text-white hover:bg-sky-700 disabled:cursor-not-allowed disabled:opacity-70">
-        {submitting ? "Submitting..." : "Submit proposal"}
-      </button>
-    </form>
+      <form onSubmit={handleSubmit} className="space-y-4">
+        
+        {/* Proposed Budget */}
+        <div>
+          <label className="mb-1.5 block text-xs font-semibold text-slate-700 uppercase tracking-wide">Proposed Budget ($ USD)</label>
+          <div className="relative rounded-xl border border-slate-200 bg-slate-50/50 focus-within:bg-white focus-within:border-[#009689] transition-all overflow-hidden flex items-center">
+            <div className="pl-3 text-slate-400">
+              <DollarSign className="w-4 h-4" />
+            </div>
+            <input
+              name="expectedAmount"
+              type="number"
+              min="1"
+              required
+              placeholder={taskBudget ? String(taskBudget) : "e.g. 150"}
+              value={form.expectedAmount}
+              onChange={(event) => setForm((current) => ({ ...current, expectedAmount: event.target.value }))}
+              className="w-full bg-transparent px-3 py-3 text-sm text-slate-900 placeholder-slate-400 focus:outline-none"
+            />
+          </div>
+        </div>
+
+        {/* Estimated Days */}
+        <div>
+          <label className="mb-1.5 block text-xs font-semibold text-slate-700 uppercase tracking-wide">Estimated Turnaround (Days)</label>
+          <div className="relative rounded-xl border border-slate-200 bg-slate-50/50 focus-within:bg-white focus-within:border-[#009689] transition-all overflow-hidden flex items-center">
+            <div className="pl-3 text-slate-400">
+              <Clock className="w-4 h-4" />
+            </div>
+            <input
+              name="estimatedDays"
+              type="number"
+              min="1"
+              required
+              placeholder="e.g. 3"
+              value={form.estimatedDays}
+              onChange={(event) => setForm((current) => ({ ...current, estimatedDays: event.target.value }))}
+              className="w-full bg-transparent px-3 py-3 text-sm text-slate-900 placeholder-slate-400 focus:outline-none"
+            />
+          </div>
+        </div>
+
+        {/* Cover Letter */}
+        <div>
+          <label className="mb-1.5 block text-xs font-semibold text-slate-700 uppercase tracking-wide">Cover Letter / Proposal Note</label>
+          <textarea
+            name="coverLetter"
+            rows="4"
+            required
+            placeholder="Introduce yourself and outline your plan to complete this task quickly and accurately..."
+            value={form.coverLetter}
+            onChange={(event) => setForm((current) => ({ ...current, coverLetter: event.target.value }))}
+            className="w-full rounded-xl border border-slate-200 bg-slate-50/50 p-3 text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:bg-white focus:border-[#009689] focus:ring-1 focus:ring-[#009689] transition-all"
+          />
+        </div>
+
+        {feedback ? (
+          <div className={`rounded-xl p-3 text-sm font-medium ${feedback.type === "success" ? "bg-emerald-50 text-emerald-700 border border-emerald-200" : "bg-rose-50 text-rose-700 border border-rose-200"}`}>
+            {feedback.message}
+          </div>
+        ) : null}
+
+        <button 
+          type="submit" 
+          disabled={submitting} 
+          className="w-full py-3.5 px-4 rounded-xl bg-[#009689] hover:bg-[#238B81] text-white font-semibold text-sm shadow-md shadow-teal-900/15 hover:shadow-teal-900/25 hover:-translate-y-0.5 transition-all duration-300 flex items-center justify-center gap-2 disabled:cursor-not-allowed disabled:opacity-70 disabled:hover:translate-y-0"
+        >
+          {submitting ? "Sending..." : "Send Proposal"}
+          {!submitting && <Send className="w-4 h-4" />}
+        </button>
+      </form>
+    </div>
   );
 }

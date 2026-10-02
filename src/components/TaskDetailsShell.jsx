@@ -2,16 +2,15 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import { FiClock, FiDollarSign, FiTag, FiUser } from "react-icons/fi";
+import { ArrowLeft, Clock, DollarSign, Users, FileText, ShieldCheck } from "lucide-react";
 import TaskProposalForm from "@/components/TaskProposalForm";
 import EditTaskForm from "@/components/dashboard/EditTaskForm";
 import { useSession } from "@/lib/auth-client";
 
 function formatDate(dateString) {
   if (!dateString) {
-    return "No deadline";
+    return "Flexible";
   }
-
   return new Date(dateString).toLocaleDateString("en-US", {
     year: "numeric",
     month: "short",
@@ -25,27 +24,29 @@ function getStatusBadge(status) {
   if (normalizedStatus === "close" || normalizedStatus === "closed") {
     return {
       label: "Closed",
-      classes: "bg-rose-50 text-rose-600 dark:bg-rose-950/40 dark:text-rose-400",
+      classes: "bg-rose-50 text-rose-700 border-rose-200",
+      showPulse: false,
     };
   }
-
   if (normalizedStatus === "in progress" || normalizedStatus === "in-progress" || normalizedStatus === "in_progress") {
     return {
       label: "In Progress",
-      classes: "bg-amber-50 text-amber-600 dark:bg-amber-950/40 dark:text-amber-400",
+      classes: "bg-amber-50 text-amber-700 border-amber-200",
+      showPulse: false,
     };
   }
-
   if (normalizedStatus === "completed" || normalizedStatus === "complete") {
     return {
       label: "Completed",
-      classes: "bg-sky-50 text-sky-600 dark:bg-sky-950/40 dark:text-sky-400",
+      classes: "bg-sky-50 text-sky-700 border-sky-200",
+      showPulse: false,
     };
   }
 
   return {
     label: "Open",
-    classes: "bg-emerald-50 text-emerald-600 dark:bg-emerald-950/40 dark:text-emerald-400",
+    classes: "bg-emerald-50 text-emerald-700 border-emerald-200",
+    showPulse: true,
   };
 }
 
@@ -54,117 +55,150 @@ export default function TaskDetailsShell({ task }) {
   const userRole = String(sessionData?.user?.role || "").trim();
   const [taskState, setTaskState] = useState(task);
   const [editingTask, setEditingTask] = useState(null);
-  const showProposalSidebar = userRole === "Freelancer";
-  const isTaskOwner = String(sessionData?.user?.id || "") === String(taskState?.clientId || taskState?.clientId || taskState?.client?._id || "");
+
+  const isTaskOwner = String(sessionData?.user?.id || "") === String(taskState?.clientId || taskState?.client?._id || "");
   const canEditTask = isTaskOwner && String(taskState?.status || "").toLowerCase() === "open";
+  const showProposalSidebar = !isTaskOwner;
 
   const clientName = taskState?.client?.name || taskState?.clientName || null;
   const clientEmail = taskState?.clientEmail || taskState?.client?.email || null;
-  const clientDisplayName = clientName || clientEmail || "Unknown client";
-  const clientDisplayContact = clientName && clientEmail ? clientEmail : clientName ? "Contact available after application" : clientEmail || null;
+  const clientDisplayName = clientName || clientEmail || "Verified Client";
+  const clientInitial = String((clientName || clientDisplayName || "C").charAt(0)).toUpperCase();
+
+  const statusInfo = getStatusBadge(taskState.status);
+  const defaultPlaceholder = "https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?auto=format&fit=crop&w=600&q=80";
+  const imageSrc = taskState.imageUrl || taskState.image || defaultPlaceholder;
 
   return (
-    <section className="container mx-auto px-4 py-10 sm:px-6 lg:px-8">
-      <div className={`grid gap-8 ${showProposalSidebar ? "lg:grid-cols-[2fr_1fr]" : "grid-cols-1"}`}>
-        <div className="relative rounded-[2rem] border border-slate-200 bg-white p-8 shadow-sm dark:border-slate-800 dark:bg-slate-950">
-          {canEditTask ? (
-            <button
-              type="button"
-              onClick={() => setEditingTask(taskState)}
-              className="absolute right-6 top-6 rounded-full bg-slate-950 px-4 py-2 text-sm font-semibold text-white transition hover:bg-slate-800"
-            >
-              Edit task
-            </button>
-          ) : null}
-          <div className="flex flex-wrap items-center gap-3">
-            <span className="rounded-full bg-sky-50 px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-sky-600 dark:bg-slate-900">
-              {task.category || "General"}
-            </span>
-            <span className={`rounded-full px-3 py-1 text-xs font-semibold ${getStatusBadge(task.status).classes}`}>
-              {getStatusBadge(task.status).label}
-            </span>
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      {/* Breadcrumb Navigation */}
+      <Link href="/browse-tasks" className="inline-flex items-center gap-1.5 text-sm text-slate-500 hover:text-[#009689] font-medium mb-6 transition-colors">
+        <ArrowLeft className="w-4 h-4" /> Back to Tasks
+      </Link>
+
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+        
+        {/* Left Column (Task Core Details) */}
+        <div className="lg:col-span-7 xl:col-span-8 space-y-6">
+          
+          {/* A. Main Task Header Card */}
+          <div className="bg-white rounded-2xl border border-slate-200/90 p-6 sm:p-8 shadow-sm">
+            
+            {/* Badges row */}
+            <div className="flex flex-wrap items-center gap-3">
+              <span className="bg-teal-50 text-[#009689] border border-teal-200 text-[11px] font-semibold px-3 py-1 rounded-lg uppercase tracking-wider">
+                {taskState.category || "General"}
+              </span>
+              <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium border ${statusInfo.classes}`}>
+                {statusInfo.showPulse && <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />}
+                {statusInfo.label}
+              </span>
+              <span className="text-xs text-slate-400 font-medium ml-auto">
+                Posted {new Date(taskState.createdAt || Date.now()).toLocaleDateString()}
+              </span>
+            </div>
+
+            {/* Task Title */}
+            <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight mt-5 mb-5">
+              {taskState.title}
+            </h1>
+
+            {/* Image Banner */}
+            <div className="w-full h-56 sm:h-72 rounded-xl overflow-hidden bg-slate-100 my-6 border border-slate-100">
+              <img 
+                src={imageSrc} 
+                alt={taskState.title} 
+                className="w-full h-full object-cover"
+                onError={(e) => { e.currentTarget.src = defaultPlaceholder; }}
+              />
+            </div>
+
+            {/* B. Quick Metric Cards Bar */}
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-6 border-t border-slate-100">
+              <div className="flex flex-col gap-1.5 bg-slate-50 border border-slate-100 rounded-xl p-4">
+                <div className="flex items-center gap-1.5 text-slate-500 text-sm font-medium">
+                  <DollarSign className="w-4 h-4 text-[#009689]" /> Fixed Budget
+                </div>
+                <div className="text-xl font-bold text-[#009689]">
+                  ${taskState.budget}
+                </div>
+              </div>
+
+              <div className="flex flex-col gap-1.5 bg-slate-50 border border-slate-100 rounded-xl p-4">
+                <div className="flex items-center gap-1.5 text-slate-500 text-sm font-medium">
+                  <Clock className="w-4 h-4 text-[#009689]" /> Due Date
+                </div>
+                <div className="text-slate-800 font-semibold text-sm sm:text-base">
+                  {formatDate(taskState.deadline || taskState.dueDate)}
+                </div>
+              </div>
+
+              <div className="flex flex-col gap-1.5 bg-slate-50 border border-slate-100 rounded-xl p-4">
+                <div className="flex items-center gap-1.5 text-slate-500 text-sm font-medium">
+                  <Users className="w-4 h-4 text-[#009689]" /> Proposals
+                </div>
+                <div className="text-slate-800 font-semibold text-sm sm:text-base">
+                  {taskState.proposalsCount || 0} Submitted
+                </div>
+              </div>
+            </div>
           </div>
 
-          <h1 className="mt-6 text-4xl font-semibold text-slate-950 dark:text-white">{task.title}</h1>
-          <p className="mt-6 text-lg leading-8 text-slate-600 dark:text-slate-400">{task.description}</p>
-
-          <div className="mt-8 grid gap-4 sm:grid-cols-3">
-            <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4 dark:border-slate-800 dark:bg-slate-900">
-              <div className="flex items-center gap-2 text-sm font-medium text-slate-500 dark:text-slate-400">
-                <FiDollarSign className="text-sky-500" /> Budget
-              </div>
-              <p className="mt-2 text-xl font-semibold text-slate-950 dark:text-white">${taskState.budget}</p>
-            </div>
-
-            <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4 dark:border-slate-800 dark:bg-slate-900">
-              <div className="flex items-center gap-2 text-sm font-medium text-slate-500 dark:text-slate-400">
-                <FiClock className="text-sky-500" /> Deadline
-              </div>
-              <p className="mt-2 text-xl font-semibold text-slate-950 dark:text-white">{formatDate(taskState.deadline)}</p>
-            </div>
-
-            <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4 dark:border-slate-800 dark:bg-slate-900">
-              <div className="flex items-center gap-2 text-sm font-medium text-slate-500 dark:text-slate-400">
-                <FiTag className="text-sky-500" /> Category
-              </div>
-              <p className="mt-2 text-xl font-semibold text-slate-950 dark:text-white">{taskState.category || "General"}</p>
+          {/* C. Detailed Description & Deliverables Card */}
+          <div className="bg-white rounded-2xl border border-slate-200/90 p-6 sm:p-8 shadow-sm space-y-4">
+            <h3 className="text-lg font-bold text-slate-900 flex items-center gap-2 mb-4">
+              <FileText className="w-5 h-5 text-[#009689]" /> Project Details
+            </h3>
+            <div className="text-slate-600 leading-relaxed text-sm sm:text-base whitespace-pre-line">
+              {taskState.description}
             </div>
           </div>
-
         </div>
 
-        {showProposalSidebar ? (
-          <aside className="rounded-[2rem] border border-slate-200 bg-white p-8 shadow-sm dark:border-slate-800 dark:bg-slate-950">
-            <h2 className="text-2xl font-semibold text-slate-950 dark:text-white">Submit a proposal</h2>
-            <p className="mt-2 text-sm text-slate-600 dark:text-slate-400">
-              Share your offer and pitch to the client.
-            </p>
-
-            <div className="mt-6 flex items-center gap-4">
-              <div className="flex h-12 w-12 items-center justify-center rounded-full bg-sky-100 font-semibold text-sky-700 dark:bg-slate-900 dark:text-sky-300">
-                {String((clientName || clientDisplayName || "C").charAt(0)).toUpperCase()}
-              </div>
-              <div>
-                <p className="font-semibold text-slate-950 dark:text-white">{clientDisplayName}</p>
-                {clientDisplayContact ? (
-                  <p className="text-sm text-slate-500 dark:text-slate-400">{clientDisplayContact}</p>
-                ) : null}
+        {/* Right Column (Sticky Proposal Submission Card) */}
+        <div className="lg:col-span-5 xl:col-span-4 sticky top-6 space-y-6">
+          {isTaskOwner ? (
+            <div className="bg-white rounded-2xl border border-slate-200/90 p-6 shadow-sm">
+              <h3 className="text-xl font-extrabold text-slate-900 mb-2">Manage Task</h3>
+              <p className="text-sm text-slate-500 mb-6">You are the creator of this task.</p>
+              
+              <div className="space-y-3">
+                {canEditTask && (
+                  <button
+                    type="button"
+                    onClick={() => setEditingTask(taskState)}
+                    className="w-full py-3 px-4 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-semibold text-sm shadow-sm transition-all duration-300"
+                  >
+                    Edit Task Details
+                  </button>
+                )}
+                <Link
+                  href="/dashboard"
+                  className="w-full flex items-center justify-center py-3 px-4 rounded-xl bg-slate-50 hover:bg-slate-100 text-slate-700 font-semibold text-sm border border-slate-200 transition-all duration-300"
+                >
+                  View Proposals
+                </Link>
               </div>
             </div>
-
-            <div className="mt-8 rounded-2xl border border-sky-100 bg-sky-50 p-5 text-sm leading-7 text-sky-800 dark:border-sky-900/40 dark:bg-sky-950/20 dark:text-sky-300">
-              <div className="flex items-center gap-2 font-semibold">
-                <FiUser className="text-sky-600" /> Ready to take this on?
-              </div>
-              <p className="mt-3">
-                Freelancers can review this task and submit a proposal once they are ready to start.
-              </p>
-            </div>
-
-            <TaskProposalForm taskId={task._id} />
-
-            <Link
-              href="/browse-tasks"
-              className="mt-8 inline-flex rounded-2xl bg-slate-950 px-5 py-3 text-sm font-semibold text-white transition hover:bg-slate-800 dark:bg-sky-600 dark:hover:bg-sky-500"
-            >
-              Back to browse tasks
-            </Link>
-          </aside>
-        ) : null}
+          ) : (
+            <TaskProposalForm taskId={taskState._id} taskBudget={taskState.budget} />
+          )}
+        </div>
       </div>
 
+      {/* Edit Modal */}
       {editingTask ? (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/70 p-4">
-          <div className="w-full max-w-3xl overflow-auto rounded-[1.75rem] bg-white p-6 shadow-2xl dark:bg-slate-950">
+          <div className="w-full max-w-3xl overflow-auto rounded-[1.75rem] bg-white p-6 shadow-2xl">
             <div className="mb-6 flex items-center justify-between gap-4">
               <div>
-                <p className="text-sm font-semibold uppercase tracking-[0.24em] text-sky-600">Edit task</p>
-                <h2 className="text-2xl font-semibold text-slate-950 dark:text-white">Update your open task</h2>
+                <p className="text-sm font-semibold uppercase tracking-wider text-[#009689] mb-1">Edit Task</p>
+                <h2 className="text-2xl font-semibold text-slate-900">Update your open task</h2>
               </div>
               <button
                 type="button"
                 onClick={() => setEditingTask(null)}
-                className="rounded-full bg-slate-200 px-4 py-2 text-sm font-semibold text-slate-700 transition hover:bg-slate-300 dark:bg-slate-800 dark:text-slate-100 dark:hover:bg-slate-700"
+                className="rounded-full bg-slate-100 px-4 py-2 text-sm font-semibold text-slate-700 transition hover:bg-slate-200 border border-slate-200"
               >
                 Close
               </button>
@@ -176,6 +210,6 @@ export default function TaskDetailsShell({ task }) {
           </div>
         </div>
       ) : null}
-    </section>
+    </div>
   );
 }

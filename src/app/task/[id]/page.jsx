@@ -18,9 +18,11 @@ export default async function TaskDetailsPage({ params }) {
   }
 
   return (
-    <main className="min-h-screen bg-slate-50 dark:bg-slate-950">
+    <main className="min-h-screen bg-slate-50/70 flex flex-col">
       <Navbar />
-      <TaskDetailsShell task={task} />
+      <div className="flex-grow py-8 sm:py-12">
+        <TaskDetailsShell task={task} />
+      </div>
       <Footer />
     </main>
   );
