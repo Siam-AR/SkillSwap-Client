@@ -44,10 +44,10 @@ export default function TaskPagination({ currentPage, totalPages, basePath = "/b
       <button
         onClick={() => handlePageChange(page - 1)}
         disabled={page === 1}
-        className={`flex items-center justify-center gap-1 px-3 sm:px-4 py-2 rounded-xl text-sm font-medium transition-all ${
+        className={`flex items-center justify-center gap-1 px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
           page === 1
-            ? "bg-slate-900/40 text-slate-600 cursor-not-allowed border border-slate-800/50"
-            : "bg-slate-900 text-slate-300 hover:text-white border border-slate-700 hover:border-slate-600 hover:bg-slate-800"
+            ? "bg-slate-50 text-slate-400 cursor-not-allowed border border-slate-200/50"
+            : "bg-white border border-slate-200 text-slate-600 hover:text-[#009689]"
         }`}
       >
         <ChevronLeft className="w-4 h-4" />
@@ -59,10 +59,10 @@ export default function TaskPagination({ currentPage, totalPages, basePath = "/b
           <button
             key={p}
             onClick={() => handlePageChange(p)}
-            className={`flex items-center justify-center w-9 h-9 sm:w-10 sm:h-10 rounded-xl text-sm font-semibold transition-all ${
+            className={`flex items-center justify-center w-9 h-9 sm:w-10 sm:h-10 rounded-xl text-sm font-semibold transition-colors ${
               p === page
-                ? "bg-[#009689] text-white shadow-md shadow-teal-900/30"
-                : "bg-slate-900 text-slate-400 hover:text-white border border-slate-800 hover:border-slate-700"
+                ? "bg-[#009689] text-white shadow-sm shadow-teal-900/20"
+                : "bg-white border border-slate-200 text-slate-600 hover:text-slate-900 hover:border-slate-300"
             }`}
           >
             {p}
@@ -73,10 +73,10 @@ export default function TaskPagination({ currentPage, totalPages, basePath = "/b
       <button
         onClick={() => handlePageChange(page + 1)}
         disabled={page === totalPages}
-        className={`flex items-center justify-center gap-1 px-3 sm:px-4 py-2 rounded-xl text-sm font-medium transition-all ${
+        className={`flex items-center justify-center gap-1 px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
           page === totalPages
-            ? "bg-slate-900/40 text-slate-600 cursor-not-allowed border border-slate-800/50"
-            : "bg-slate-900 text-slate-300 hover:text-white border border-slate-700 hover:border-slate-600 hover:bg-slate-800"
+            ? "bg-slate-50 text-slate-400 cursor-not-allowed border border-slate-200/50"
+            : "bg-white border border-slate-200 text-slate-600 hover:text-[#009689]"
         }`}
       >
         <span className="hidden sm:inline">Next</span>

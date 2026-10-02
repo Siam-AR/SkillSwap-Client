@@ -32,27 +32,25 @@ export default async function BrowseTasksPage({ searchParams }) {
   const categories = Array.isArray(response?.categories) ? response.categories : [];
 
   return (
-    <main className="min-h-screen bg-[#0B1320] text-slate-100 flex flex-col">
+    <main className="min-h-screen bg-slate-50/60 relative overflow-hidden flex flex-col">
       <Navbar />
 
-      <section className="flex-grow relative pt-12 pb-24 overflow-hidden">
-        {/* Ambient Lighting */}
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[300px] bg-gradient-to-b from-[#009689]/15 to-transparent blur-3xl pointer-events-none -z-10" />
+      <section className="flex-grow relative py-10 lg:py-14 overflow-hidden">
+        {/* Subtle Brand Glow */}
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-4xl h-48 bg-gradient-to-b from-teal-500/8 to-transparent blur-3xl pointer-events-none -z-10" />
 
         <div className="max-w-7xl mx-auto px-6 lg:px-8 relative z-10">
           
-          {/* Header Section */}
+          {/* Header Block */}
           <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between mb-8">
             <div>
-              <div className="flex items-center gap-3 mb-4">
-                <span className="bg-teal-500/10 text-teal-400 border border-teal-500/20 text-xs font-semibold px-3 py-1 rounded-full">
-                  {totalTasks} open tasks available
-                </span>
+              <div className="inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1 rounded-full bg-teal-50 text-[#009689] border border-teal-200/80 mb-3">
+                {totalTasks} open tasks available
               </div>
-              <h1 className="text-4xl sm:text-5xl font-extrabold text-white tracking-tight">
+              <h1 className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
                 Find the right <span className="text-[#009689]">micro-task</span> for you
               </h1>
-              <p className="mt-4 max-w-2xl text-base sm:text-lg text-slate-400">
+              <p className="text-slate-600 text-sm sm:text-base max-w-xl mt-2 leading-relaxed">
                 Search open tasks, filter by category, and jump into a project that fits your skills.
               </p>
             </div>
@@ -62,16 +60,16 @@ export default async function BrowseTasksPage({ searchParams }) {
           <TaskFilters categories={categories} initialSearch={search} initialCategory={category} />
 
           {(search || category) && (
-            <p className="mt-4 text-sm text-slate-400">
-              Showing results for <span className="font-semibold text-white">{search || "all tasks"}</span>
+            <p className="mt-4 text-sm text-slate-600">
+              Showing results for <span className="font-semibold text-slate-900">{search || "all tasks"}</span>
               {category ? ` in ${category}` : ""}.
             </p>
           )}
 
           {error ? (
-            <div className="mt-12 rounded-2xl border border-dashed border-rose-800/50 bg-rose-950/20 p-10 text-center shadow-sm">
-              <h2 className="text-2xl font-semibold text-white">Unable to load tasks</h2>
-              <p className="mt-3 text-slate-400">
+            <div className="mt-12 rounded-2xl border border-dashed border-rose-200 bg-rose-50 p-10 text-center shadow-sm">
+              <h2 className="text-2xl font-semibold text-rose-800">Unable to load tasks</h2>
+              <p className="mt-3 text-rose-600/80">
                 {error}
               </p>
             </div>
@@ -88,15 +86,15 @@ export default async function BrowseTasksPage({ searchParams }) {
               </div>
             </>
           ) : (
-            <div className="mt-12 rounded-2xl border border-dashed border-slate-800 bg-slate-900/40 p-12 text-center shadow-sm flex flex-col items-center justify-center">
-              <div className="w-16 h-16 bg-slate-800 rounded-full flex items-center justify-center mb-4">
+            <div className="mt-12 rounded-2xl border border-dashed border-slate-300 bg-white p-12 text-center shadow-sm flex flex-col items-center justify-center">
+              <div className="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mb-4">
                 <Search className="w-8 h-8 text-slate-400" />
               </div>
-              <h2 className="text-2xl font-semibold text-white">No tasks found</h2>
-              <p className="mt-3 text-slate-400 max-w-md mx-auto">
+              <h2 className="text-2xl font-semibold text-slate-900">No tasks found</h2>
+              <p className="mt-3 text-slate-600 max-w-md mx-auto">
                 We couldn't find any tasks matching your current filters. Try a broader search or visit the homepage to see the latest opportunities.
               </p>
-              <Link href="/browse-tasks" className="mt-6 inline-flex rounded-xl bg-slate-800 px-6 py-2.5 text-sm font-semibold text-slate-300 hover:text-white hover:bg-slate-700 transition-colors border border-slate-700">
+              <Link href="/browse-tasks" className="mt-6 inline-flex rounded-xl bg-slate-100 px-6 py-2.5 text-sm font-semibold text-slate-700 hover:text-slate-900 hover:bg-slate-200 transition-colors border border-slate-200">
                 Clear filters
               </Link>
             </div>

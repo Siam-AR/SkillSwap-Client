@@ -39,25 +39,25 @@ export default function TaskFilters({ categories, initialSearch = "", initialCat
   return (
     <form 
       onSubmit={handleSubmit} 
-      className="mt-8 bg-slate-900/80 backdrop-blur-md border border-slate-800 p-2 sm:p-2.5 rounded-2xl flex flex-col md:flex-row gap-2.5 items-center shadow-xl shadow-black/20 w-full"
+      className="mt-8 bg-white border border-slate-200/80 p-2.5 sm:p-3 rounded-2xl flex flex-col md:flex-row gap-3 items-center shadow-sm shadow-slate-200/50 w-full"
     >
       <div className="relative flex-1 w-full">
-        <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
+        <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
         <input
           name="search"
           value={search}
           onChange={(event) => setSearch(event.target.value)}
           placeholder="Search by title, category, or keyword..."
-          className="w-full bg-slate-950/60 border border-slate-800/80 rounded-xl pl-11 pr-4 py-2.5 text-sm text-slate-100 placeholder-slate-500 focus:border-[#009689] focus:ring-1 focus:ring-[#009689] transition-all outline-none"
+          className="w-full bg-slate-50/70 border border-slate-200 text-slate-900 placeholder-slate-400 rounded-xl pl-11 pr-4 py-2.5 text-sm focus:outline-none focus:bg-white focus:border-[#009689] focus:ring-1 focus:ring-[#009689] transition-all"
         />
       </div>
 
-      <div className="w-full md:w-auto relative">
+      <div className="w-full md:w-auto relative shrink-0">
         <select
           name="category"
           value={category}
           onChange={(event) => setCategory(event.target.value)}
-          className="w-full md:w-48 appearance-none bg-slate-950/60 border border-slate-800/80 rounded-xl px-4 py-2.5 text-sm text-slate-100 outline-none focus:border-[#009689] focus:ring-1 focus:ring-[#009689] transition-all cursor-pointer"
+          className="w-full md:w-56 appearance-none bg-slate-50/70 border border-slate-200 text-slate-700 text-sm rounded-xl px-4 py-2.5 focus:outline-none focus:bg-white focus:border-[#009689] focus:ring-1 focus:ring-[#009689] transition-all cursor-pointer"
         >
           <option value="">All Categories</option>
           {categories.map((item) => (
@@ -75,7 +75,7 @@ export default function TaskFilters({ categories, initialSearch = "", initialCat
 
       <button
         type="submit"
-        className="w-full md:w-auto bg-[#009689] hover:bg-[#2CA99F] text-white font-medium text-sm px-6 py-2.5 rounded-xl transition-all shadow-md shadow-teal-950/30 whitespace-nowrap"
+        className="w-full md:w-auto px-6 py-2.5 rounded-xl bg-[#009689] hover:bg-[#238B81] text-white font-semibold text-sm transition-all duration-300 shadow-md shadow-teal-900/15 shrink-0 whitespace-nowrap"
       >
         Apply filters
       </button>
