@@ -5,6 +5,7 @@ import TaskCard from "@/components/TaskCard";
 import TaskPagination from "@/components/TaskPagination";
 import TaskFilters from "@/components/TaskFilters";
 import { fetchBrowseTasks } from "@/lib/api";
+import { Search } from "lucide-react";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
@@ -19,7 +20,7 @@ export default async function BrowseTasksPage({ searchParams }) {
   let error = null;
 
   try {
-    response = await fetchBrowseTasks({ search, category, page, limit: 3 });
+    response = await fetchBrowseTasks({ search, category, page, limit: 12 });
   } catch (err) {
     error = err?.message || "Unable to load tasks from the database.";
   }
@@ -31,67 +32,76 @@ export default async function BrowseTasksPage({ searchParams }) {
   const categories = Array.isArray(response?.categories) ? response.categories : [];
 
   return (
-    <main className="min-h-screen bg-slate-50 dark:bg-slate-950">
+    <main className="min-h-screen bg-[#0B1320] text-slate-100 flex flex-col">
       <Navbar />
 
-      <section className="container mx-auto px-4 py-10 sm:px-6 lg:px-8">
-        <div className="rounded-[2rem] border border-slate-200 bg-white p-8 shadow-sm dark:border-slate-800 dark:bg-slate-950">
-          <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
+      <section className="flex-grow relative pt-12 pb-24 overflow-hidden">
+        {/* Ambient Lighting */}
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[300px] bg-gradient-to-b from-[#009689]/15 to-transparent blur-3xl pointer-events-none -z-10" />
+
+        <div className="max-w-7xl mx-auto px-6 lg:px-8 relative z-10">
+          
+          {/* Header Section */}
+          <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between mb-8">
             <div>
-              <p className="text-sm font-semibold uppercase tracking-[0.25em] text-sky-600">Browse tasks</p>
-              <h1 className="mt-3 text-4xl font-semibold text-slate-950 dark:text-white">
-                Find the right micro-task for you
+              <div className="flex items-center gap-3 mb-4">
+                <span className="bg-teal-500/10 text-teal-400 border border-teal-500/20 text-xs font-semibold px-3 py-1 rounded-full">
+                  {totalTasks} open tasks available
+                </span>
+              </div>
+              <h1 className="text-4xl sm:text-5xl font-extrabold text-white tracking-tight">
+                Find the right <span className="text-[#009689]">micro-task</span> for you
               </h1>
-              <p className="mt-3 max-w-2xl text-lg text-slate-600 dark:text-slate-400">
+              <p className="mt-4 max-w-2xl text-base sm:text-lg text-slate-400">
                 Search open tasks, filter by category, and jump into a project that fits your skills.
               </p>
             </div>
-
-            <div className="rounded-2xl bg-sky-50 px-4 py-3 text-sm font-medium text-sky-700 dark:bg-slate-900 dark:text-sky-300">
-              {totalTasks} open tasks available
-            </div>
           </div>
 
+          {/* Search & Filters */}
           <TaskFilters categories={categories} initialSearch={search} initialCategory={category} />
 
           {(search || category) && (
-            <p className="mt-4 text-sm text-slate-600 dark:text-slate-400">
-              Showing results for <span className="font-semibold text-slate-900 dark:text-white">{search || "all tasks"}</span>
+            <p className="mt-4 text-sm text-slate-400">
+              Showing results for <span className="font-semibold text-white">{search || "all tasks"}</span>
               {category ? ` in ${category}` : ""}.
             </p>
           )}
+
+          {error ? (
+            <div className="mt-12 rounded-2xl border border-dashed border-rose-800/50 bg-rose-950/20 p-10 text-center shadow-sm">
+              <h2 className="text-2xl font-semibold text-white">Unable to load tasks</h2>
+              <p className="mt-3 text-slate-400">
+                {error}
+              </p>
+            </div>
+          ) : tasks.length ? (
+            <>
+              <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                {tasks.map((task) => (
+                  <TaskCard key={task._id.toString()} task={task} />
+                ))}
+              </div>
+
+              <div className="mt-16">
+                <TaskPagination currentPage={currentPage} totalPages={totalPages} />
+              </div>
+            </>
+          ) : (
+            <div className="mt-12 rounded-2xl border border-dashed border-slate-800 bg-slate-900/40 p-12 text-center shadow-sm flex flex-col items-center justify-center">
+              <div className="w-16 h-16 bg-slate-800 rounded-full flex items-center justify-center mb-4">
+                <Search className="w-8 h-8 text-slate-400" />
+              </div>
+              <h2 className="text-2xl font-semibold text-white">No tasks found</h2>
+              <p className="mt-3 text-slate-400 max-w-md mx-auto">
+                We couldn't find any tasks matching your current filters. Try a broader search or visit the homepage to see the latest opportunities.
+              </p>
+              <Link href="/browse-tasks" className="mt-6 inline-flex rounded-xl bg-slate-800 px-6 py-2.5 text-sm font-semibold text-slate-300 hover:text-white hover:bg-slate-700 transition-colors border border-slate-700">
+                Clear filters
+              </Link>
+            </div>
+          )}
         </div>
-
-        {error ? (
-          <div className="mt-10 rounded-[2rem] border border-dashed border-rose-300 bg-white p-10 text-center shadow-sm dark:border-rose-700 dark:bg-slate-900">
-            <h2 className="text-2xl font-semibold text-slate-950 dark:text-white">Unable to load tasks</h2>
-            <p className="mt-3 text-slate-600 dark:text-slate-400">
-              {error}
-            </p>
-          </div>
-        ) : tasks.length ? (
-          <>
-            <div className="mt-8 grid gap-6 sm:grid-cols-2 md:grid-cols-3">
-              {tasks.map((task) => (
-                <TaskCard key={task._id.toString()} task={task} />
-              ))}
-            </div>
-
-            <div className="mt-10">
-              <TaskPagination currentPage={currentPage} totalPages={totalPages} />
-            </div>
-          </>
-        ) : (
-          <div className="mt-10 rounded-[2rem] border border-dashed border-slate-300 bg-white p-10 text-center shadow-sm dark:border-slate-700 dark:bg-slate-900">
-            <h2 className="text-2xl font-semibold text-slate-950 dark:text-white">No tasks match these filters yet</h2>
-            <p className="mt-3 text-slate-600 dark:text-slate-400">
-              Try a broader search or visit the homepage to see the latest opportunities.
-            </p>
-            <Link href="/" className="mt-6 inline-flex rounded-2xl bg-sky-600 px-5 py-3 text-sm font-semibold text-white hover:bg-sky-700">
-              Back to home
-            </Link>
-          </div>
-        )}
       </section>
 
       <Footer />
