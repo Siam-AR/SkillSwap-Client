@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef, useEffect } from "react";
-import { FiUsers, FiCheckCircle, FiDollarSign } from "react-icons/fi";
+import { Users, CheckCircle, Banknote } from "lucide-react";
 import { motion, useInView, useMotionValue, useSpring } from "framer-motion";
 
 function formatCurrency(amount) {
@@ -44,19 +44,19 @@ export default function StatsSection({ stats }) {
     {
       label: "Total Users",
       value: stats?.totalUsers || 44,
-      icon: FiUsers,
+      icon: Users,
       isCurrency: false,
     },
     {
       label: "Total Tasks",
       value: stats?.totalTasks || 46,
-      icon: FiCheckCircle,
+      icon: CheckCircle,
       isCurrency: false,
     },
     {
       label: "Total Payout Completed",
       value: stats?.totalPayout || 2228,
-      icon: FiDollarSign,
+      icon: Banknote,
       isCurrency: true,
     },
   ];
@@ -77,32 +77,32 @@ export default function StatsSection({ stats }) {
   };
 
   return (
-    <section className="relative z-20 pt-10 sm:pt-16 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section className="relative z-20 pt-10 sm:pt-16 max-w-7xl mx-auto px-4 w-full">
       <motion.div 
         variants={containerVariants}
         initial="hidden"
         whileInView="show"
         viewport={{ once: true, margin: "-50px" }}
-        className="grid gap-4 sm:gap-6 md:grid-cols-3 bg-white/80 backdrop-blur-md rounded-2xl sm:rounded-[2rem] border border-teal-100 shadow-lg shadow-teal-900/5 p-4 sm:p-6 lg:p-8"
+        className="grid gap-6 sm:gap-8 md:grid-cols-3 bg-white border border-slate-100 rounded-[2rem] p-6 sm:p-8 shadow-[0_8px_30px_rgba(0,150,137,0.06)]"
       >
         {items.map((item) => (
           <motion.div
             key={item.label}
             variants={itemVariants}
-            className="flex items-center gap-5 p-4 rounded-xl hover:bg-teal-50/50 transition-colors duration-300"
+            className="flex items-center gap-5 p-2 rounded-2xl hover:bg-slate-50 transition-colors duration-300"
           >
             {/* ICON BOX */}
-            <div className="flex-shrink-0 flex items-center justify-center w-14 h-14 rounded-2xl bg-teal-50 text-[#009689] shadow-sm shadow-teal-100/50">
-              <item.icon className="w-7 h-7" />
+            <div className="flex-shrink-0 h-12 w-12 rounded-xl flex items-center justify-center border border-teal-100 bg-teal-50 text-[#009689]">
+              <item.icon className="w-6 h-6" strokeWidth={2.25} />
             </div>
 
-            {/* TEXT */}
-            <div>
-              <p className="text-3xl font-black text-slate-800 tracking-tight">
-                <CountUp value={item.value} isCurrency={item.isCurrency} />
-              </p>
-              <p className="text-sm font-medium text-slate-500 mt-0.5">
+            {/* TEXT (Label on top, Number on bottom) */}
+            <div className="flex flex-col items-start gap-1">
+              <p className="text-sm font-medium text-slate-500">
                 {item.label}
+              </p>
+              <p className="text-4xl sm:text-5xl font-extrabold text-slate-950 tracking-tight">
+                <CountUp value={item.value} isCurrency={item.isCurrency} />
               </p>
             </div>
           </motion.div>
