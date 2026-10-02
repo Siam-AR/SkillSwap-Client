@@ -4,19 +4,18 @@ import Image from "next/image";
 import { motion } from "framer-motion";
 
 const paymentLogos = [
-  { name: "Visa", icon: "/assets/payments/visa.svg" },
-  { name: "Mastercard", icon: "/assets/payments/mastercard.svg" },
-  { name: "PayPal", icon: "/assets/payments/paypal.svg" },
-  { name: "Google Pay", icon: "/assets/payments/gpay.svg" },
-  { name: "Apple Pay", icon: "/assets/payments/apple-pay.svg" },
-  { name: "SEPA", icon: "/assets/payments/sepa.svg" },
-  { name: "Crypto", icon: "/assets/payments/crypto.svg" },
+  { name: "Visa", icon: "/icons/payments/visa.svg" },
+  { name: "Mastercard", icon: "/icons/payments/mastercard.svg" },
+  { name: "PayPal", icon: "/icons/payments/paypal.svg" },
+  { name: "Google Pay", icon: "/icons/payments/gpay.svg" },
+  { name: "Apple Pay", icon: "/icons/payments/apple-pay.svg" },
+  { name: "SEPA", icon: "/icons/payments/sepa.svg" }
 ];
 
 export default function PaymentMethodsSection() {
   const spinTransition = {
     repeat: Infinity,
-    duration: 32,
+    duration: 30,
     ease: "linear",
   };
 
@@ -48,7 +47,7 @@ export default function PaymentMethodsSection() {
         
         {/* Background World Map */}
         <div className="absolute inset-x-0 top-0 sm:top-4 h-full max-h-[420px] pointer-events-none -z-10 flex items-center justify-center">
-          <Image alt="Global Coverage" className="object-contain opacity-90 brightness-95 saturate-125" fill priority sizes="(max-width: 768px) 100vw, 1000px" src="/assets/payments/world-map.svg"/>
+          <Image alt="Global Coverage" className="object-contain opacity-90 brightness-95 saturate-125" fill priority sizes="(max-width: 768px) 100vw, 1000px" src="/images/world-map.svg"/>
         </div>
 
         {/* Concentric Arc Graphic Layers */}
