@@ -1,9 +1,11 @@
+"use client";
+
 import Link from "next/link";
-import { Clock, DollarSign, ArrowRight } from "lucide-react";
+import { Clock, ArrowRight } from "lucide-react";
 
 function formatDate(dateString) {
   if (!dateString) {
-    return "No deadline";
+    return "Flexible";
   }
 
   return new Date(dateString).toLocaleDateString("en-US", {
@@ -19,27 +21,30 @@ function getStatusBadge(status) {
   if (normalizedStatus === "close" || normalizedStatus === "closed") {
     return {
       label: "Closed",
-      classes: "bg-rose-50 text-rose-600 border-rose-200",
+      bgClass: "bg-rose-500/90",
+      showPulse: false,
     };
   }
 
   if (normalizedStatus === "in progress" || normalizedStatus === "in-progress" || normalizedStatus === "in_progress") {
     return {
       label: "In Progress",
-      classes: "bg-amber-50 text-amber-600 border-amber-200",
+      bgClass: "bg-amber-500/90",
+      showPulse: false,
     };
   }
 
   if (normalizedStatus === "completed" || normalizedStatus === "complete") {
     return {
       label: "Completed",
-      classes: "bg-sky-50 text-sky-600 border-sky-200",
+      bgClass: "bg-sky-500/90",
+      showPulse: false,
     };
   }
 
   return {
     label: "Open",
-    classes: "bg-emerald-50 text-emerald-700 border-emerald-200",
+    bgClass: "bg-emerald-500/90",
     showPulse: true,
   };
 }
@@ -69,53 +74,77 @@ const normalizeTaskId = (id) => {
 export default function TaskCard({ task, actions }) {
   const taskId = normalizeTaskId(task._id ?? task.id ?? "");
   const statusInfo = getStatusBadge(task.status);
+  
+  const defaultPlaceholder = "https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?auto=format&fit=crop&w=600&q=80";
+  const imageSrc = task.imageUrl || task.image || defaultPlaceholder;
 
   return (
-    <div className="group relative bg-white hover:bg-white border border-slate-200/90 hover:border-[#009689] rounded-2xl p-6 flex flex-col justify-between transition-all duration-300 shadow-sm hover:shadow-xl hover:shadow-teal-900/10 hover:-translate-y-1 h-full overflow-hidden">
+    <div className="group bg-white rounded-2xl border border-slate-200/90 hover:border-[#009689] overflow-hidden shadow-sm hover:shadow-xl hover:shadow-teal-900/10 transition-all duration-300 flex flex-col justify-between hover:-translate-y-1 h-full">
       
-      <div className="flex flex-col h-full">
-        {/* Card Header (Category & Status) */}
-        <div className="flex items-center justify-between gap-2 mb-4">
-          <span className="text-[11px] font-semibold uppercase tracking-wider px-2.5 py-1 rounded-lg bg-teal-50 text-[#009689] border border-teal-200/60">
+      {/* 1. Image Thumbnail Banner */}
+      <div className="relative w-full h-44 sm:h-48 overflow-hidden bg-slate-100 shrink-0">
+        <img
+          src={imageSrc}
+          alt={task.title}
+          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-out"
+          onError={(e) => {
+            e.currentTarget.src = defaultPlaceholder;
+          }}
+        />
+        {/* Category Badge overlay on top-left */}
+        <div className="absolute top-3 left-3">
+          <span className="text-[11px] font-semibold tracking-wider uppercase px-2.5 py-1 rounded-lg bg-white/90 backdrop-blur-md text-[#009689] shadow-sm inline-block">
             {task.category || "General"}
           </span>
-          <span className={`inline-flex items-center gap-1.5 text-xs font-medium px-2.5 py-0.5 rounded-full border ${statusInfo.classes}`}>
+        </div>
+        {/* Status badge on top-right */}
+        <div className="absolute top-3 right-3">
+          <span className={`inline-flex items-center gap-1.5 text-xs font-medium px-2.5 py-1 rounded-full ${statusInfo.bgClass} backdrop-blur-md text-white shadow-sm`}>
             {statusInfo.showPulse && (
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+              <span className="w-1.5 h-1.5 rounded-full bg-white animate-pulse" />
             )}
             {statusInfo.label}
           </span>
         </div>
+      </div>
 
-        {/* Card Body */}
-        <Link href={`/task/${taskId}`} className="flex-1">
-          <h3 className="text-lg font-bold text-slate-900 group-hover:text-[#009689] transition-colors line-clamp-1 mt-3 mb-2">
-            {task.title}
-          </h3>
-          <p className="text-sm text-slate-600 line-clamp-2 leading-relaxed min-h-[40px] mb-5">
-            {task.description}
-          </p>
+      {/* 2. Card Content */}
+      <div className="p-5 sm:p-6 flex flex-col flex-1">
+        {/* Title */}
+        <h3 className="text-base sm:text-lg font-bold text-slate-900 group-hover:text-[#009689] transition-colors line-clamp-1 mb-2">
+          {task.title}
+        </h3>
 
-          {/* Metadata Strip */}
-          <div className="flex items-center justify-between border-t border-slate-100 pt-4">
-            <span className="text-lg font-extrabold text-[#009689]">${task.budget}</span>
-            <div className="flex items-center gap-1.5 text-xs text-slate-500 font-medium">
-              <Clock className="w-3.5 h-3.5 text-slate-400" />
-              <span>Due {formatDate(task.deadline)}</span>
-            </div>
+        {/* Description */}
+        <p className="text-xs sm:text-sm text-slate-600 line-clamp-2 leading-relaxed mb-4 flex-1">
+          {task.description}
+        </p>
+
+        {/* Due Date & Sub-meta */}
+        <div className="flex items-center gap-1.5 text-xs text-slate-500 mb-4 pb-4 border-b border-slate-100 mt-auto">
+          <Clock className="w-3.5 h-3.5 text-slate-400" />
+          <span>Due: {formatDate(task.deadline || task.dueDate)}</span>
+        </div>
+
+        {/* 3. Footer Bar: Price & CTA Button */}
+        <div className="flex items-center justify-between gap-3 pt-1">
+          <div>
+            <span className="block text-[11px] uppercase tracking-wider text-slate-400 font-medium mb-0.5">Budget</span>
+            <span className="text-lg sm:text-xl font-extrabold text-[#009689]">
+              ${task.budget}
+            </span>
           </div>
-        </Link>
-        
-        {/* Card Footer & Action */}
-        <div className="mt-5 flex flex-col sm:flex-row items-center gap-3">
-          <Link 
-            href={`/task/${taskId}`} 
-            className="w-full py-2.5 px-4 rounded-xl bg-teal-50 group-hover:bg-[#009689] text-[#009689] group-hover:text-white text-sm font-semibold flex items-center justify-center gap-2 transition-all duration-300"
-          >
-            View Details
-            <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-          </Link>
-          {actions ? <div className="flex w-full items-center justify-center gap-2">{actions}</div> : null}
+
+          <div className="flex flex-col gap-2">
+            <Link 
+              className="inline-flex items-center justify-center gap-1.5 px-4 py-2 rounded-xl bg-teal-50 group-hover:bg-[#009689] text-[#009689] group-hover:text-white text-xs sm:text-sm font-semibold transition-all duration-300" 
+              href={`/task/${taskId}`}
+            >
+              View Details
+              <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
+            </Link>
+            {actions ? <div className="flex items-center justify-center gap-2">{actions}</div> : null}
+          </div>
         </div>
       </div>
     </div>
