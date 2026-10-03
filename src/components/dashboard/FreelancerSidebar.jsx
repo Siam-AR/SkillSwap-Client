@@ -3,14 +3,16 @@
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useState } from "react";
-import { FiBarChart2, FiBriefcase, FiClipboard, FiFileText, FiLogOut, FiMenu, FiPackage, FiUser, FiX } from "react-icons/fi";
+import { LayoutDashboard, FileText, Briefcase, DollarSign, User, LogOut, Menu, X } from "lucide-react";
 import { signOut } from "@/lib/auth-client";
+import Image from "next/image";
 
 const navItems = [
-  { href: "/dashboard/freelancer", label: "Overview", icon: FiBarChart2 },
-  { href: "/dashboard/freelancer/my-proposals", label: "My Proposals", icon: FiClipboard },
-  { href: "/dashboard/freelancer/active-projects", label: "Active Projects", icon: FiPackage },
-  { href: "/dashboard/freelancer/earnings", label: "Earnings", icon: FiFileText },
+  { href: "/dashboard/freelancer", label: "Overview", icon: LayoutDashboard },
+  { href: "/dashboard/freelancer/my-proposals", label: "My Proposals", icon: FileText },
+  { href: "/dashboard/freelancer/active-projects", label: "Active Projects", icon: Briefcase },
+  { href: "/dashboard/freelancer/earnings", label: "Earnings & Payouts", icon: DollarSign },
+  { href: "/profile", label: "My Profile", icon: User },
 ];
 
 export default function FreelancerSidebar({ user }) {
@@ -22,99 +24,116 @@ export default function FreelancerSidebar({ user }) {
     if (href === "/dashboard/freelancer") {
       return pathname === href;
     }
-
     return pathname === href || pathname.startsWith(`${href}/`);
   };
-
-  const initials = (user?.name || "Freelancer")
-    .split(" ")
-    .map((segment) => segment[0])
-    .join("")
-    .slice(0, 2)
-    .toUpperCase();
 
   const handleLogout = async () => {
     await signOut();
     router.push("/");
   };
 
+  const avatarInitial = user?.name ? user.name.charAt(0).toUpperCase() : "U";
+
   const sidebarContent = (
-    <div className="flex h-full flex-col gap-4">
-      <nav className="flex flex-col gap-2">
-        {navItems.map((item) => {
-          const Icon = item.icon;
-          const active = isActive(item.href);
-
-          return (
-            <Link
-              key={item.href}
-              href={item.href}
-              onClick={() => setIsOpen(false)}
-              className={`flex items-center gap-3 rounded-2xl px-4 py-3 text-sm font-medium transition ${
-                active
-                  ? "bg-sky-600 text-white shadow-lg shadow-sky-600/20"
-                  : "text-slate-600 hover:bg-slate-100 hover:text-slate-900 dark:text-slate-300 dark:hover:bg-slate-800 dark:hover:text-white"
-              }`}
-            >
-              <Icon className="h-4 w-4" />
-              {item.label}
-            </Link>
-          );
-        })}
-      </nav>
-
-      <div className="rounded-[1.5rem] border border-slate-200 bg-white/80 p-4 shadow-sm dark:border-slate-800 dark:bg-slate-900/80">
-        <div className="flex items-center gap-3">
-          <div className="flex h-11 w-11 items-center justify-center rounded-full bg-sky-100 text-sm font-semibold text-sky-700 dark:bg-sky-500/15 dark:text-sky-300">
-            {initials || <FiUser className="h-4 w-4" />}
-          </div>
-          <div>
-            <h2 className="text-base font-semibold text-slate-950 dark:text-white">{user?.name || "Welcome back"}</h2>
-            <p className="text-sm capitalize text-slate-600 dark:text-slate-400">{user?.role || "freelancer"}</p>
-          </div>
+    <div className="flex h-full flex-col justify-between">
+      <div>
+        {/* Brand / Workspace Header */}
+        <div className="mb-8 px-2">
+          <span className="text-[10px] font-bold tracking-widest text-[#009689] uppercase bg-teal-50 px-2 py-0.5 rounded-md inline-block mb-1">
+            WORKSPACE
+          </span>
+          <h2 className="text-sm font-extrabold text-slate-900">Freelancer Portal</h2>
         </div>
 
-        <button
-          type="button"
-          onClick={handleLogout}
-          className="mt-4 inline-flex items-center gap-2 rounded-2xl border border-slate-200 px-3 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-100 dark:border-slate-700 dark:text-slate-200 dark:hover:bg-slate-800"
-        >
-          <FiLogOut className="h-4 w-4" />
-          Logout
-        </button>
+        {/* Navigation Links Group */}
+        <nav className="flex flex-col space-y-1.5">
+          {navItems.map((item) => {
+            const Icon = item.icon;
+            const active = isActive(item.href);
+
+            return (
+              <Link
+                key={item.href}
+                href={item.href}
+                onClick={() => setIsOpen(false)}
+                className={`flex items-center gap-3 rounded-xl px-3.5 py-2.5 text-sm transition-all ${
+                  active
+                    ? "bg-[#009689] text-white shadow-sm shadow-teal-900/15 font-semibold"
+                    : "text-slate-600 hover:text-slate-900 hover:bg-slate-100/80 font-medium"
+                }`}
+              >
+                <Icon className="h-4 w-4" />
+                {item.label}
+              </Link>
+            );
+          })}
+        </nav>
+      </div>
+
+      {/* Bottom User Card & Action */}
+      <div className="mt-8">
+        <div className="p-3 rounded-2xl bg-slate-50 border border-slate-200/70 flex items-center justify-between gap-3">
+          <div className="flex items-center gap-3 min-w-0">
+            <div className="relative shrink-0">
+              <div className="flex h-9 w-9 items-center justify-center overflow-hidden rounded-full border-2 border-[#009689] bg-sky-100 text-sky-700">
+                {user?.image ? (
+                  <Image src={user.image} alt={user.name} width={36} height={36} className="h-full w-full object-cover" unoptimized />
+                ) : (
+                  <span className="text-sm font-bold">{avatarInitial}</span>
+                )}
+              </div>
+              <div className="absolute bottom-0 right-0 h-2.5 w-2.5 rounded-full bg-emerald-500 ring-2 ring-white"></div>
+            </div>
+            <div className="min-w-0">
+              <p className="text-sm font-bold text-slate-900 truncate">{user?.name || "User"}</p>
+              <p className="text-[10px] text-slate-500 uppercase tracking-wider font-semibold truncate">{user?.role || "Freelancer"}</p>
+            </div>
+          </div>
+          
+          <button
+            type="button"
+            onClick={handleLogout}
+            className="shrink-0 p-2 rounded-xl text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition-colors"
+            title="Logout"
+          >
+            <LogOut className="h-4 w-4" />
+          </button>
+        </div>
       </div>
     </div>
   );
 
   return (
     <>
-      <div className="lg:hidden">
+      <div className="lg:hidden p-4 bg-white border-b border-slate-200 sticky top-0 z-40">
         <button
           type="button"
           onClick={() => setIsOpen(true)}
-          className="inline-flex items-center gap-2 rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm font-semibold text-slate-700 shadow-sm dark:border-slate-800 dark:bg-slate-900 dark:text-slate-200"
+          className="inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm font-semibold text-slate-700 shadow-sm"
         >
-          <FiMenu className="h-4 w-4" />
-          Dashboard menu
+          <Menu className="h-4 w-4" />
+          Menu
         </button>
       </div>
 
-      <aside className="hidden w-72 shrink-0 lg:block">
-        <div className="sticky top-6 rounded-[2rem] border border-slate-200 bg-slate-50/80 p-4 shadow-sm dark:border-slate-800 dark:bg-slate-900/80">
-          {sidebarContent}
-        </div>
+      <aside className="hidden w-64 xl:w-72 shrink-0 border-r border-slate-200/80 bg-white min-h-screen p-5 lg:flex flex-col justify-between sticky top-0">
+        {sidebarContent}
       </aside>
 
       {isOpen ? (
-        <div className="fixed inset-0 z-50 bg-slate-950/40 lg:hidden" onClick={() => setIsOpen(false)}>
-          <div className="h-full w-80 max-w-[85vw] bg-white p-4 shadow-xl dark:bg-slate-950" onClick={(event) => event.stopPropagation()}>
-            <div className="mb-4 flex items-center justify-between">
-              <p className="text-sm font-semibold text-slate-900 dark:text-white">Navigation</p>
-              <button type="button" onClick={() => setIsOpen(false)} className="rounded-full p-2 text-slate-600 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-800">
-                <FiX className="h-4 w-4" />
+        <div className="fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-sm lg:hidden" onClick={() => setIsOpen(false)}>
+          <div className="h-full w-72 bg-white p-5 shadow-2xl flex flex-col justify-between transform transition-transform duration-300" onClick={(event) => event.stopPropagation()}>
+            <div className="mb-6 flex items-center justify-between">
+              <span className="text-[10px] font-bold tracking-widest text-[#009689] uppercase bg-teal-50 px-2 py-0.5 rounded-md inline-block">
+                WORKSPACE
+              </span>
+              <button type="button" onClick={() => setIsOpen(false)} className="rounded-full p-2 text-slate-400 hover:bg-slate-100">
+                <X className="h-4 w-4" />
               </button>
             </div>
-            {sidebarContent}
+            <div className="flex-1 overflow-y-auto">
+              {sidebarContent}
+            </div>
           </div>
         </div>
       ) : null}

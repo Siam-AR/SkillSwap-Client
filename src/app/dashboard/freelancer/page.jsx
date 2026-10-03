@@ -1,6 +1,8 @@
 import Link from "next/link";
 import { getServerSession } from "@/lib/session";
 import { getFreelancerOverviewStats } from "@/lib/dashboard-freelancer-overview";
+import { Search, Send, Clock, CheckCircle2, Wallet, User as UserIcon, TrendingUp, AlertCircle } from "lucide-react";
+import Image from "next/image";
 
 const formatCurrency = (value) => {
   const amount = Number(value ?? 0);
@@ -9,51 +11,165 @@ const formatCurrency = (value) => {
 
 export default async function FreelancerDashboardOverviewPage() {
   const session = await getServerSession();
-  const userEmail = session?.user?.email;
+  const user = session?.user || null;
+  const userEmail = user?.email;
   const stats = await getFreelancerOverviewStats(userEmail);
 
+  // We don't have a real recentProposals fetcher yet, so we will use an empty array
+  // to show the clean empty state as requested in specs.
+  const recentProposals = [];
+
   return (
-    <div className="space-y-6">
-      <div className="rounded-[1.75rem] border border-slate-200 bg-linear-to-r from-sky-600 via-cyan-500 to-indigo-600 p-8 text-white shadow-sm">
-        <p className="text-sm font-semibold uppercase tracking-[0.24em] text-sky-100">Freelancer dashboard</p>
-        <h1 className="mt-4 text-3xl font-semibold">Welcome to your freelancer workspace</h1>
-        <p className="mt-3 max-w-3xl text-sm text-sky-50/90 sm:text-base">
-          This is the freelancer dashboard overview. Use the sidebar to browse open tasks, manage proposals, track active projects, view earnings, and update your profile.
-        </p>
+    <>
+      {/* A. Top Welcome Header Bar */}
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
+        <div>
+          <p className="text-[11px] font-bold tracking-widest text-slate-500 uppercase mb-2">
+            FREELANCER WORKSPACE <span className="mx-1">•</span> OVERVIEW
+          </p>
+          <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
+            Welcome back, <span className="text-[#009689]">{user?.name || "Freelancer"}</span>
+          </h1>
+          <p className="mt-2 text-sm sm:text-base text-slate-500 font-medium">
+            Track your proposals, active contracts, and project earnings in real time.
+          </p>
+        </div>
+        
+        <Link 
+          href="/browse-tasks" 
+          className="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-[#009689] hover:bg-[#238B81] text-white text-sm font-semibold shadow-sm shadow-teal-900/15 transition-all shrink-0"
+        >
+          <Search className="w-4 h-4" /> 
+          Explore Open Tasks
+        </Link>
       </div>
 
-      <div className="space-y-6">
-        <div className="rounded-[1.75rem] border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-950">
-          <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-            <div className="rounded-[1.5rem] border border-slate-200 bg-slate-50 p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900/70">
-              <p className="text-sm uppercase tracking-[0.24em] text-slate-500 dark:text-slate-400">Total proposals</p>
-              <p className="mt-4 text-3xl font-semibold text-slate-950 dark:text-white">{stats.totalProposals}</p>
+      {/* B. 4-Column Live Metric Cards Grid */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+        <div className="bg-white rounded-2xl border border-slate-200/90 p-5 shadow-sm hover:shadow-md hover:border-[#009689]/40 transition-all flex flex-col justify-between group">
+          <div className="flex items-center justify-between">
+            <span className="text-[11px] font-semibold tracking-wider text-slate-400 uppercase">
+              Total Proposals
+            </span>
+            <div className="bg-teal-50 text-[#009689] p-2.5 rounded-xl group-hover:scale-110 transition-transform">
+              <Send className="w-4 h-4" />
             </div>
-            <div className="rounded-[1.5rem] border border-slate-200 bg-slate-50 p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900/70">
-              <p className="text-sm uppercase tracking-[0.24em] text-slate-500 dark:text-slate-400">Pending proposals</p>
-              <p className="mt-4 text-3xl font-semibold text-slate-950 dark:text-white">{stats.pendingProposals}</p>
-            </div>
-            <div className="rounded-[1.5rem] border border-slate-200 bg-slate-50 p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900/70">
-              <p className="text-sm uppercase tracking-[0.24em] text-slate-500 dark:text-slate-400">Accepted proposals</p>
-              <p className="mt-4 text-3xl font-semibold text-slate-950 dark:text-white">{stats.acceptedProposals}</p>
-            </div>
-            <div className="rounded-[1.5rem] border border-slate-200 bg-slate-50 p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900/70">
-              <p className="text-sm uppercase tracking-[0.24em] text-slate-500 dark:text-slate-400">Total earnings</p>
-              <p className="mt-4 text-3xl font-semibold text-slate-950 dark:text-white">{formatCurrency(stats.totalEarnings)}</p>
-            </div>
+          </div>
+          <div className="mt-4">
+            <p className="text-2xl font-extrabold text-slate-900">{stats?.totalProposals || 0}</p>
           </div>
         </div>
 
-        <div className="rounded-[1.75rem] border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-950">
-          <h2 className="text-xl font-semibold text-slate-950 dark:text-white">Next steps</h2>
-          <p className="mt-3 text-sm leading-7 text-slate-600 dark:text-slate-400">
-            Start by browsing tasks and sending proposals to clients. You can track all submitted work and earnings from the sidebar navigation.
-          </p>
-          <Link href="/browse-tasks" className="mt-6 inline-flex rounded-2xl bg-sky-600 px-5 py-3 text-sm font-semibold text-white hover:bg-sky-700">
-            Browse public tasks
-          </Link>
+        <div className="bg-white rounded-2xl border border-slate-200/90 p-5 shadow-sm hover:shadow-md hover:border-[#009689]/40 transition-all flex flex-col justify-between group">
+          <div className="flex items-center justify-between">
+            <span className="text-[11px] font-semibold tracking-wider text-slate-400 uppercase">
+              Pending Proposals
+            </span>
+            <div className="bg-amber-50 text-amber-600 p-2.5 rounded-xl group-hover:scale-110 transition-transform">
+              <Clock className="w-4 h-4" />
+            </div>
+          </div>
+          <div className="mt-4">
+            <p className="text-2xl font-extrabold text-slate-900">{stats?.pendingProposals || 0}</p>
+          </div>
+        </div>
+
+        <div className="bg-white rounded-2xl border border-slate-200/90 p-5 shadow-sm hover:shadow-md hover:border-[#009689]/40 transition-all flex flex-col justify-between group">
+          <div className="flex items-center justify-between">
+            <span className="text-[11px] font-semibold tracking-wider text-slate-400 uppercase">
+              Accepted / Active
+            </span>
+            <div className="bg-emerald-50 text-emerald-600 p-2.5 rounded-xl group-hover:scale-110 transition-transform">
+              <CheckCircle2 className="w-4 h-4" />
+            </div>
+          </div>
+          <div className="mt-4">
+            <p className="text-2xl font-extrabold text-slate-900">{stats?.acceptedProposals || 0}</p>
+          </div>
+        </div>
+
+        <div className="bg-white rounded-2xl border border-slate-200/90 p-5 shadow-sm hover:shadow-md hover:border-[#009689]/40 transition-all flex flex-col justify-between group">
+          <div className="flex items-center justify-between">
+            <span className="text-[11px] font-semibold tracking-wider text-slate-400 uppercase">
+              Net Earnings
+            </span>
+            <div className="bg-teal-50 text-[#009689] p-2.5 rounded-xl group-hover:scale-110 transition-transform">
+              <Wallet className="w-4 h-4" />
+            </div>
+          </div>
+          <div className="mt-4">
+            <p className="text-2xl font-extrabold text-slate-900">{formatCurrency(stats?.totalEarnings)}</p>
+          </div>
         </div>
       </div>
-    </div>
+
+      {/* C. Split Two-Column Action Section */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        
+        {/* Recent Proposals Activity (Span 8) */}
+        <div className="lg:col-span-8 bg-white rounded-2xl border border-slate-200/90 p-6 shadow-sm space-y-4">
+          <div className="flex items-center justify-between">
+            <h3 className="text-lg font-bold text-slate-900">Recent Submitted Proposals</h3>
+            <Link href="/dashboard/freelancer/my-proposals" className="text-sm font-semibold text-[#009689] hover:text-[#238B81]">
+              View All
+            </Link>
+          </div>
+          
+          <div className="mt-6 flex flex-col items-center justify-center py-12 text-center bg-slate-50/50 rounded-xl border border-dashed border-slate-200">
+            <div className="bg-teal-50 p-4 rounded-full text-[#009689] mb-4">
+              <Search className="w-8 h-8" />
+            </div>
+            <h4 className="text-base font-bold text-slate-900 mb-1">No proposals yet</h4>
+            <p className="text-sm text-slate-500 max-w-sm mb-6">
+              You haven't submitted any proposals recently. Browse open tasks and start sending proposals to land your next job.
+            </p>
+            <Link 
+              href="/browse-tasks" 
+              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-slate-900 hover:bg-slate-800 text-white text-sm font-semibold transition-colors"
+            >
+              Browse Open Tasks
+            </Link>
+          </div>
+        </div>
+
+        {/* Quick Account / Performance Summary (Span 4) */}
+        <div className="lg:col-span-4 space-y-6">
+          <div className="bg-white rounded-2xl border border-slate-200/90 p-6 shadow-sm space-y-5">
+            <h3 className="text-base font-bold text-slate-900">Account Status</h3>
+            
+            <div className="flex items-center justify-between p-3 rounded-xl border border-slate-100 bg-slate-50">
+              <div className="flex items-center gap-3">
+                <div className="w-2 h-2 rounded-full bg-emerald-500 ring-4 ring-emerald-500/20"></div>
+                <span className="text-sm font-semibold text-slate-700">Available for work</span>
+              </div>
+            </div>
+
+            <div>
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-sm font-semibold text-slate-700">Profile Completeness</span>
+                <span className="text-sm font-bold text-[#009689]">85%</span>
+              </div>
+              <div className="w-full bg-slate-100 rounded-full h-2 mb-3">
+                <div className="bg-[#009689] h-2 rounded-full" style={{ width: '85%' }}></div>
+              </div>
+              <Link href="/profile" className="text-xs font-semibold text-slate-500 hover:text-[#009689] flex items-center gap-1">
+                <UserIcon className="w-3 h-3" /> Update Profile
+              </Link>
+            </div>
+          </div>
+
+          <div className="bg-gradient-to-br from-teal-50 to-emerald-50 rounded-2xl border border-teal-100/60 p-6 shadow-sm">
+            <div className="flex items-center gap-2 mb-3 text-[#009689]">
+              <TrendingUp className="w-5 h-5" />
+              <h3 className="text-base font-bold">Pro Tips</h3>
+            </div>
+            <p className="text-sm text-slate-600 font-medium leading-relaxed">
+              Tailor your proposals to each client's specific needs. A personalized proposal increases your chances of getting hired by up to 40%.
+            </p>
+          </div>
+        </div>
+
+      </div>
+    </>
   );
 }
