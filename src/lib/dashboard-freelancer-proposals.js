@@ -83,23 +83,29 @@ export async function getFreelancerProposals(freelancerEmail) {
   }
 
   const taskDocs = taskQuery.length
-    ? await tasksCollection.find({ $or: taskQuery }).project({ _id: 1, id: 1, title: 1 }).toArray()
+    ? await tasksCollection.find({ $or: taskQuery }).project({ _id: 1, id: 1, title: 1, category: 1, clientEmail: 1, client_email: 1, budget: 1, price: 1 }).toArray()
     : [];
 
-  const taskTitleById = new Map();
+  const taskDetailsById = new Map();
   taskDocs.forEach((task) => {
     const key = normalizeId(task._id) || normalizeId(task.id);
-    taskTitleById.set(key, task.title || "Unknown task");
+    taskDetailsById.set(key, task);
   });
 
   return proposals.map((proposal) => {
     const taskKey = normalizeId(proposal.taskId || proposal.task_id || proposal.task || "");
     const submittedAt = normalizeDateValue(proposal.createdAt ?? proposal.submitted_at);
+    const taskInfo = taskDetailsById.get(taskKey) || {};
 
     return {
       id: normalizeId(proposal._id),
-      taskTitle: taskTitleById.get(taskKey) || proposal.task_title || proposal.taskTitle || "Unknown task",
+      taskId: taskKey,
+      taskTitle: taskInfo.title || proposal.task_title || proposal.taskTitle || "Unknown task",
+      taskCategory: taskInfo.category || "General",
+      clientEmail: taskInfo.clientEmail || taskInfo.client_email || proposal.clientEmail || "Unknown client",
+      taskBudget: Number(taskInfo.budget ?? taskInfo.price ?? 0),
       proposedBudget: Number(proposal.expectedAmount ?? proposal.proposed_budget ?? proposal.proposedBudget ?? proposal.budget ?? 0),
+      coverLetter: proposal.coverLetter || proposal.message || proposal.proposal || "",
       submittedAt,
       status: String(proposal.status || "pending").toLowerCase(),
     };
