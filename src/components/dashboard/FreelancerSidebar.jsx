@@ -8,7 +8,6 @@ import { signOut } from "@/lib/auth-client";
 
 const navItems = [
   { href: "/dashboard/freelancer", label: "Overview", icon: FiBarChart2 },
-  { href: "/dashboard/freelancer/browse-tasks", label: "Browse Tasks", icon: FiBriefcase },
   { href: "/dashboard/freelancer/my-proposals", label: "My Proposals", icon: FiClipboard },
   { href: "/dashboard/freelancer/active-projects", label: "Active Projects", icon: FiPackage },
   { href: "/dashboard/freelancer/earnings", label: "Earnings", icon: FiFileText },
