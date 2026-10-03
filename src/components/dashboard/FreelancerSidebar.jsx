@@ -12,7 +12,6 @@ const navItems = [
   { href: "/dashboard/freelancer/my-proposals", label: "My Proposals", icon: FiClipboard },
   { href: "/dashboard/freelancer/active-projects", label: "Active Projects", icon: FiPackage },
   { href: "/dashboard/freelancer/earnings", label: "Earnings", icon: FiFileText },
-  { href: "/dashboard/freelancer/edit-profile", label: "Edit Profile", icon: FiUser },
 ];
 
 export default function FreelancerSidebar({ user }) {
