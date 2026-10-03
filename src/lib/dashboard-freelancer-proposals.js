@@ -105,7 +105,7 @@ export async function getFreelancerProposals(freelancerEmail) {
       clientEmail: taskInfo.clientEmail || taskInfo.client_email || proposal.clientEmail || "Unknown client",
       taskBudget: Number(taskInfo.budget ?? taskInfo.price ?? 0),
       proposedBudget: Number(proposal.expectedAmount ?? proposal.proposed_budget ?? proposal.proposedBudget ?? proposal.budget ?? 0),
-      coverLetter: proposal.coverLetter || proposal.message || proposal.proposal || "",
+      coverLetter: proposal.cover_note || proposal.coverLetter || proposal.message || proposal.proposal || proposal.description || "",
       submittedAt,
       status: String(proposal.status || "pending").toLowerCase(),
     };
