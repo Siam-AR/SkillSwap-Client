@@ -152,7 +152,7 @@ const Navbar = () => {
           </div>
         </Link>
 
-        <nav className="hidden items-center gap-2 lg:flex">
+        <nav className="hidden items-center gap-2 md:flex">
           {navItems.map((item) => (
             <Link
               key={item.href}
@@ -292,7 +292,7 @@ const Navbar = () => {
           <button
             type="button"
             onClick={() => setIsMenuOpen((current) => !current)}
-            className={`flex h-11 w-11 items-center justify-center rounded-full border lg:hidden ${themeClasses.button}`}
+            className={`flex h-11 w-11 items-center justify-center rounded-full border md:hidden ${themeClasses.button}`}
             aria-label="Toggle navigation menu"
             aria-expanded={isMenuOpen}
           >
@@ -306,8 +306,8 @@ const Navbar = () => {
       </div>
 
       <div
-        className={`overflow-hidden border-t transition-[max-height,opacity] duration-300 lg:hidden ${
-          isMenuOpen ? "max-h-96 opacity-100" : "max-h-0 opacity-0"
+        className={`absolute left-0 right-0 top-full border-t shadow-xl md:hidden ${
+          isMenuOpen ? "block" : "hidden"
         } ${isDarkMode ? "border-slate-800" : "border-slate-200"} ${themeClasses.panel}`}
       >
         <div className="mx-auto flex max-w-7xl flex-col gap-2 px-4 py-4 sm:px-6 lg:px-8">
