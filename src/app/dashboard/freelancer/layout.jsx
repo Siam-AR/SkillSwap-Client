@@ -11,9 +11,9 @@ const FreelancerDashboardLayout = async ({ children }) => {
   const user = session?.user || null;
 
   return (
-    <div className="min-h-screen bg-slate-50/70 text-slate-800 lg:flex">
+    <div className="flex flex-col lg:flex-row min-h-screen bg-slate-50/70 text-slate-800">
       <FreelancerSidebar user={user} />
-      <main className="flex-1 p-6 sm:p-8 lg:p-10 max-w-7xl mx-auto space-y-8 w-full">
+      <main className="flex-1 min-w-0 p-6 sm:p-8 lg:p-10 max-w-7xl mx-auto space-y-8 w-full">
         {children}
       </main>
     </div>

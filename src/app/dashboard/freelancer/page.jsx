@@ -72,26 +72,28 @@ export default async function FreelancerDashboardOverviewPage() {
   return (
     <>
       {/* A. Top Welcome Header Bar */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <p className="text-[11px] font-bold tracking-widest text-slate-500 uppercase mb-2">
-            FREELANCER WORKSPACE <span className="mx-1">•</span> OVERVIEW
-          </p>
-          <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
+          <span className="text-[11px] font-bold tracking-wider text-slate-400 uppercase">
+            FREELANCER WORKSPACE • OVERVIEW
+          </span>
+          <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight mt-1">
             Welcome back, <span className="text-[#009689]">{user?.name || "Freelancer"}</span>
           </h1>
-          <p className="mt-2 text-sm sm:text-base text-slate-500 font-medium">
+          <p className="text-sm text-slate-500 mt-1">
             Track your proposals, active contracts, and project earnings in real time.
           </p>
         </div>
         
-        <Link 
-          href="/browse-tasks" 
-          className="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-[#009689] hover:bg-[#238B81] text-white text-sm font-semibold shadow-sm shadow-teal-900/15 transition-all shrink-0"
-        >
-          <Search className="w-4 h-4" /> 
-          Explore Open Tasks
-        </Link>
+        <div className="shrink-0">
+          <Link 
+            href="/browse-tasks" 
+            className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[#009689] hover:bg-[#238B81] text-white text-xs sm:text-sm font-semibold shadow-sm shadow-teal-900/15 transition-all"
+          >
+            <Search className="w-4 h-4" /> 
+            Explore Open Tasks
+          </Link>
+        </div>
       </div>
 
       {/* B. 4-Column Live Metric Cards Grid */}
