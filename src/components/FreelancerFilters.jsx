@@ -15,6 +15,15 @@ export default function FreelancerFilters() {
   // Debounced search
   useEffect(() => {
     const handler = setTimeout(() => {
+      const currentSearch = searchParams.get("search") || "";
+      const currentSkill = searchParams.get("skill") || "";
+      const currentSort = searchParams.get("sort") || "";
+
+      // Only push to router if the filters actually changed (prevents pagination reset loop)
+      if (search === currentSearch && skill === currentSkill && sort === currentSort) {
+        return;
+      }
+
       const params = new URLSearchParams(searchParams);
       if (search) params.set("search", search);
       else params.delete("search");
@@ -28,7 +37,7 @@ export default function FreelancerFilters() {
       // Reset to page 1 when filters change
       params.set("page", "1");
 
-      router.push(`/browse-freelancers?${params.toString()}`);
+      router.push(`/browse-freelancers?${params.toString()}`, { scroll: false });
     }, 400);
 
     return () => clearTimeout(handler);

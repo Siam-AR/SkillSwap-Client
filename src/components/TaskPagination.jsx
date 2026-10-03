@@ -13,7 +13,8 @@ export default function TaskPagination({ currentPage, totalPages, basePath = "/b
     setPage(currentPage);
   }, [currentPage]);
 
-  const handlePageChange = (nextPage) => {
+  const handlePageChange = (e, nextPage) => {
+    e.preventDefault();
     if (nextPage < 1 || nextPage > totalPages) {
       return;
     }
@@ -32,7 +33,7 @@ export default function TaskPagination({ currentPage, totalPages, basePath = "/b
     const targetUrl = `${basePath}${query ? `?${query}` : ""}`;
 
     router.push(targetUrl, { scroll: false });
-    router.refresh();
+    window.scrollTo({ top: 100, behavior: "smooth" });
   };
 
   if (totalPages <= 1) {
@@ -42,7 +43,8 @@ export default function TaskPagination({ currentPage, totalPages, basePath = "/b
   return (
     <div className="flex justify-center items-center gap-2 mt-4">
       <button
-        onClick={() => handlePageChange(page - 1)}
+        type="button"
+        onClick={(e) => handlePageChange(e, page - 1)}
         disabled={page === 1}
         className={`flex items-center justify-center gap-1 px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
           page === 1
@@ -58,7 +60,8 @@ export default function TaskPagination({ currentPage, totalPages, basePath = "/b
         {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => (
           <button
             key={p}
-            onClick={() => handlePageChange(p)}
+            type="button"
+            onClick={(e) => handlePageChange(e, p)}
             className={`flex items-center justify-center w-9 h-9 sm:w-10 sm:h-10 rounded-xl text-sm font-semibold transition-colors ${
               p === page
                 ? "bg-[#009689] text-white shadow-sm shadow-teal-900/20"
@@ -71,7 +74,8 @@ export default function TaskPagination({ currentPage, totalPages, basePath = "/b
       </div>
 
       <button
-        onClick={() => handlePageChange(page + 1)}
+        type="button"
+        onClick={(e) => handlePageChange(e, page + 1)}
         disabled={page === totalPages}
         className={`flex items-center justify-center gap-1 px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
           page === totalPages
