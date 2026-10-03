@@ -118,29 +118,32 @@ export default async function BrowseFreelancersPage({ searchParams }) {
                       <div className="bg-slate-50/80 rounded-xl p-2.5 flex items-center justify-between text-xs mb-5 border border-slate-100">
                         <div className="flex items-center gap-1.5 font-bold text-slate-800">
                           <span className="text-amber-500">★</span>
-                          <span>{freelancer.rating ? Number(freelancer.rating).toFixed(0) : "5"}</span>
+                          <span>{freelancer.rating ? Number(freelancer.rating).toFixed(1) : "New"}</span>
                           <span className="text-slate-400 font-normal">
-                            ({freelancer.reviewCount || freelancer.reviews?.length || 1})
+                            ({freelancer.reviewsCount || freelancer.reviews?.length || 0})
                           </span>
                         </div>
                         <div className="text-slate-500 font-medium">
-                          {freelancer.finishedJobs || freelancer.completedOrders || freelancer.completedTasks || 1} order{freelancer.finishedJobs === 1 || freelancer.completedOrders === 1 || freelancer.completedTasks === 1 ? "" : "s"}
+                          {freelancer.finishedJobs || freelancer.completedOrders || freelancer.completedTasks || 0} order{(freelancer.finishedJobs || freelancer.completedOrders || freelancer.completedTasks || 0) === 1 ? "" : "s"}
                         </div>
                       </div>
 
                       {/* 4. Skill Tags / Chips */}
-                      <div className="flex flex-wrap gap-1.5 mb-6 min-h-[58px]">
-                        {(freelancer.skills?.length
-                          ? freelancer.skills.slice(0, 4)
-                          : ["Web Development", "React", "Next.js"]
-                        ).map((skill, i) => (
-                          <span
-                            key={i}
-                            className="text-xs font-medium px-2.5 py-1 rounded-lg bg-slate-50 text-slate-600 border border-slate-200/80"
-                          >
-                            {skill}
+                      <div className="flex flex-wrap gap-1.5 mb-6 min-h-[58px] content-start">
+                        {freelancer.skills && freelancer.skills.length > 0 ? (
+                          freelancer.skills.slice(0, 4).map((skill, i) => (
+                            <span
+                              key={i}
+                              className="text-xs font-medium px-2.5 py-1 rounded-lg bg-slate-50 text-slate-600 border border-slate-200/80"
+                            >
+                              {skill}
+                            </span>
+                          ))
+                        ) : (
+                          <span className="text-xs font-medium px-2.5 py-1 text-slate-400 italic">
+                            No skills listed
                           </span>
-                        ))}
+                        )}
                       </div>
                     </div>
 
