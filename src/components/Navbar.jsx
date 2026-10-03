@@ -4,8 +4,9 @@ import { Button } from "@heroui/react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, useRef } from "react";
 import { FiLogOut, FiMenu, FiMoon, FiSun, FiX } from "react-icons/fi";
+import { ChevronDown, User, LayoutDashboard, Briefcase, LogOut } from "lucide-react";
 import { signOut, useSession } from "@/lib/auth-client";
 
 const navItems = [
@@ -28,13 +29,28 @@ const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [avatarError, setAvatarError] = useState(false);
   const [showProfileCard, setShowProfileCard] = useState(false);
-  
+
   const [isScrolled, setIsScrolled] = useState(false);
 
-  // Close mobile menu on route change
+  // Close menus on route change
   useEffect(() => {
     setIsMenuOpen(false);
+    setShowProfileCard(false);
   }, [pathname]);
+
+  const profileMenuRef = useRef(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (profileMenuRef.current && !profileMenuRef.current.contains(event.target)) {
+        setShowProfileCard(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -42,7 +58,7 @@ const Navbar = () => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 20);
     };
-    
+
     // Check initial scroll
     handleScroll();
 
@@ -179,12 +195,6 @@ const Navbar = () => {
               >
                 Dashboard
               </a>
-              <a
-                href="/profile"
-                className={themeClasses.link(isActive("/profile"))}
-              >
-                Profile
-              </a>
             </>
           ) : null}
         </nav>
@@ -209,40 +219,45 @@ const Navbar = () => {
 
           {isAuthenticated ? (
             <div className="hidden md:flex w-full items-center justify-end gap-3">
-              <div className="relative flex items-center gap-2">
-                <button
-                  type="button"
+              <div className="relative flex items-center gap-2" ref={profileMenuRef}>
+                <div
                   onClick={() => setShowProfileCard((prev) => !prev)}
-                  className="flex items-center gap-2 rounded-full pr-2 transition hover:bg-white/10 text-white"
+                  className="group flex items-center gap-2.5 pl-2 pr-3 py-1.5 rounded-full border border-slate-200/90 bg-white/95 hover:bg-slate-50 hover:border-[#009689]/40 transition-all duration-200 shadow-sm cursor-pointer"
                 >
-                  <div className="flex h-9 w-9 items-center justify-center overflow-hidden rounded-full bg-sky-100 text-sky-700 dark:bg-slate-800 dark:text-sky-200">
-                    {avatarSrc && !avatarError ? (
-                      <Image
-                        src={avatarSrc}
-                        alt={avatarLabel}
-                        width={36}
-                        height={36}
-                        unoptimized
-                        className="h-full w-full object-cover"
-                        onError={() => setAvatarError(true)}
-                      />
-                    ) : (
-                      <span className="text-sm font-semibold">{avatarInitial}</span>
-                    )}
+                  <div className="relative">
+                    <div className="flex h-8 w-8 items-center justify-center overflow-hidden rounded-full border border-[#009689]/30 bg-sky-100 text-sky-700">
+                      {avatarSrc && !avatarError ? (
+                        <Image
+                          src={avatarSrc}
+                          alt={avatarLabel}
+                          width={32}
+                          height={32}
+                          unoptimized
+                          className="h-full w-full object-cover"
+                          onError={() => setAvatarError(true)}
+                        />
+                      ) : (
+                        <span className="text-xs font-semibold">{avatarInitial}</span>
+                      )}
+                    </div>
+                    <div className="absolute bottom-0 right-0 h-2 w-2 rounded-full bg-emerald-500 ring-1 ring-white"></div>
                   </div>
-                  <span className="text-sm font-medium">{avatarLabel}</span>
-                </button>
+                  <span className="text-xs font-bold text-slate-800 tracking-tight max-w-[120px] truncate">
+                    {avatarLabel}
+                  </span>
+                  <ChevronDown className={`w-3.5 h-3.5 text-slate-400 group-hover:text-[#009689] transition-transform duration-200 ${showProfileCard ? "rotate-180" : ""}`} />
+                </div>
 
                 {showProfileCard ? (
-                  <div className={`absolute right-0 top-[calc(100%+0.6rem)] w-64 rounded-2xl border p-4 shadow-xl ${themeClasses.profileCard}`}>
-                    <div className="flex items-center gap-3">
-                      <div className="flex h-12 w-12 items-center justify-center overflow-hidden rounded-full bg-sky-100 text-sky-700 dark:bg-slate-800 dark:text-sky-200">
+                  <div className="absolute right-0 top-[calc(100%+0.5rem)] w-64 bg-white rounded-2xl border border-slate-200/90 shadow-xl shadow-slate-200/60 p-2 z-50 animate-in fade-in zoom-in-95">
+                    <div className="p-3 rounded-xl bg-slate-50/80 border border-slate-100 flex items-center gap-3 mb-1.5">
+                      <div className="flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-full border-2 border-[#009689] bg-sky-100 text-sky-700">
                         {avatarSrc && !avatarError ? (
                           <Image
                             src={avatarSrc}
                             alt={avatarLabel}
-                            width={48}
-                            height={48}
+                            width={40}
+                            height={40}
                             unoptimized
                             className="h-full w-full object-cover"
                             onError={() => setAvatarError(true)}
@@ -251,24 +266,39 @@ const Navbar = () => {
                           <span className="text-sm font-semibold">{avatarInitial}</span>
                         )}
                       </div>
-                      <div>
-                        <p className="text-sm font-semibold">{avatarLabel}</p>
-                        <p className="text-xs text-slate-500 dark:text-slate-400">{user?.role || "Member"}</p>
+                      <div className="min-w-0">
+                        <p className="text-sm font-bold text-slate-900 truncate">{avatarLabel}</p>
+                        <p className="text-[11px] text-slate-500 truncate">{user?.email || "No email provided"}</p>
+                        <span className="inline-flex items-center gap-1 text-[10px] font-semibold px-2 py-0.5 rounded-full bg-teal-50 text-[#009689] border border-teal-200/60 mt-1 capitalize">
+                          {user?.role || "Member"}
+                        </span>
                       </div>
                     </div>
-                    <p className="mt-3 truncate text-sm text-slate-600 dark:text-slate-300">{user?.email || "No email provided"}</p>
+
+                    <div className="flex flex-col gap-0.5">
+                      <a href="/profile" className="group flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-semibold text-slate-700 hover:text-[#009689] hover:bg-teal-50/60 transition-colors">
+                        <User className="w-4 h-4 text-slate-400 group-hover:text-[#009689]" />
+                        View Profile
+                      </a>
+                      <a href={dashboardHref} className="group flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-semibold text-slate-700 hover:text-[#009689] hover:bg-teal-50/60 transition-colors">
+                        <LayoutDashboard className="w-4 h-4 text-slate-400 group-hover:text-[#009689]" />
+                        Dashboard
+                      </a>
+                    </div>
+
+                    <div className="h-px bg-slate-100 my-1"></div>
+
+                    <button
+                      type="button"
+                      onClick={handleLogout}
+                      className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-semibold text-rose-600 hover:bg-rose-50 transition-colors"
+                    >
+                      <LogOut className="w-4 h-4 text-rose-500" />
+                      Logout
+                    </button>
                   </div>
                 ) : null}
               </div>
-
-              <button
-                type="button"
-                onClick={handleLogout}
-                aria-label="Logout"
-                className="inline-flex h-9 w-9 items-center justify-center rounded-full transition text-white hover:bg-white/10 hover:text-white"
-              >
-                <FiLogOut className="h-4 w-4" />
-              </button>
             </div>
           ) : (
             <div className="hidden items-center gap-2 md:flex">
@@ -311,9 +341,8 @@ const Navbar = () => {
       </div>
 
       <div
-        className={`absolute left-0 right-0 top-full border-t shadow-xl md:hidden ${
-          isMenuOpen ? "block" : "hidden"
-        } ${isDarkMode ? "border-slate-800" : "border-slate-200"} ${themeClasses.panel}`}
+        className={`absolute left-0 right-0 top-full border-t shadow-xl md:hidden ${isMenuOpen ? "block" : "hidden"
+          } ${isDarkMode ? "border-slate-800" : "border-slate-200"} ${themeClasses.panel}`}
       >
         <div className="mx-auto flex max-w-7xl flex-col gap-2 px-4 py-4 sm:px-6 lg:px-8">
           {navItems.map((item) => (
@@ -335,13 +364,6 @@ const Navbar = () => {
                 onClick={() => setIsMenuOpen(false)}
               >
                 Dashboard
-              </a>
-              <a
-                href="/profile"
-                className={themeClasses.mobileItem(isActive("/profile"))}
-                onClick={() => setIsMenuOpen(false)}
-              >
-                Profile
               </a>
               <button
                 type="button"
