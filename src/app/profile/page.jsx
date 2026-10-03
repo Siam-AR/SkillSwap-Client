@@ -5,7 +5,7 @@ import Link from "next/link";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { useSession } from "@/lib/auth-client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import EditProfileForm from "./EditProfileForm";
 
 function getInitials(name, email) {
@@ -22,13 +22,33 @@ function getInitials(name, email) {
 }
 
 export default function ProfilePage() {
-  const { data: sessionData, isPending } = useSession();
-  const user = sessionData?.user || null;
-  const isAuthenticated = Boolean(user);
+  const { data: sessionData, isPending: sessionPending } = useSession();
+  const sessionUser = sessionData?.user || null;
+  const isAuthenticated = Boolean(sessionUser);
   const [isEditing, setIsEditing] = useState(false);
+  const [fullUser, setFullUser] = useState(null);
+  const [isFetching, setIsFetching] = useState(false);
 
-  const avatarLabel = user?.name || user?.email || "Account";
-  const avatarInitials = getInitials(user?.name, user?.email);
+  useEffect(() => {
+    if (isAuthenticated && sessionUser?.email) {
+      setIsFetching(true);
+      fetch("/api/dashboard/freelancer/profile", {
+        headers: { "X-User-Email": sessionUser.email }
+      })
+        .then(res => res.json())
+        .then(payload => {
+          if (payload.success) setFullUser(payload.data);
+        })
+        .catch(console.error)
+        .finally(() => setIsFetching(false));
+    }
+  }, [isAuthenticated, sessionUser?.email, isEditing]);
+
+  const user = fullUser || sessionUser || null;
+  const isPending = sessionPending || (isAuthenticated && isFetching && !fullUser);
+
+  const avatarLabel = user?.name || "Freelancer";
+  const avatarInitials = getInitials(avatarLabel, user?.email);
 
   if (isPending) {
     return (
@@ -93,8 +113,8 @@ export default function ProfilePage() {
           <div className="relative flex flex-col sm:flex-row items-center sm:items-start justify-between gap-6">
             <div className="flex flex-col sm:flex-row items-center sm:items-start gap-5 text-center sm:text-left">
               <div className="relative shrink-0">
-                {user?.image ? (
-                  <img src={user.image} alt={avatarLabel} className="relative w-24 h-24 sm:w-28 sm:h-28 rounded-full object-cover p-1 border-2 border-[#009689] shadow-md bg-white z-10" />
+                {user?.image || user?.avatar ? (
+                  <img src={user?.image || user?.avatar} alt={avatarLabel} className="relative w-24 h-24 sm:w-28 sm:h-28 rounded-full object-cover p-1 border-2 border-[#009689] shadow-md bg-white z-10" />
                 ) : (
                   <div className="relative w-24 h-24 sm:w-28 sm:h-28 rounded-full p-1 border-2 border-[#009689] shadow-md bg-white z-10 flex items-center justify-center">
                     <div className="w-full h-full rounded-full bg-gradient-to-tr from-[#009689] to-[#2CA99F] flex items-center justify-center text-white font-bold text-3xl shadow-inner">
@@ -105,24 +125,38 @@ export default function ProfilePage() {
                 
                 {/* Status Badge */}
                 <div className="absolute -bottom-2 sm:-bottom-1 left-1/2 sm:left-auto sm:-right-2 -translate-x-1/2 sm:translate-x-0 z-20">
-                  {user?.status === "busy" || user?.status === "unavailable" ? (
-                    <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-bold tracking-wide uppercase bg-rose-50 text-rose-700 border border-rose-200 shadow-sm whitespace-nowrap">
-                      <span className="w-2 h-2 rounded-full bg-rose-500" />
-                      {user.status === "busy" ? "Busy" : "Unavailable"}
-                    </span>
-                  ) : (
-                    <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-bold tracking-wide uppercase bg-emerald-50 text-emerald-700 border border-emerald-200 shadow-sm whitespace-nowrap">
-                      <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                      Available
-                    </span>
-                  )}
+                  {(() => {
+                    const status = user?.status || user?.availabilityStatus || "available";
+                    if (status === "busy") {
+                      return (
+                        <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-bold tracking-wide uppercase bg-amber-50 text-amber-700 border border-amber-200 shadow-sm whitespace-nowrap">
+                          <span className="w-2 h-2 rounded-full bg-amber-500" />
+                          Busy
+                        </span>
+                      );
+                    }
+                    if (status === "unavailable") {
+                      return (
+                        <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-bold tracking-wide uppercase bg-rose-50 text-rose-700 border border-rose-200 shadow-sm whitespace-nowrap">
+                          <span className="w-2 h-2 rounded-full bg-rose-500" />
+                          Unavailable
+                        </span>
+                      );
+                    }
+                    return (
+                      <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-bold tracking-wide uppercase bg-emerald-50 text-emerald-700 border border-emerald-200 shadow-sm whitespace-nowrap">
+                        <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                        Available
+                      </span>
+                    );
+                  })()}
                 </div>
               </div>
               
               <div className="pt-2">
                 <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900">{avatarLabel}</h1>
                 <p className="text-sm sm:text-base font-semibold text-[#009689] mt-0.5">
-                  {user?.designation || user?.headline || (user?.role === "freelancer" ? "Full Stack Developer" : "Client Account")}
+                  {user?.designation || (user?.role === "freelancer" ? "Freelancer Account" : "Client Account")}
                 </p>
               </div>
             </div>
@@ -145,20 +179,18 @@ export default function ProfilePage() {
             </div>
             <div>
               <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Completed Tasks</p>
-              <p className="text-base sm:text-lg font-bold text-slate-800">{user?.completedTasks || user?.finishedJobs || user?.completedOrders || 0} Orders</p>
+              <p className="text-base sm:text-lg font-bold text-slate-800">{user?.completedTasks ? `${user.completedTasks} Orders` : "0 Orders"}</p>
             </div>
             <div>
               <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Rating Score</p>
               <p className="text-base sm:text-lg font-bold text-slate-800 flex items-center justify-center sm:justify-start gap-1">
-                <span className="text-amber-500">★</span> 
-                {user?.rating ? Number(user.rating).toFixed(1) : "New"} 
-                <span className="text-slate-400 font-medium text-sm">({user?.reviewsCount || user?.reviews?.length || 0})</span>
+                {user?.rating ? `★ ${Number(user.rating).toFixed(1)} (${user.reviewsCount || 0})` : "★ New (0)"}
               </p>
             </div>
             <div>
               <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Member Since</p>
               <p className="text-base sm:text-lg font-bold text-slate-800">
-                {user?.createdAt ? new Date(user.createdAt).toLocaleDateString("en-US", { month: "short", year: "numeric" }) : "Recently"}
+                {user?.createdAt ? new Date(user.createdAt).toLocaleDateString("en-US", { month: "short", year: "numeric" }) : "Recently Joined"}
               </p>
             </div>
           </div>
