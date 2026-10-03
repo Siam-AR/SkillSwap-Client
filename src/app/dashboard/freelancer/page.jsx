@@ -3,10 +3,29 @@ import { getServerSession } from "@/lib/session";
 import { getFreelancerOverviewStats } from "@/lib/dashboard-freelancer-overview";
 import { getFreelancerProposals } from "@/lib/dashboard-freelancer-proposals";
 import { Search, Send, Clock, CheckCircle2, Wallet, User as UserIcon, TrendingUp } from "lucide-react";
+import { getAuthDb } from "@/lib/server-auth-db";
+
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
 
 const formatCurrency = (value) => {
   const amount = Number(value ?? 0);
   return Number.isNaN(amount) ? "$0.00" : `$${amount.toFixed(2)}`;
+};
+
+const calculateProfileCompleteness = (user) => {
+  if (!user) return 0;
+  let score = 0;
+  
+  if (user.name) score += 15;
+  if (user.email) score += 15;
+  if (user.image || user.avatar) score += 10;
+  if (user.designation || user.headline) score += 15;
+  if (user.skills && user.skills.length > 0) score += 15;
+  if (user.bio) score += 15;
+  if (user.hourlyRate != null) score += 15;
+  
+  return Math.min(score, 100);
 };
 
 export default async function FreelancerDashboardOverviewPage() {
@@ -14,6 +33,10 @@ export default async function FreelancerDashboardOverviewPage() {
   const user = session?.user || null;
   const userEmail = user?.email;
   
+  const db = await getAuthDb();
+  const usersCollection = db.collection("user");
+  const freshUser = await usersCollection.findOne({ email: userEmail });
+
   // Fetch overview stats and recent proposals in parallel
   const [stats, allProposals] = await Promise.all([
     getFreelancerOverviewStats(userEmail),
@@ -22,8 +45,8 @@ export default async function FreelancerDashboardOverviewPage() {
   
   const recentProposals = allProposals.slice(0, 5);
 
-  // Determine dynamic user status
-  const userStatus = String(user?.availabilityStatus || user?.status || 'available').toLowerCase();
+  // Determine dynamic user status from fresh database query
+  const userStatus = String(freshUser?.availabilityStatus || freshUser?.status || user?.availabilityStatus || user?.status || 'available').toLowerCase();
   let statusBadge = {
     indicator: "bg-emerald-500 ring-emerald-500/20",
     textClass: "text-emerald-700 bg-emerald-50 border-emerald-200",
@@ -43,6 +66,8 @@ export default async function FreelancerDashboardOverviewPage() {
       label: "Unavailable for work"
     };
   }
+
+  const profileCompleteness = calculateProfileCompleteness(freshUser || user);
 
   return (
     <>
@@ -204,10 +229,10 @@ export default async function FreelancerDashboardOverviewPage() {
             <div>
               <div className="flex items-center justify-between mb-2">
                 <span className="text-sm font-semibold text-slate-700">Profile Completeness</span>
-                <span className="text-sm font-bold text-[#009689]">85%</span>
+                <span className="text-sm font-bold text-[#009689]">{profileCompleteness}%</span>
               </div>
               <div className="w-full bg-slate-100 rounded-full h-2 mb-3">
-                <div className="bg-[#009689] h-2 rounded-full" style={{ width: '85%' }}></div>
+                <div className="bg-[#009689] h-2 rounded-full" style={{ width: `${profileCompleteness}%` }}></div>
               </div>
               <Link href="/profile" className="text-xs font-semibold text-slate-500 hover:text-[#009689] flex items-center gap-1">
                 <UserIcon className="w-3 h-3" /> Update Profile
