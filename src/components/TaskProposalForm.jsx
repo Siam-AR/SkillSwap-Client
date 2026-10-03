@@ -24,7 +24,7 @@ async function apiFetch(path, opts = {}) {
   return data;
 }
 
-export default function TaskProposalForm({ taskId, taskBudget }) {
+export default function TaskProposalForm({ taskId, taskBudget, client }) {
   const { data: sessionData, isPending } = useSession();
   const [user, setUser] = useState(null);
   const [hasSubmitted, setHasSubmitted] = useState(false);
@@ -143,14 +143,29 @@ export default function TaskProposalForm({ taskId, taskBudget }) {
       <h3 className="text-xl font-extrabold text-slate-900">Submit a Proposal</h3>
       <p className="text-xs sm:text-sm text-slate-500 mt-1">Pitch your turnaround time and bid to the client.</p>
 
-      {/* Logged-in Freelancer Preview */}
-      <div className="bg-slate-50 border border-slate-200/80 rounded-xl p-3 flex items-center gap-3 my-5">
-        <div className="bg-gradient-to-tr from-[#009689] to-[#2CA99F] text-white font-bold w-10 h-10 rounded-full flex items-center justify-center text-sm shrink-0">
-          {String((user?.name || user?.email || "F").charAt(0)).toUpperCase()}
-        </div>
-        <div className="overflow-hidden">
-          <p className="font-semibold text-slate-900 text-sm truncate">{user?.name || user?.email}</p>
-          <p className="text-xs text-slate-500">Applying as Freelancer</p>
+      {/* Proposal Destination Header / Client Card */}
+      <div className="p-3.5 rounded-2xl bg-teal-50/60 border border-teal-100/90 flex items-center gap-3 my-5">
+        {client?.image || client?.avatar ? (
+          <img 
+            src={client.image || client.avatar} 
+            alt={client.name || "Client"} 
+            className="w-10 h-10 rounded-full object-cover border border-[#009689]"
+          />
+        ) : (
+          <div className="w-10 h-10 rounded-full bg-[#009689] text-white font-bold text-sm flex items-center justify-center uppercase">
+            {client?.name?.charAt(0) || "C"}
+          </div>
+        )}
+
+        <div className="min-w-0 flex-1">
+          <span className="text-[10px] font-bold uppercase tracking-wider text-teal-700 block">
+            Sending Proposal to
+          </span>
+          <h4 className="text-sm font-bold text-slate-900 truncate">
+            <span className="underline decoration-[#009689] decoration-2 underline-offset-4">
+              {client?.name || client?.email?.split('@')[0] || "Client"}
+            </span>
+          </h4>
         </div>
       </div>
 
