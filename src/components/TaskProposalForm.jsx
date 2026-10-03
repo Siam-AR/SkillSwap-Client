@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import { useSession } from "@/lib/auth-client";
 import { Clock, Send, Lock, CheckCircle2, DollarSign } from "lucide-react";
 
@@ -26,11 +27,13 @@ async function apiFetch(path, opts = {}) {
 
 export default function TaskProposalForm({ taskId, taskBudget, client }) {
   const { data: sessionData, isPending } = useSession();
+  const router = useRouter();
   const [user, setUser] = useState(null);
   const [hasSubmitted, setHasSubmitted] = useState(false);
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
   const [feedback, setFeedback] = useState(null);
+  const [imgError, setImgError] = useState(false);
   
   const [form, setForm] = useState({
     expectedAmount: taskBudget ? String(taskBudget) : "",
@@ -98,6 +101,7 @@ export default function TaskProposalForm({ taskId, taskBudget, client }) {
         setHasSubmitted(true);
         setFeedback({ type: "success", message: "Proposal submitted successfully." });
         setForm({ expectedAmount: "", estimatedDays: "", coverLetter: "" });
+        router.refresh();
       }
     } catch (error) {
       const message = error?.body?.message || error?.message || "Failed to submit proposal.";
@@ -145,14 +149,15 @@ export default function TaskProposalForm({ taskId, taskBudget, client }) {
 
       {/* Proposal Destination Header / Client Card */}
       <div className="p-3.5 rounded-2xl bg-teal-50/60 border border-teal-100/90 flex items-center gap-3 my-5">
-        {client?.image || client?.avatar ? (
+        {(client?.image || client?.avatar) && !imgError ? (
           <img 
             src={client.image || client.avatar} 
             alt={client.name || "Client"} 
+            onError={() => setImgError(true)}
             className="w-10 h-10 rounded-full object-cover border border-[#009689]"
           />
         ) : (
-          <div className="w-10 h-10 rounded-full bg-[#009689] text-white font-bold text-sm flex items-center justify-center uppercase">
+          <div className="w-10 h-10 rounded-full bg-[#009689] text-white font-bold text-sm flex items-center justify-center uppercase shrink-0">
             {client?.name?.charAt(0) || "C"}
           </div>
         )}

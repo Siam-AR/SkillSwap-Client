@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { ArrowLeft, Clock, DollarSign, Users, FileText, ShieldCheck, CheckCircle2 } from "lucide-react";
 import TaskProposalForm from "@/components/TaskProposalForm";
 import EditTaskForm from "@/components/dashboard/EditTaskForm";
@@ -55,6 +55,11 @@ export default function TaskDetailsShell({ task }) {
   const userRole = String(sessionData?.user?.role || "").trim();
   const [taskState, setTaskState] = useState(task);
   const [editingTask, setEditingTask] = useState(null);
+  const [imgError, setImgError] = useState(false);
+
+  useEffect(() => {
+    setTaskState(task);
+  }, [task]);
 
   const isTaskOwner = String(sessionData?.user?.id || "") === String(taskState?.clientId || taskState?.client?._id || "");
   const canEditTask = isTaskOwner && String(taskState?.status || "").toLowerCase() === "open";
@@ -160,37 +165,32 @@ export default function TaskDetailsShell({ task }) {
               About the Client
             </h3>
 
-            <div className="flex items-center gap-3.5">
-              {taskState.client?.image || taskState.client?.avatar ? (
-                <img 
-                  src={taskState.client.image || taskState.client.avatar} 
-                  alt={taskState.client.name || "Client"} 
-                  className="w-12 h-12 rounded-full object-cover border-2 border-[#009689]"
-                />
-              ) : (
-                <div className="w-12 h-12 rounded-full bg-teal-50 text-[#009689] font-bold text-lg flex items-center justify-center border border-teal-200">
-                  {clientInitial}
+            <div className="flex items-center justify-between gap-3.5">
+              <div className="flex items-center gap-3.5">
+                {(taskState.client?.image || taskState.client?.avatar) && !imgError ? (
+                  <img 
+                    src={taskState.client.image || taskState.client.avatar} 
+                    alt={taskState.client.name || "Client"} 
+                    onError={() => setImgError(true)}
+                    className="w-12 h-12 rounded-full object-cover border-2 border-[#009689]"
+                  />
+                ) : (
+                  <div className="w-12 h-12 rounded-full bg-teal-50 text-[#009689] font-bold text-lg flex items-center justify-center border border-teal-200 shrink-0">
+                    {clientInitial}
+                  </div>
+                )}
+
+                <div>
+                  <h4 className="text-base font-bold text-slate-900 leading-tight">
+                    {clientDisplayName}
+                  </h4>
+                  <p className="text-xs text-slate-500">
+                    {clientEmail || "Verified Client"}
+                  </p>
                 </div>
-              )}
-
-              <div>
-                <h4 className="text-base font-bold text-slate-900 leading-tight">
-                  {clientDisplayName}
-                </h4>
-                <p className="text-xs text-slate-500">
-                  {clientEmail || "Verified Client"}
-                </p>
               </div>
-            </div>
-
-            <div className="grid grid-cols-2 gap-3 pt-3 border-t border-slate-100 text-xs">
-              <div>
-                <span className="text-slate-400 block font-medium">Payment Status</span>
-                <span className="font-semibold text-emerald-600 flex items-center gap-1 mt-0.5">
-                  <CheckCircle2 className="w-3.5 h-3.5"/> Verified
-                </span>
-              </div>
-              <div>
+              
+              <div className="text-right text-xs">
                 <span className="text-slate-400 block font-medium">Member Since</span>
                 <span className="font-semibold text-slate-700 mt-0.5 block">
                   {taskState.client?.createdAt ? new Date(taskState.client.createdAt).toLocaleDateString('en-US', { month: 'short', year: 'numeric' }) : "Recently Joined"}
