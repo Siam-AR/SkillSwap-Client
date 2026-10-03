@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import { FiSave, FiX } from "react-icons/fi";
 import { getSession } from "@/lib/auth-client";
 import { useRouter } from "next/navigation";
+import { CustomUploadButton } from "@/components/CustomUploadButton";
 
 const normalizeSkills = (value) => {
   if (!value) return [];
@@ -142,24 +143,34 @@ export default function EditProfileForm({ onCancel, onSuccess, initialUser }) {
           </label>
         </div>
 
-        {/* Row 2: Image URL with Preview */}
+        {/* Row 2: Image Upload */}
         <div>
-          <label className="block text-sm font-semibold text-slate-800">
-            Profile Photo URL
-            <input
-              type="url"
-              value={formState.image}
-              onChange={handleChange("image")}
-              placeholder="https://images.unsplash.com/..."
-              className="mt-2 w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900 outline-none transition focus:bg-white focus:border-[#009689] focus:ring-1 focus:ring-[#009689]"
-            />
+          <label className="block text-sm font-semibold text-slate-800 mb-2">
+            Profile Photo
           </label>
-          {formState.image && (
-            <div className="mt-3 flex items-center gap-3">
-              <span className="text-xs font-medium text-slate-500 uppercase tracking-wide">Preview:</span>
-              <img src={formState.image} alt="Preview" className="w-10 h-10 rounded-full border border-slate-200 object-cover" onError={(e) => e.currentTarget.src="https://via.placeholder.com/40"} />
+          <div className="flex flex-col sm:flex-row sm:items-center gap-6 mt-2 rounded-xl border border-slate-200 bg-slate-50 p-4">
+            {formState.image ? (
+              <img src={formState.image} alt="Preview" className="w-16 h-16 rounded-full border border-slate-200 object-cover shrink-0" onError={(e) => e.currentTarget.src="https://via.placeholder.com/64"} />
+            ) : (
+              <div className="w-16 h-16 rounded-full border border-slate-200 bg-slate-100 flex items-center justify-center text-slate-400 text-xs text-center shrink-0">
+                No Photo
+              </div>
+            )}
+            
+            <div className="flex-1 flex justify-start">
+              <CustomUploadButton
+                onUploadComplete={(res) => {
+                  if (res && res.length > 0) {
+                    setFormState((current) => ({ ...current, image: res[0].url }));
+                    setFeedback({ type: "success", message: "Photo uploaded successfully!" });
+                  }
+                }}
+                onUploadError={(error) => {
+                  setFeedback({ type: "error", message: `Upload failed: ${error.message}` });
+                }}
+              />
             </div>
-          )}
+          </div>
         </div>
 
         {/* Row 3: Rate and Status */}
