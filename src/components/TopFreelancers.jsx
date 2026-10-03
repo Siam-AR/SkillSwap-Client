@@ -23,21 +23,11 @@ export default function TopFreelancers({ freelancers }) {
     <section className="w-full">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
         {/* Header */}
-        <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
-          <div>
-            <p className="text-sm font-semibold uppercase tracking-[0.15em] text-[#009689]">
-              Top Freelancers
-            </p>
-            <h2 className="mt-2 text-3xl font-bold text-slate-900">
-              Hire top rated talent
-            </h2>
-          </div>
-          <Link
-            href="/browse-freelancers"
-            className="text-sm font-semibold text-[#009689] transition hover:text-teal-500 flex items-center gap-1 group"
-          >
-            Browse freelancers <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
-          </Link>
+        <div className="flex flex-col items-center text-center pb-4">
+          <h2 className="text-4xl font-bold text-slate-900">Top  <span className="text-[#009689]">Freelancers</span></h2>
+          <p className="mt-3 text-slate-600">
+            Hire top rated talent
+          </p>
         </div>
 
         {/* Grid */}
@@ -164,6 +154,17 @@ export default function TopFreelancers({ freelancers }) {
             );
           })}
         </motion.div>
+
+        {/* Action Button */}
+        <div className="pt-4 flex justify-center">
+          <Link 
+            href="/browse-freelancers"
+            className="flex items-center gap-2 text-[#009689] hover:text-[#238B81] font-semibold text-base transition-colors group"
+          >
+            Browse all freelancers
+            <ArrowRight className="w-5 h-5 transition-transform group-hover:translate-x-1" />
+          </Link>
+        </div>
       </div>
     </section>
   );

@@ -168,7 +168,7 @@ const Navbar = () => {
             <p
               className={`text-xs font-medium transition-colors duration-300 ${themeClasses.brandText}`}
             >
-              Freelance micro-tasks
+              Freelance tasks platform
             </p>
           </div>
         </Link>

@@ -23,7 +23,7 @@ export default function FeatureServices({ tasks }) {
   return (
     <section className="mt-20">
       <div className="text-center">
-        <h2 className="text-4xl font-bold text-slate-900">Feature Services</h2>
+        <h2 className="text-4xl font-bold text-slate-900">Feature  <span className="text-[#009689]">Services</span></h2>
         <p className="mt-3 text-slate-600">
           Discover our featured services designed to elevate your experience
         </p>
