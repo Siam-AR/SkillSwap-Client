@@ -55,9 +55,14 @@ export async function PATCH(request) {
     const body = await request.json();
     const name = String(body.name || "").trim();
     const image = String(body.image || "").trim();
+    const designation = String(body.designation || "").trim();
     const skills = Array.isArray(body.skills) ? body.skills.map((skill) => String(skill || "").trim()).filter(Boolean) : [];
     const bio = String(body.bio || "").trim();
     const hourlyRate = Number(body.hourlyRate ?? body.hourly_rate ?? body.hourlyRateUSD ?? 0);
+    let status = String(body.status || "").trim().toLowerCase();
+    if (!["available", "busy", "unavailable"].includes(status)) {
+      status = "available";
+    }
 
     if (!name) {
       return NextResponse.json({ success: false, message: "Name is required" }, { status: 400 });
@@ -77,9 +82,11 @@ export async function PATCH(request) {
         $set: {
           name,
           image,
+          designation,
           skills,
           bio,
           hourlyRate,
+          status,
           updatedAt: new Date(),
         },
       }
