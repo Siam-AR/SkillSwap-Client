@@ -2,7 +2,10 @@
 
 import { useState, useMemo } from "react";
 import Link from "next/link";
-import { Search, Eye, Calendar, FileSearch, Trash2, Filter } from "lucide-react";
+import { Search, Eye, Calendar, FileSearch, Trash2, Filter, ExternalLink, FileText } from "lucide-react";
+import { toast } from "react-toastify";
+import ProposalDetailsModal from "./ProposalDetailsModal";
+import WithdrawModal from "./WithdrawModal";
 
 const formatCurrency = (value) => {
   const amount = Number(value ?? 0);
@@ -26,11 +29,14 @@ const getInitials = (email) => {
 };
 
 export default function ProposalsClientView({ initialProposals = [] }) {
+  const [localProposals, setLocalProposals] = useState(initialProposals);
   const [searchQuery, setSearchQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
+  const [selectedProposal, setSelectedProposal] = useState(null);
+  const [proposalToWithdraw, setProposalToWithdraw] = useState(null);
 
   const stats = useMemo(() => {
-    return initialProposals.reduce(
+    return localProposals.reduce(
       (acc, curr) => {
         acc.all++;
         if (curr.status === "pending") acc.pending++;
@@ -40,10 +46,10 @@ export default function ProposalsClientView({ initialProposals = [] }) {
       },
       { all: 0, pending: 0, accepted: 0, rejected: 0 }
     );
-  }, [initialProposals]);
+  }, [localProposals]);
 
   const filteredProposals = useMemo(() => {
-    return initialProposals.filter((proposal) => {
+    return localProposals.filter((proposal) => {
       const matchesSearch = 
         (proposal.taskTitle || "").toLowerCase().includes(searchQuery.toLowerCase()) ||
         (proposal.clientEmail || "").toLowerCase().includes(searchQuery.toLowerCase());
@@ -52,13 +58,14 @@ export default function ProposalsClientView({ initialProposals = [] }) {
       
       return matchesSearch && matchesStatus;
     });
-  }, [initialProposals, searchQuery, statusFilter]);
+  }, [localProposals, searchQuery, statusFilter]);
 
-  const handleDelete = async (proposalId) => {
-    if (!confirm("Are you sure you want to withdraw this proposal?")) return;
-    // In a real app, you would make an API call here.
-    // For now, we will just alert as we don't have the API route for delete.
-    alert("Delete functionality to be implemented. Proposal ID: " + proposalId);
+  const handleConfirmWithdraw = async (proposalId) => {
+    // Simulate API call delay
+    await new Promise(resolve => setTimeout(resolve, 800));
+    setLocalProposals((current) => current.filter(p => p.id !== proposalId));
+    setProposalToWithdraw(null);
+    toast.success("Proposal successfully withdrawn.", { icon: "✅" });
   };
 
   return (
@@ -232,29 +239,35 @@ export default function ProposalsClientView({ initialProposals = [] }) {
                       )}
                     </td>
                     <td className="px-6 py-4 text-right">
-                      <div className="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                      <div className="flex items-center gap-2 justify-end opacity-0 group-hover:opacity-100 transition-opacity">
+                        <button
+                          onClick={() => setSelectedProposal(proposal)}
+                          className="p-2 rounded-xl text-[#009689] bg-teal-50 hover:bg-[#009689] hover:text-white transition-all duration-200 border border-teal-200/60"
+                          title="View Proposal Details"
+                        >
+                          <FileText className="w-4 h-4" />
+                        </button>
                         {proposal.taskId ? (
                           <Link 
                             href={`/task/${proposal.taskId}`}
-                            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold text-[#009689] bg-teal-50 hover:bg-[#009689] hover:text-white transition-all duration-200"
-                            title="View Task"
+                            target="_blank"
+                            className="p-2 rounded-xl text-slate-500 bg-slate-50 hover:bg-slate-200 hover:text-slate-800 transition-all border border-slate-200"
+                            title="Open Original Task"
                           >
-                            <Eye className="w-3.5 h-3.5" />
-                            <span>View Task</span>
+                            <ExternalLink className="w-4 h-4" />
                           </Link>
                         ) : (
                           <span 
-                            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-400 bg-slate-50 cursor-not-allowed"
+                            className="p-2 rounded-xl text-slate-300 bg-slate-50 border border-slate-100 cursor-not-allowed"
                             title="Task Unavailable"
                           >
-                            <Eye className="w-3.5 h-3.5" />
-                            <span>View Task</span>
+                            <ExternalLink className="w-4 h-4" />
                           </span>
                         )}
                         {proposal.status === "pending" && (
                           <button 
-                            onClick={() => handleDelete(proposal.id)}
-                            className="p-2 rounded-lg text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition-colors"
+                            onClick={() => setProposalToWithdraw(proposal)}
+                            className="p-2 rounded-xl text-rose-500 bg-rose-50 hover:bg-rose-500 hover:text-white transition-all border border-rose-100"
                             title="Withdraw Proposal"
                           >
                             <Trash2 className="w-4 h-4" />
@@ -309,26 +322,35 @@ export default function ProposalsClientView({ initialProposals = [] }) {
                   </div>
                 </div>
 
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-2 pt-2">
+                  <button
+                    onClick={() => setSelectedProposal(proposal)}
+                    className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-teal-50 text-[#009689] text-sm font-semibold hover:bg-[#009689] hover:text-white transition-colors border border-teal-200/60"
+                  >
+                    <FileText className="w-4 h-4" /> View Details
+                  </button>
                   {proposal.taskId ? (
                     <Link 
                       href={`/task/${proposal.taskId}`}
-                      className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-sm font-semibold transition-colors"
+                      target="_blank"
+                      className="inline-flex items-center justify-center p-2.5 rounded-xl border border-slate-200 bg-slate-50 text-slate-500 hover:bg-slate-200 hover:text-slate-800 transition-colors"
+                      title="Open Original Task"
                     >
-                      <Eye className="w-4 h-4" /> View Task
+                      <ExternalLink className="w-4 h-4" />
                     </Link>
                   ) : (
                     <span 
-                      className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-2 rounded-xl bg-slate-50 text-slate-400 text-sm font-semibold cursor-not-allowed"
+                      className="inline-flex items-center justify-center p-2.5 rounded-xl border border-slate-100 bg-slate-50 text-slate-300 cursor-not-allowed"
                       title="Task Unavailable"
                     >
-                      <Eye className="w-4 h-4" /> View Task
+                      <ExternalLink className="w-4 h-4" />
                     </span>
                   )}
                   {proposal.status === "pending" && (
                     <button 
-                      onClick={() => handleDelete(proposal.id)}
-                      className="inline-flex items-center justify-center p-2 rounded-xl border border-rose-200 text-rose-600 hover:bg-rose-50 transition-colors"
+                      onClick={() => setProposalToWithdraw(proposal)}
+                      className="inline-flex items-center justify-center p-2.5 rounded-xl border border-rose-100 text-rose-500 bg-rose-50 hover:bg-rose-500 hover:text-white transition-colors"
+                      title="Withdraw Proposal"
                     >
                       <Trash2 className="w-4 h-4" />
                     </button>
@@ -366,6 +388,21 @@ export default function ProposalsClientView({ initialProposals = [] }) {
             </Link>
           )}
         </div>
+      )}
+
+      {selectedProposal && (
+        <ProposalDetailsModal 
+          proposal={selectedProposal} 
+          onClose={() => setSelectedProposal(null)} 
+        />
+      )}
+
+      {proposalToWithdraw && (
+        <WithdrawModal
+          proposal={proposalToWithdraw}
+          onClose={() => setProposalToWithdraw(null)}
+          onConfirm={handleConfirmWithdraw}
+        />
       )}
     </div>
   );
