@@ -20,7 +20,7 @@ export default async function BrowseFreelancersPage({ searchParams }) {
   let error = null;
 
   try {
-    response = await fetchBrowseFreelancers({ search, page, limit: 6, skill, sort });
+    response = await fetchBrowseFreelancers({ search, page, limit: 8, skill, sort });
   } catch (err) {
     error = err?.message || "Unable to load freelancers from the database.";
   }
@@ -65,7 +65,7 @@ export default async function BrowseFreelancersPage({ searchParams }) {
           ) : freelancers.length ? (
             <>
               {/* Freelancers Grid */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                 {freelancers.map((freelancer) => (
                   <div key={freelancer._id} className="group bg-white rounded-3xl border border-slate-200/90 hover:border-[#009689] p-5 sm:p-6 flex flex-col justify-between transition-all duration-300 shadow-sm hover:shadow-xl hover:shadow-teal-900/10 hover:-translate-y-1">
                     <div>
