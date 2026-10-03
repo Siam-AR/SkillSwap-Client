@@ -1,8 +1,8 @@
 import Link from "next/link";
 import { getServerSession } from "@/lib/session";
 import { getFreelancerOverviewStats } from "@/lib/dashboard-freelancer-overview";
-import { Search, Send, Clock, CheckCircle2, Wallet, User as UserIcon, TrendingUp, AlertCircle } from "lucide-react";
-import Image from "next/image";
+import { getFreelancerProposals } from "@/lib/dashboard-freelancer-proposals";
+import { Search, Send, Clock, CheckCircle2, Wallet, User as UserIcon, TrendingUp } from "lucide-react";
 
 const formatCurrency = (value) => {
   const amount = Number(value ?? 0);
@@ -13,11 +13,36 @@ export default async function FreelancerDashboardOverviewPage() {
   const session = await getServerSession();
   const user = session?.user || null;
   const userEmail = user?.email;
-  const stats = await getFreelancerOverviewStats(userEmail);
+  
+  // Fetch overview stats and recent proposals in parallel
+  const [stats, allProposals] = await Promise.all([
+    getFreelancerOverviewStats(userEmail),
+    getFreelancerProposals(userEmail)
+  ]);
+  
+  const recentProposals = allProposals.slice(0, 5);
 
-  // We don't have a real recentProposals fetcher yet, so we will use an empty array
-  // to show the clean empty state as requested in specs.
-  const recentProposals = [];
+  // Determine dynamic user status
+  const userStatus = String(user?.availabilityStatus || user?.status || 'available').toLowerCase();
+  let statusBadge = {
+    indicator: "bg-emerald-500 ring-emerald-500/20",
+    textClass: "text-emerald-700 bg-emerald-50 border-emerald-200",
+    label: "Available for work"
+  };
+
+  if (userStatus === 'busy') {
+    statusBadge = {
+      indicator: "bg-amber-500 ring-amber-500/20",
+      textClass: "text-amber-700 bg-amber-50 border-amber-200",
+      label: "Busy on active projects"
+    };
+  } else if (userStatus === 'unavailable') {
+    statusBadge = {
+      indicator: "bg-rose-500 ring-rose-500/20",
+      textClass: "text-rose-700 bg-rose-50 border-rose-200",
+      label: "Unavailable for work"
+    };
+  }
 
   return (
     <>
@@ -110,26 +135,58 @@ export default async function FreelancerDashboardOverviewPage() {
         <div className="lg:col-span-8 bg-white rounded-2xl border border-slate-200/90 p-6 shadow-sm space-y-4">
           <div className="flex items-center justify-between">
             <h3 className="text-lg font-bold text-slate-900">Recent Submitted Proposals</h3>
-            <Link href="/dashboard/freelancer/my-proposals" className="text-sm font-semibold text-[#009689] hover:text-[#238B81]">
-              View All
-            </Link>
+            {recentProposals.length > 0 && (
+              <Link href="/dashboard/freelancer/my-proposals" className="text-sm font-semibold text-[#009689] hover:text-[#238B81]">
+                View All
+              </Link>
+            )}
           </div>
           
-          <div className="mt-6 flex flex-col items-center justify-center py-12 text-center bg-slate-50/50 rounded-xl border border-dashed border-slate-200">
-            <div className="bg-teal-50 p-4 rounded-full text-[#009689] mb-4">
-              <Search className="w-8 h-8" />
+          {recentProposals.length > 0 ? (
+            <div className="mt-6 flex flex-col gap-3">
+              {recentProposals.map((proposal) => {
+                const statusColor = 
+                  proposal.status === "accepted" ? "bg-emerald-50 text-emerald-700 border-emerald-200" :
+                  proposal.status === "rejected" ? "bg-rose-50 text-rose-700 border-rose-200" :
+                  "bg-amber-50 text-amber-700 border-amber-200";
+
+                return (
+                  <div key={proposal.id} className="flex items-center justify-between p-4 rounded-xl border border-slate-100 bg-slate-50 hover:bg-slate-100/50 transition-colors">
+                    <div className="flex flex-col min-w-0 pr-4">
+                      <h4 className="text-sm font-bold text-slate-900 truncate">
+                        {proposal.taskTitle || "Untitled Task"}
+                      </h4>
+                      <p className="text-xs text-slate-500 mt-1">
+                        Submitted: {new Date(proposal.submittedAt).toLocaleDateString()}
+                      </p>
+                    </div>
+                    <div className="flex flex-col items-end shrink-0">
+                      <p className="text-sm font-bold text-slate-900">${proposal.proposedBudget}</p>
+                      <span className={`inline-flex mt-1 px-2.5 py-0.5 rounded-full border text-[10px] font-bold uppercase tracking-wider ${statusColor}`}>
+                        {proposal.status}
+                      </span>
+                    </div>
+                  </div>
+                );
+              })}
             </div>
-            <h4 className="text-base font-bold text-slate-900 mb-1">No proposals yet</h4>
-            <p className="text-sm text-slate-500 max-w-sm mb-6">
-              You haven't submitted any proposals recently. Browse open tasks and start sending proposals to land your next job.
-            </p>
-            <Link 
-              href="/browse-tasks" 
-              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-slate-900 hover:bg-slate-800 text-white text-sm font-semibold transition-colors"
-            >
-              Browse Open Tasks
-            </Link>
-          </div>
+          ) : (
+            <div className="mt-6 flex flex-col items-center justify-center py-12 text-center bg-slate-50/50 rounded-xl border border-dashed border-slate-200">
+              <div className="bg-teal-50 p-4 rounded-full text-[#009689] mb-4">
+                <Search className="w-8 h-8" />
+              </div>
+              <h4 className="text-base font-bold text-slate-900 mb-1">No proposals yet</h4>
+              <p className="text-sm text-slate-500 max-w-sm mb-6">
+                You haven't submitted any proposals recently. Browse open tasks and start sending proposals to land your next job.
+              </p>
+              <Link 
+                href="/browse-tasks" 
+                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-slate-900 hover:bg-slate-800 text-white text-sm font-semibold transition-colors"
+              >
+                Browse Open Tasks
+              </Link>
+            </div>
+          )}
         </div>
 
         {/* Quick Account / Performance Summary (Span 4) */}
@@ -137,10 +194,10 @@ export default async function FreelancerDashboardOverviewPage() {
           <div className="bg-white rounded-2xl border border-slate-200/90 p-6 shadow-sm space-y-5">
             <h3 className="text-base font-bold text-slate-900">Account Status</h3>
             
-            <div className="flex items-center justify-between p-3 rounded-xl border border-slate-100 bg-slate-50">
+            <div className={`flex items-center justify-between p-3 rounded-xl border ${statusBadge.textClass}`}>
               <div className="flex items-center gap-3">
-                <div className="w-2 h-2 rounded-full bg-emerald-500 ring-4 ring-emerald-500/20"></div>
-                <span className="text-sm font-semibold text-slate-700">Available for work</span>
+                <div className={`w-2 h-2 rounded-full ring-4 ${statusBadge.indicator}`}></div>
+                <span className="text-sm font-semibold">{statusBadge.label}</span>
               </div>
             </div>
 
