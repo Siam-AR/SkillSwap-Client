@@ -2,10 +2,11 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { FiBriefcase, FiClock, FiMail, FiMapPin, FiShield, FiUser } from "react-icons/fi";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { useSession } from "@/lib/auth-client";
+import { useState } from "react";
+import EditProfileForm from "./EditProfileForm";
 
 function getInitials(name, email) {
   if (name) {
@@ -24,6 +25,7 @@ export default function ProfilePage() {
   const { data: sessionData, isPending } = useSession();
   const user = sessionData?.user || null;
   const isAuthenticated = Boolean(user);
+  const [isEditing, setIsEditing] = useState(false);
 
   const avatarLabel = user?.name || user?.email || "Account";
   const avatarInitials = getInitials(user?.name, user?.email);
@@ -75,7 +77,15 @@ export default function ProfilePage() {
 
       <section className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10 lg:py-14 space-y-8">
         
-        {/* Profile Hero Banner */}
+        {isEditing ? (
+          <EditProfileForm 
+            initialUser={user} 
+            onCancel={() => setIsEditing(false)} 
+            onSuccess={() => setIsEditing(false)} 
+          />
+        ) : (
+          <>
+            {/* Profile Hero Banner */}
         <div className="bg-white border border-slate-200/90 rounded-3xl p-6 sm:p-8 shadow-sm relative overflow-hidden">
           {/* Ambient Header Accent */}
           <div className="absolute top-0 left-0 right-0 h-32 bg-gradient-to-b from-teal-500/10 to-transparent pointer-events-none" />
@@ -118,9 +128,12 @@ export default function ProfilePage() {
             </div>
 
             <div>
-              <Link href={user?.role === "freelancer" ? "/dashboard/freelancer/edit-profile" : "/dashboard"} className="inline-flex px-5 py-2.5 rounded-xl bg-[#009689] hover:bg-[#238B81] text-white text-sm font-semibold shadow-md shadow-teal-900/15 transition-all">
-                {user?.role === "freelancer" ? "Edit Profile" : "Dashboard"}
-              </Link>
+              <button 
+                onClick={() => setIsEditing(true)}
+                className="inline-flex px-5 py-2.5 rounded-xl bg-[#009689] hover:bg-[#238B81] text-white text-sm font-semibold shadow-md shadow-teal-900/15 transition-all"
+              >
+                Edit Profile
+              </button>
             </div>
           </div>
 
@@ -179,6 +192,8 @@ export default function ProfilePage() {
           </div>
 
         </div>
+        </>
+        )}
 
       </section>
       <Footer />
