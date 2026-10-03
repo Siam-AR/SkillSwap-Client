@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+
 import { useSession } from "@/lib/auth-client";
 import { useState, useEffect } from "react";
 import EditProfileForm from "./EditProfileForm";
@@ -52,8 +53,8 @@ export default function ProfilePage() {
 
   if (isPending) {
     return (
-      <main className="min-h-screen bg-slate-50/70">
-        <Navbar />
+    <main className="min-h-screen bg-slate-50/70">
+      <Navbar />
         <section className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10 lg:py-14">
           <div className="rounded-3xl border border-slate-200 bg-white p-8 shadow-sm">
             <div className="animate-pulse space-y-4">
@@ -70,8 +71,8 @@ export default function ProfilePage() {
 
   if (!isAuthenticated) {
     return (
-      <main className="min-h-screen bg-slate-50/70">
-        <Navbar />
+    <main className="min-h-screen bg-slate-50/70">
+      <Navbar />
         <section className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
           <div className="rounded-3xl border border-slate-200 bg-white p-10 text-center shadow-sm">
             <h1 className="text-3xl font-semibold text-slate-950">Sign in to view your profile</h1>
@@ -226,7 +227,6 @@ export default function ProfilePage() {
         </div>
         </>
         )}
-
       </section>
       <Footer />
     </main>

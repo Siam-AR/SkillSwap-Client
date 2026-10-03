@@ -31,6 +31,11 @@ const Navbar = () => {
   
   const [isScrolled, setIsScrolled] = useState(false);
 
+  // Close mobile menu on route change
+  useEffect(() => {
+    setIsMenuOpen(false);
+  }, [pathname]);
+
   useEffect(() => {
     if (typeof window === "undefined") return;
 
@@ -154,7 +159,7 @@ const Navbar = () => {
 
         <nav className="hidden items-center gap-2 md:flex">
           {navItems.map((item) => (
-            <Link
+            <a
               key={item.href}
               href={item.href}
               className={themeClasses.link(isActive(item.href))}
@@ -163,23 +168,23 @@ const Navbar = () => {
               {isActive(item.href) ? (
                 <span className="absolute inset-x-3 -bottom-1 h-1 rounded-full bg-white" />
               ) : null}
-            </Link>
+            </a>
           ))}
 
           {isAuthenticated ? (
             <>
-              <Link
+              <a
                 href={dashboardHref}
                 className={themeClasses.link(isActive("/dashboard"))}
               >
                 Dashboard
-              </Link>
-              <Link
+              </a>
+              <a
                 href="/profile"
                 className={themeClasses.link(isActive("/profile"))}
               >
                 Profile
-              </Link>
+              </a>
             </>
           ) : null}
         </nav>
@@ -312,32 +317,32 @@ const Navbar = () => {
       >
         <div className="mx-auto flex max-w-7xl flex-col gap-2 px-4 py-4 sm:px-6 lg:px-8">
           {navItems.map((item) => (
-            <Link
+            <a
               key={item.href}
               href={item.href}
               className={themeClasses.mobileItem(isActive(item.href))}
               onClick={() => setIsMenuOpen(false)}
             >
               {item.label}
-            </Link>
+            </a>
           ))}
 
           {isAuthenticated ? (
             <>
-              <Link
+              <a
                 href={dashboardHref}
                 className={themeClasses.mobileItem(isActive("/dashboard"))}
                 onClick={() => setIsMenuOpen(false)}
               >
                 Dashboard
-              </Link>
-              <Link
+              </a>
+              <a
                 href="/profile"
                 className={themeClasses.mobileItem(isActive("/profile"))}
                 onClick={() => setIsMenuOpen(false)}
               >
                 Profile
-              </Link>
+              </a>
               <button
                 type="button"
                 onClick={() => {

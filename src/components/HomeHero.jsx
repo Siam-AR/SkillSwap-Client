@@ -29,25 +29,25 @@ export default function HomeHero() {
           Find and hire expert freelancers to bring your projects to life. Explore a variety of services and skills.
         </p>
 
-        <div className="mx-auto flex w-full max-w-4xl flex-col sm:flex-row items-center overflow-hidden rounded-2xl sm:rounded-full bg-white shadow-lg p-2 gap-2">
+        <div className="mx-auto w-full max-w-4xl bg-white rounded-2xl md:rounded-full p-2 md:p-2.5 shadow-xl flex flex-col md:flex-row items-center gap-2 md:gap-3">
           <div className="flex w-full flex-1 items-center px-4">
-            <FiSearch className="h-5 w-5 text-slate-400" />
+            <FiSearch className="h-5 w-5 text-slate-400 shrink-0" />
             <input 
               type="text" 
               placeholder="Job title, key words or company" 
-              className="w-full bg-transparent px-3 py-3 text-sm text-slate-900 outline-none placeholder:text-slate-400"
+              className="flex-1 w-full bg-transparent px-4 py-3 md:py-2 text-sm text-slate-800 placeholder-slate-400 focus:outline-none"
             />
           </div>
-          <div className="hidden sm:block h-8 w-[1px] bg-slate-200"></div>
-          <div className="flex w-full sm:w-auto items-center px-4">
-            <select className="w-full sm:w-auto bg-transparent py-3 text-sm text-slate-600 outline-none cursor-pointer border-none appearance-none pr-8 relative">
+          <div className="hidden md:block w-px h-8 bg-slate-200 shrink-0"></div>
+          <div className="flex w-full md:w-auto items-center px-2">
+            <select className="w-full md:w-auto bg-transparent px-3 py-3 md:py-2 text-sm text-slate-600 focus:outline-none cursor-pointer border-none appearance-none pr-8">
               <option value="">All Categories</option>
               {categories.map((c) => (
                 <option key={c.name} value={c.name}>{c.name}</option>
               ))}
             </select>
           </div>
-          <button className="w-full sm:w-auto rounded-full bg-teal-500 px-8 py-3.5 text-sm font-semibold text-white transition-colors hover:bg-teal-600 shrink-0">
+          <button className="w-full md:w-auto px-7 py-3 rounded-xl md:rounded-full bg-[#009689] hover:bg-[#238B81] text-white font-semibold text-sm transition-all shrink-0">
             Search
           </button>
         </div>
