@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useState } from "react";
-import { LayoutDashboard, FileText, Briefcase, DollarSign, User, LogOut, Menu, X } from "lucide-react";
+import { LayoutDashboard, FileText, Briefcase, DollarSign, User, LogOut, Menu, X, ArrowLeft } from "lucide-react";
 import { signOut } from "@/lib/auth-client";
 import Image from "next/image";
 
@@ -37,12 +37,19 @@ export default function FreelancerSidebar({ user }) {
   const sidebarContent = (
     <div className="flex h-full flex-col justify-between">
       <div>
-        {/* Brand / Workspace Header */}
-        <div className="mb-8 px-2">
-          <span className="text-[10px] font-bold tracking-widest text-[#009689] uppercase bg-teal-50 px-2 py-0.5 rounded-md inline-block mb-1">
-            WORKSPACE
-          </span>
-          <h2 className="text-sm font-extrabold text-slate-900">Freelancer Portal</h2>
+        <div className="mb-8 px-2 flex items-center justify-between pb-3 border-b border-slate-100">
+          <div>
+            <span className="text-[10px] font-bold tracking-widest text-[#009689] uppercase bg-teal-50 px-2 py-0.5 rounded-md inline-block mb-1">
+              WORKSPACE
+            </span>
+            <h2 className="text-sm font-extrabold text-slate-900 mt-1">Freelancer Portal</h2>
+          </div>
+          
+          {/* Back to Home Button */}
+          <Link className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-600 hover:text-slate-900 text-xs font-semibold transition-all shadow-2xs group" href="/" title="Return to Main Website">
+            <ArrowLeft className="w-3.5 h-3.5 text-slate-400 group-hover:-translate-x-0.5 transition-transform"/>
+            <span>Home</span>
+          </Link>
         </div>
 
         {/* Navigation Links Group */}

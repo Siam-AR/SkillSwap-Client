@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { LayoutDashboard, PlusCircle, Briefcase, FileText, CreditCard, LogOut } from "lucide-react";
+import { LayoutDashboard, PlusCircle, Briefcase, FileText, CreditCard, LogOut, ArrowLeft } from "lucide-react";
 import { signOut } from "@/lib/auth-client";
 
 const navItems = [
@@ -39,11 +39,19 @@ export default function ClientSidebar({ user }) {
   return (
     <div className="flex h-full flex-col justify-between">
       <div>
-        <div className="mb-8 px-2">
-          <span className="text-[10px] font-bold tracking-widest text-[#009689] uppercase bg-teal-50 px-2 py-0.5 rounded-md inline-block mb-1">
-            WORKSPACE
-          </span>
-          <h2 className="text-sm font-extrabold text-slate-900">Client Portal</h2>
+        <div className="mb-8 px-2 flex items-center justify-between pb-3 border-b border-slate-100">
+          <div>
+            <span className="text-[10px] font-bold tracking-widest text-[#009689] uppercase bg-teal-50 px-2 py-0.5 rounded-md inline-block mb-1">
+              WORKSPACE
+            </span>
+            <h2 className="text-sm font-extrabold text-slate-900 mt-1">Client Portal</h2>
+          </div>
+          
+          {/* Back to Home Button */}
+          <Link className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-600 hover:text-slate-900 text-xs font-semibold transition-all shadow-2xs group" href="/" title="Return to Main Website">
+            <ArrowLeft className="w-3.5 h-3.5 text-slate-400 group-hover:-translate-x-0.5 transition-transform"/>
+            <span>Home</span>
+          </Link>
         </div>
 
         <nav className="flex flex-col space-y-1.5">
