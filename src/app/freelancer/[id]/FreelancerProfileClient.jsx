@@ -43,6 +43,32 @@ export default function FreelancerProfileClient({ freelancer }) {
 
   const isBioEmptyOrPlaceholder = !freelancer?.bio || /^[\s./\\]+$/.test(freelancer.bio);
 
+  const currentStatus = (freelancer?.status || freelancer?.availabilityStatus || "available").toLowerCase();
+  
+  const statusMap = {
+    available: {
+      label: "Available for work",
+      badgeClass: "bg-emerald-50 text-emerald-700 border-emerald-200/80",
+      dotClass: "bg-emerald-500",
+      pulse: true,
+    },
+    busy: {
+      label: "Busy on active projects",
+      badgeClass: "bg-amber-50 text-amber-700 border-amber-200/80",
+      dotClass: "bg-amber-500",
+      pulse: false,
+    },
+    unavailable: {
+      label: "Unavailable for work",
+      badgeClass: "bg-rose-50 text-rose-700 border-rose-200/80",
+      dotClass: "bg-rose-500",
+      pulse: false,
+    },
+  };
+
+  const statusConfig = statusMap[currentStatus] || statusMap.available;
+
+
   return (
     <div className="min-h-screen bg-slate-50/70 text-slate-800 pb-16">
       {/* Container */}
@@ -75,7 +101,10 @@ export default function FreelancerProfileClient({ freelancer }) {
                 </div>
               )}
               {/* Active status indicator ring */}
-              <div className="absolute -bottom-1 -right-1 w-4 h-4 rounded-full bg-emerald-500 ring-4 ring-white" title="Active"></div>
+              <div 
+                className={`absolute -bottom-1 -right-1 w-4 h-4 rounded-full ring-4 ring-white ${statusConfig.dotClass}`} 
+                title={statusConfig.label}
+              ></div>
             </div>
 
             {/* Freelancer Name, Badges & Headline */}
@@ -85,13 +114,12 @@ export default function FreelancerProfileClient({ freelancer }) {
                 <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
                   {freelancer?.name || "Freelancer"}
                 </h1>
-                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-emerald-50 text-emerald-700 border border-emerald-200 w-fit">
-                  <span className="relative flex h-2 w-2">
-                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                    <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
-                  </span>
-                  Available for work
-                </span>
+                
+                {/* Dynamic Status Badge */}
+                <div className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold border transition-colors ${statusConfig.badgeClass}`}>
+                  <span className={`w-2 h-2 rounded-full ${statusConfig.dotClass} ${statusConfig.pulse ? "animate-pulse" : ""}`} />
+                  <span>{statusConfig.label}</span>
+                </div>
               </div>
               
               {/* Middle Row (Professional Title) */}
