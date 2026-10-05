@@ -445,10 +445,7 @@ export default function ClientProposalsPage() {
 
             {/* Modal Actions */}
             <div className="flex items-center justify-between pt-2 border-t border-slate-100">
-              <Link className="inline-flex items-center gap-1.5 text-xs font-bold text-[#009689] hover:underline" href={`/freelancers/${inspectProposal.freelancerId?._id || inspectProposal.freelancerId?.id}`} target="_blank">
-                <span>View Full Freelancer Profile</span>
-                <ExternalLink className="w-3.5 h-3.5"/>
-              </Link>
+              <div className="flex-1"></div>
 
               <div className="flex items-center gap-2">
                 {getNormalizedStatus(inspectProposal.status) === "pending" ? (

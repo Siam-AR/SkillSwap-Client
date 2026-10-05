@@ -1,30 +1,29 @@
 "use client";
 
+import { useEffect, useState, useMemo } from "react";
 import Link from "next/link";
-import { useEffect, useState } from "react";
-import { FiCreditCard, FiArrowRight } from "react-icons/fi";
+import {
+  CreditCard,
+  DollarSign,
+  Receipt,
+  Download,
+  Search,
+  ExternalLink,
+  Calendar,
+  CheckCircle2,
+  Inbox,
+  User,
+  X,
+  FileText
+} from "lucide-react";
 import { getDashboardHeaders } from "@/lib/dashboard-client-proposals";
-
-function PaymentRow({ p }) {
-  return (
-    <div className="flex items-center justify-between gap-4 rounded-lg border border-slate-200 bg-white p-4 shadow-sm dark:border-slate-800 dark:bg-slate-950">
-      <div className="flex-1">
-        <p className="text-sm font-semibold text-slate-700 dark:text-slate-200">{p.task_title || "Untitled Task"}</p>
-        <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">Freelancer: <span className="font-medium text-slate-900 dark:text-white">{p.freelancer_name || p.freelancer_email}</span></p>
-        <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">Transaction: {p.transaction_id || "—"}</p>
-      </div>
-      <div className="flex flex-col items-end">
-        <div className="text-lg font-semibold text-slate-900 dark:text-white">${p.amount}</div>
-        <div className="mt-1 text-sm text-slate-500 dark:text-slate-400">{p.paid_at ? new Date(p.paid_at).toLocaleString() : (p.createdAt ? new Date(p.createdAt).toLocaleString() : "—")}</div>
-      </div>
-    </div>
-  );
-}
 
 export default function ClientPaymentsPage() {
   const [payments, setPayments] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [searchQuery, setSearchQuery] = useState("");
+  const [selectedReceipt, setSelectedReceipt] = useState(null);
 
   useEffect(() => {
     const load = async () => {
@@ -32,7 +31,10 @@ export default function ClientPaymentsPage() {
         setLoading(true);
         setError("");
         const headers = await getDashboardHeaders();
-        const res = await fetch("/api/dashboard/client/payments", { headers: { ...headers }, cache: "no-store" });
+        const res = await fetch("/api/dashboard/client/payments", {
+          headers: { ...headers },
+          cache: "no-store",
+        });
         const data = await res.json();
         if (!res.ok) throw new Error(data?.message || "Failed to load payments");
         setPayments(Array.isArray(data?.data) ? data.data : []);
@@ -45,53 +47,274 @@ export default function ClientPaymentsPage() {
     void load();
   }, []);
 
-  return (
-    <div className="space-y-6">
-      <div className="rounded-[1.75rem] border border-slate-200 bg-linear-to-r from-sky-600 via-cyan-500 to-indigo-600 p-6 text-white shadow-sm">
-        <p className="text-sm font-semibold uppercase tracking-[0.24em] text-sky-100">Payments</p>
-        <h2 className="mt-2 text-3xl font-semibold">Manage your payment activity</h2>
-        <p className="mt-3 max-w-2xl text-sm text-sky-50/90 sm:text-base">
-          Review completed transactions and keep your billing information organized.
-        </p>
-      </div>
+  // Live Metrics
+  const totalSpent = useMemo(() => {
+    return payments.reduce((acc, p) => acc + (Number(p.amount) || 0), 0);
+  }, [payments]);
 
-      <div className="rounded-[1.75rem] border border-slate-200 bg-slate-50 p-6 dark:border-slate-800 dark:bg-slate-900">
-        <div className="flex items-center gap-3">
-          <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-sky-100 text-sky-700 dark:bg-sky-500/15 dark:text-sky-300">
-            <FiCreditCard className="h-5 w-5" />
-          </div>
-          <div>
-            <h3 className="text-xl font-semibold text-slate-950 dark:text-white">Payment center</h3>
-            <p className="mt-1 text-sm text-slate-600 dark:text-slate-400">
-              Below is a list of your successfully completed payments.
-            </p>
-          </div>
+  const avgCost = useMemo(() => {
+    return payments.length > 0 ? totalSpent / payments.length : 0;
+  }, [payments, totalSpent]);
+
+  // Search Filter
+  const filteredPayments = useMemo(() => {
+    const query = searchQuery.toLowerCase();
+    if (!query) return payments;
+    return payments.filter((p) => {
+      const title = (p.task_title || "").toLowerCase();
+      const freelancer = (p.freelancer_name || p.freelancer_email || "").toLowerCase();
+      const tx = (p.transaction_id || "").toLowerCase();
+      return title.includes(query) || freelancer.includes(query) || tx.includes(query);
+    });
+  }, [payments, searchQuery]);
+
+  return (
+    <div className="space-y-8">
+      {/* 1. Modern Borderless Header */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <span className="text-[11px] font-bold tracking-wider text-slate-400 uppercase">
+            CLIENT WORKSPACE • BILLING & TRANSACTIONS
+          </span>
+          <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight mt-1">
+            Payments & Invoices
+          </h1>
+          <p className="text-sm text-slate-500 mt-1">
+            Review completed transactions, download project receipts, and monitor platform expenses.
+          </p>
         </div>
 
-        <div className="mt-6 rounded-[1.25rem] border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-950">
-          {loading ? (
-            <div className="py-12 text-center text-sm text-slate-600">Loading payments...</div>
-          ) : error ? (
-            <div className="rounded-lg border border-rose-200 bg-rose-50 p-4 text-sm text-rose-700">{error}</div>
-          ) : payments.length === 0 ? (
-            <div className="py-12 text-center text-sm text-slate-600">No completed payments found.</div>
-          ) : (
-            <div className="space-y-3">
-              {payments.map((p) => (
-                <PaymentRow key={p._id} p={p} />
-              ))}
-            </div>
-          )}
-
-          <Link
-            href="/dashboard/client"
-            className="mt-6 inline-flex items-center gap-2 text-sm font-semibold text-sky-600 transition hover:text-sky-700"
-          >
-            Back to overview
-            <FiArrowRight className="h-4 w-4" />
+        <div className="flex items-center gap-3 shrink-0">
+          <Link className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 text-xs sm:text-sm font-semibold transition-all shadow-sm" href="/dashboard/client/my-tasks">
+            <span>View Active Tasks</span>
           </Link>
         </div>
       </div>
+
+      {/* 2. Financial Metrics Bar */}
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
+        <div className="bg-white rounded-2xl border border-slate-200/90 p-5 shadow-sm">
+          <div className="flex items-center gap-3 mb-3">
+            <div className="p-2.5 rounded-xl bg-teal-50 text-[#009689]">
+              <DollarSign className="w-5 h-5"/>
+            </div>
+            <p className="text-xs font-bold text-slate-500 tracking-wider uppercase">TOTAL EXPENDITURE</p>
+          </div>
+          <h3 className="text-2xl font-bold text-slate-900">${totalSpent.toFixed(2)}</h3>
+          <p className="text-xs text-slate-500 mt-1">Total cleared contractor fees</p>
+        </div>
+
+        <div className="bg-white rounded-2xl border border-slate-200/90 p-5 shadow-sm">
+          <div className="flex items-center gap-3 mb-3">
+            <div className="p-2.5 rounded-xl bg-sky-50 text-sky-600">
+              <Receipt className="w-5 h-5"/>
+            </div>
+            <p className="text-xs font-bold text-slate-500 tracking-wider uppercase">PAID TRANSACTIONS</p>
+          </div>
+          <h3 className="text-2xl font-bold text-slate-900">{payments.length}</h3>
+          <p className="text-xs text-slate-500 mt-1">Settled milestones & tasks</p>
+        </div>
+
+        <div className="bg-white rounded-2xl border border-slate-200/90 p-5 shadow-sm">
+          <div className="flex items-center gap-3 mb-3">
+            <div className="p-2.5 rounded-xl bg-emerald-50 text-emerald-600">
+              <CreditCard className="w-5 h-5"/>
+            </div>
+            <p className="text-xs font-bold text-slate-500 tracking-wider uppercase">AVERAGE PROJECT COST</p>
+          </div>
+          <h3 className="text-2xl font-bold text-slate-900">${avgCost.toFixed(2)}</h3>
+          <p className="text-xs text-slate-500 mt-1">Average payout per task</p>
+        </div>
+      </div>
+
+      {/* 3. Search & Filter Bar */}
+      <div className="bg-white rounded-2xl border border-slate-200/90 p-3.5 flex flex-col sm:flex-row items-center justify-between gap-3 shadow-sm">
+        <div className="relative w-full sm:w-80">
+          <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2"/>
+          <input
+            type="text"
+            placeholder="Search by task, freelancer, or transaction ID..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="w-full pl-9 pr-4 py-2 rounded-xl border border-slate-200 bg-slate-50/50 text-xs text-slate-800 placeholder:text-slate-400 focus:outline-none focus:border-[#009689] focus:bg-white transition-all"
+          />
+        </div>
+
+        <div className="text-xs font-medium text-slate-500 px-2">
+          Showing <span className="font-bold text-slate-900">{filteredPayments.length}</span> recorded payments
+        </div>
+      </div>
+
+      {/* 4. Payments Table Card */}
+      <div className="bg-white rounded-3xl border border-slate-200/90 shadow-sm overflow-hidden">
+        {loading ? (
+          <div className="py-16 text-center flex flex-col items-center justify-center min-h-[300px]">
+            <div className="w-8 h-8 border-4 border-teal-500/30 border-t-[#009689] rounded-full animate-spin"></div>
+            <p className="mt-4 text-sm font-semibold text-slate-600">Loading payment history...</p>
+          </div>
+        ) : error ? (
+          <div className="p-6 text-center text-sm font-semibold text-rose-600 bg-rose-50 border-b border-rose-100">
+            {error}
+          </div>
+        ) : filteredPayments.length === 0 ? (
+          <div className="py-16 text-center flex flex-col items-center justify-center min-h-[300px]">
+            <div className="w-14 h-14 rounded-2xl bg-teal-50 text-[#009689] flex items-center justify-center mb-4">
+              <Inbox className="w-7 h-7"/>
+            </div>
+            <h3 className="text-lg font-bold text-slate-900">No completed payments found</h3>
+            <p className="text-sm text-slate-500 max-w-sm mt-1">
+              Once you accept and approve task deliverables, your settled transactions and downloadable receipts will appear here.
+            </p>
+          </div>
+        ) : (
+          <div className="overflow-x-auto">
+            <table className="w-full text-left border-collapse">
+              <thead>
+                <tr className="border-b border-slate-100 text-[11px] font-bold uppercase tracking-wider text-slate-400 bg-slate-50/60">
+                  <th className="py-4 px-6">Task & Transaction ID</th>
+                  <th className="py-4 px-6">Freelancer Recipient</th>
+                  <th className="py-4 px-6">Date Cleared</th>
+                  <th className="py-4 px-6">Amount</th>
+                  <th className="py-4 px-6">Status</th>
+                  <th className="py-4 px-6 text-right">Receipt</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-slate-100 text-sm">
+                {filteredPayments.map((p) => {
+                  const paymentDate = p.paid_at || p.createdAt;
+                  return (
+                    <tr key={p._id || p.transaction_id} className="hover:bg-slate-50/70 transition-colors">
+                      {/* Task & TX ID */}
+                      <td className="py-4 px-6">
+                        <h4 className="font-bold text-slate-900 line-clamp-1">
+                          {p.task_title || "Direct Task Settlement"}
+                        </h4>
+                        <span className="font-mono text-[11px] font-medium text-slate-400 mt-0.5 block truncate max-w-xs">
+                          {p.transaction_id || "TX-PENDING"}
+                        </span>
+                      </td>
+
+                      {/* Freelancer Recipient */}
+                      <td className="py-4 px-6">
+                        <div className="flex items-center gap-2.5">
+                          <div className="w-8 h-8 rounded-full bg-teal-50 text-[#009689] font-bold text-xs flex items-center justify-center border border-teal-100">
+                            {(p.freelancer_name || p.freelancer_email || "F").charAt(0).toUpperCase()}
+                          </div>
+                          <div className="min-w-0">
+                            <p className="font-semibold text-slate-800 text-xs truncate">
+                              {p.freelancer_name || "Verified Freelancer"}
+                            </p>
+                            <p className="text-[11px] text-slate-400 truncate max-w-[160px]">
+                              {p.freelancer_email}
+                            </p>
+                          </div>
+                        </div>
+                      </td>
+
+                      {/* Date Cleared */}
+                      <td className="py-4 px-6 text-xs text-slate-500 whitespace-nowrap">
+                        <div className="flex items-center gap-1.5 font-medium">
+                          <Calendar className="w-3.5 h-3.5 text-slate-400"/>
+                          <span>
+                            {paymentDate ? new Date(paymentDate).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" }) : "—"}
+                          </span>
+                        </div>
+                      </td>
+
+                      {/* Amount */}
+                      <td className="py-4 px-6">
+                        <span className="font-extrabold text-[#009689] text-base">
+                          ${Number(p.amount).toFixed(2)}
+                        </span>
+                      </td>
+
+                      {/* Status */}
+                      <td className="py-4 px-6">
+                        <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold bg-emerald-50 text-emerald-700 border border-emerald-200/80">
+                          <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+                          <span>Completed</span>
+                        </span>
+                      </td>
+
+                      {/* Receipt Action */}
+                      <td className="py-4 px-6 text-right">
+                        <button
+                          type="button"
+                          onClick={() => setSelectedReceipt(p)}
+                          className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-slate-200 bg-white hover:bg-teal-50 hover:text-[#009689] hover:border-teal-200 text-slate-600 text-xs font-semibold transition-all shadow-sm"
+                        >
+                          <Receipt className="w-3.5 h-3.5"/>
+                          <span>View Receipt</span>
+                        </button>
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </div>
+
+      {/* 5. Clean Receipt Popover Modal */}
+      {selectedReceipt ? (
+        <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-in fade-in duration-200">
+          <div className="bg-white rounded-3xl border border-slate-200 shadow-2xl max-w-md w-full p-6 sm:p-7 space-y-6 relative animate-in zoom-in-95">
+            <div className="flex items-start justify-between">
+              <div>
+                <span className="text-[10px] font-bold text-[#009689] bg-teal-50 border border-teal-100 px-2 py-0.5 rounded-md uppercase">
+                  Official Receipt
+                </span>
+                <h3 className="text-xl font-extrabold text-slate-900 mt-1">Transaction Summary</h3>
+              </div>
+              <button
+                type="button"
+                onClick={() => setSelectedReceipt(null)}
+                className="p-1.5 rounded-full hover:bg-slate-100 text-slate-400 hover:text-slate-600 transition-colors"
+              >
+                <X className="w-5 h-5"/>
+              </button>
+            </div>
+
+            <div className="p-4 rounded-2xl bg-slate-50 border border-slate-100 space-y-3 text-xs">
+              <div className="flex justify-between items-center py-1 border-b border-slate-200/60">
+                <span className="text-slate-500 font-medium">Payment ID</span>
+                <span className="font-mono font-medium text-slate-800 text-[11px] truncate max-w-[200px]">
+                  {selectedReceipt.transaction_id || "TX-PENDING"}
+                </span>
+              </div>
+              <div className="flex justify-between items-center py-1 border-b border-slate-200/60">
+                <span className="text-slate-500 font-medium">Task / Project</span>
+                <span className="font-bold text-slate-800 text-right truncate max-w-[200px]">
+                  {selectedReceipt.task_title || "Project Milestone"}
+                </span>
+              </div>
+              <div className="flex justify-between items-center py-1 border-b border-slate-200/60">
+                <span className="text-slate-500 font-medium">Paid To</span>
+                <span className="font-bold text-slate-800">{selectedReceipt.freelancer_name || selectedReceipt.freelancer_email}</span>
+              </div>
+              <div className="flex justify-between items-center py-1">
+                <span className="text-slate-500 font-medium">Amount Settled</span>
+                <span className="font-extrabold text-[#009689] text-base">${Number(selectedReceipt.amount).toFixed(2)}</span>
+              </div>
+            </div>
+
+            <div className="flex items-center justify-between pt-2">
+              <span className="text-xs text-emerald-600 font-bold flex items-center gap-1">
+                <CheckCircle2 className="w-4 h-4"/> Paid via Taskify
+              </span>
+              <button
+                type="button"
+                onClick={() => window.print()}
+                className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-[#009689] hover:bg-[#238B81] text-white text-xs font-bold transition-all shadow-sm"
+              >
+                <Download className="w-3.5 h-3.5"/>
+                <span>Print Receipt</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      ) : null}
     </div>
   );
 }
