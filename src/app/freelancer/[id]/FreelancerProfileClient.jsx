@@ -123,19 +123,23 @@ export default function FreelancerProfileClient({ freelancer }) {
               </div>
               
               {/* Middle Row (Professional Title) */}
-              <p className="text-sm sm:text-base font-semibold text-[#009689]">
-                {freelancer?.headline || freelancer?.role || "Professional Freelancer"}
-              </p>
+              {(() => {
+                const displayTitle = freelancer?.title || freelancer?.profession || freelancer?.headline || "";
+                if (displayTitle && displayTitle !== "Available for freelance work") {
+                  return (
+                    <p className="text-sm sm:text-base font-semibold text-[#009689]">
+                      {displayTitle}
+                    </p>
+                  );
+                }
+                return null;
+              })()}
 
               {/* Bottom Row (Quick Trust Tags) */}
               <div className="flex flex-wrap items-center gap-4 mt-1">
                 <span className="inline-flex items-center gap-1.5 text-xs text-slate-500 font-medium">
                   <MapPin className="w-3.5 h-3.5 text-slate-400" />
                   {freelancer?.location || "Remote"}
-                </span>
-                <span className="inline-flex items-center gap-1.5 text-xs text-slate-500 font-medium">
-                  <ShieldCheck className="w-3.5 h-3.5 text-emerald-500" />
-                  Verified Freelancer
                 </span>
                 <span className="inline-flex items-center gap-1.5 text-xs text-slate-500 font-medium">
                   <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-400" />
@@ -186,7 +190,7 @@ export default function FreelancerProfileClient({ freelancer }) {
               {/* Skills & Specializations */}
               <section>
                 <h3 className="text-xs font-bold uppercase tracking-wider text-slate-400 mb-3 block">
-                  Verified Skills & Technologies
+                  Skills & Technologies
                 </h3>
                 <div className="flex flex-wrap gap-2">
                   {freelancer?.skills && freelancer.skills.length > 0 ? (
@@ -195,7 +199,7 @@ export default function FreelancerProfileClient({ freelancer }) {
                         key={index} 
                         className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-teal-50/70 border border-teal-200/60 text-xs font-bold text-[#009689] hover:bg-[#009689] hover:text-white transition-all duration-200 cursor-default"
                       >
-                        <Check className="w-3 h-3" />
+                        {/* <Check className="w-3 h-3" /> */}
                         {skill}
                       </span>
                     ))
@@ -290,11 +294,11 @@ export default function FreelancerProfileClient({ freelancer }) {
                 </div>
 
                 <div className="flex items-start gap-3">
-                  <ShieldCheck className="w-4 h-4 text-emerald-500 mt-0.5" />
+                  <Award className="w-4 h-4 text-emerald-500 mt-0.5" />
                   <div>
                     <p className="text-xs font-medium text-slate-500">Platform Standing</p>
                     <p className="text-sm font-semibold text-slate-900">
-                      Verified Freelancer • {completedJobs} Delivered Tasks
+                      {completedJobs} Delivered Tasks
                     </p>
                   </div>
                 </div>
