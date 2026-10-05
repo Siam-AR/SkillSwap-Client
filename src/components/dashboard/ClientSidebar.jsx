@@ -37,7 +37,7 @@ export default function ClientSidebar({ user }) {
   };
 
   return (
-    <aside className="hidden lg:flex w-64 xl:w-72 shrink-0 border-r border-slate-200/80 bg-white min-h-screen sticky top-0 flex-col justify-between p-5">
+    <div className="flex h-full flex-col justify-between">
       <div>
         <div className="mb-8 px-2">
           <span className="text-[10px] font-bold tracking-widest text-[#009689] uppercase bg-teal-50 px-2 py-0.5 rounded-md inline-block mb-1">
@@ -93,6 +93,6 @@ export default function ClientSidebar({ user }) {
           <LogOut className="w-4 h-4" />
         </button>
       </div>
-    </aside>
+    </div>
   );
 }
