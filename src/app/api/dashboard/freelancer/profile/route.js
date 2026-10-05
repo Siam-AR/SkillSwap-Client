@@ -58,6 +58,7 @@ export async function PATCH(request) {
     const designation = String(body.designation || "").trim();
     const skills = Array.isArray(body.skills) ? body.skills.map((skill) => String(skill || "").trim()).filter(Boolean) : [];
     const bio = String(body.bio || "").trim();
+    const location = String(body.location || "").trim();
     const hourlyRate = Number(body.hourlyRate ?? body.hourly_rate ?? body.hourlyRateUSD ?? 0);
     let status = String(body.status || "").trim().toLowerCase();
     if (!["available", "busy", "unavailable"].includes(status)) {
@@ -85,6 +86,7 @@ export async function PATCH(request) {
           designation,
           skills,
           bio,
+          location,
           hourlyRate,
           status,
           updatedAt: new Date(),

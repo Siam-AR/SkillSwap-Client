@@ -25,6 +25,7 @@ export default function EditProfileForm({ onCancel, onSuccess, initialUser }) {
     bio: initialUser?.bio || "",
     hourlyRate: initialUser?.hourlyRate != null ? String(initialUser.hourlyRate) : "",
     status: initialUser?.status || "available",
+    location: initialUser?.location || "",
   });
   const [feedback, setFeedback] = useState(null);
   const [isSaving, setIsSaving] = useState(false);
@@ -43,6 +44,7 @@ export default function EditProfileForm({ onCancel, onSuccess, initialUser }) {
     const trimmedDesignation = String(formState.designation || "").trim();
     const trimmedImage = String(formState.image || "").trim();
     const trimmedBio = String(formState.bio || "").trim();
+    const trimmedLocation = String(formState.location || "").trim();
     const hourlyRateValue = Number(formState.hourlyRate || 0);
 
     if (!trimmedName) {
@@ -82,6 +84,7 @@ export default function EditProfileForm({ onCancel, onSuccess, initialUser }) {
           bio: trimmedBio,
           hourlyRate: hourlyRateValue,
           status: formState.status,
+          location: trimmedLocation,
         }),
       });
 
@@ -173,8 +176,19 @@ export default function EditProfileForm({ onCancel, onSuccess, initialUser }) {
           </div>
         </div>
 
-        {/* Row 3: Rate and Status */}
-        <div className="grid gap-6 sm:grid-cols-2">
+        {/* Row 3: Rate, Status and Location */}
+        <div className="grid gap-6 sm:grid-cols-3">
+          <label className="block text-sm font-semibold text-slate-800">
+            Location
+            <input
+              type="text"
+              value={formState.location}
+              onChange={handleChange("location")}
+              placeholder="e.g. New York, NY"
+              className="mt-2 w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900 outline-none transition focus:bg-white focus:border-[#009689] focus:ring-1 focus:ring-[#009689]"
+            />
+          </label>
+
           <label className="block text-sm font-semibold text-slate-800">
             Hourly Rate (USD)
             <input
