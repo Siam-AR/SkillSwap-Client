@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { 
   ArrowLeft, 
@@ -18,6 +19,7 @@ import {
 } from "lucide-react";
 
 export default function FreelancerProfileClient({ freelancer }) {
+  const router = useRouter();
   const [imgError, setImgError] = useState(false);
   const [copiedEmail, setCopiedEmail] = useState(false);
   const [isInviteModalOpen, setIsInviteModalOpen] = useState(false);
@@ -74,12 +76,12 @@ export default function FreelancerProfileClient({ freelancer }) {
       {/* Container */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8">
         {/* Breadcrumb */}
-        <Link 
-          href="/browse-freelancers" 
+        <button 
+          onClick={() => router.back()}
           className="inline-flex items-center gap-2 text-xs font-semibold text-slate-500 hover:text-[#009689] transition-colors mb-6"
         >
-          <ArrowLeft className="w-4 h-4" /> Back to Freelancers
-        </Link>
+          <ArrowLeft className="w-4 h-4" /> Go Back
+        </button>
 
         {/* Unified Single-Card Container */}
         <div className="bg-white rounded-3xl border border-slate-200/90 shadow-sm p-6 sm:p-8 flex flex-col lg:flex-row lg:items-center justify-between gap-6">
@@ -222,11 +224,12 @@ export default function FreelancerProfileClient({ freelancer }) {
                     {freelancer.reviews.map((review, i) => (
                       <div key={i} className="p-4 rounded-2xl border border-slate-100 bg-slate-50/50 space-y-2">
                         <div className="flex items-center gap-1 text-amber-500">
-                          <Star className="w-4 h-4 fill-current" />
-                          <Star className="w-4 h-4 fill-current" />
-                          <Star className="w-4 h-4 fill-current" />
-                          <Star className="w-4 h-4 fill-current" />
-                          <Star className="w-4 h-4 fill-current" />
+                          {[1, 2, 3, 4, 5].map((star) => (
+                            <Star 
+                              key={star} 
+                              className={`w-4 h-4 ${star <= (review.rating || 5) ? "fill-current text-amber-500" : "text-slate-200"}`} 
+                            />
+                          ))}
                         </div>
                         <p className="text-sm text-slate-700">"{review.comment}"</p>
                         <p className="text-xs text-slate-400 font-medium">{review.taskTitle} • {new Date(review.createdAt).toLocaleDateString()}</p>
