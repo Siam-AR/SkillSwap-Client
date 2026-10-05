@@ -135,6 +135,8 @@ export async function getFreelancerActiveProjects(freelancerEmail) {
         submittedAt: proposal.createdAt ?? proposal.submitted_at ?? null,
         completedAt: taskDoc.completedAt || taskDoc.updatedAt || null,
         deliverableUrl: taskDoc.deliverable_url || taskDoc.deliverableUrl || taskDoc.deliverable || "",
+        deliveryNotes: taskDoc.deliveryNotes || "",
+        clientRevisionNotes: taskDoc.clientRevisionNotes || "",
       };
     })
     .filter(Boolean)

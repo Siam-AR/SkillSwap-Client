@@ -306,7 +306,7 @@ export default function FreelancerActiveProjectsPanel({ initialProjects = [], fr
                       onClick={() => {
                         setSelectedProject(project);
                         setDeliverableUrl(project.deliverableUrl || "");
-                        setDeliveryNotes("Previous delivery notes not available.");
+                        setDeliveryNotes(project.deliveryNotes || "Previous delivery notes not available.");
                       }}
                       className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl border border-indigo-200 bg-indigo-50 text-indigo-700 hover:bg-indigo-100 text-sm font-semibold transition-all"
                     >
@@ -375,6 +375,17 @@ export default function FreelancerActiveProjectsPanel({ initialProjects = [], fr
             </div>
 
             <form onSubmit={handleSubmit} className="flex-1 overflow-y-auto pt-5 pb-2 -mr-2 pr-2 space-y-5">
+              
+              {String(selectedProject.taskStatus || "").toLowerCase() === "revision requested" && selectedProject.clientRevisionNotes && (
+                <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 flex items-start gap-3">
+                  <MessageSquare className="w-5 h-5 text-amber-600 mt-0.5 shrink-0" />
+                  <div>
+                    <h4 className="text-sm font-bold text-amber-800">Client Revision Notes</h4>
+                    <p className="text-sm text-amber-700 mt-1 whitespace-pre-wrap">{selectedProject.clientRevisionNotes}</p>
+                  </div>
+                </div>
+              )}
+
               <div className="space-y-4">
                 <div>
                   <label className="block text-sm font-semibold text-slate-700 mb-1.5">
@@ -385,7 +396,7 @@ export default function FreelancerActiveProjectsPanel({ initialProjects = [], fr
                     <input
                       type="url"
                       required
-                      readOnly={String(selectedProject.taskStatus || "").toLowerCase() !== "in progress"}
+                      readOnly={String(selectedProject.taskStatus || "").toLowerCase() !== "in progress" && String(selectedProject.taskStatus || "").toLowerCase() !== "revision requested"}
                       value={deliverableUrl}
                       onChange={(e) => setDeliverableUrl(e.target.value)}
                       placeholder="https://your-preview-link.com"
@@ -403,7 +414,7 @@ export default function FreelancerActiveProjectsPanel({ initialProjects = [], fr
                     <Code className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
                     <input
                       type="url"
-                      readOnly={String(selectedProject.taskStatus || "").toLowerCase() !== "in progress"}
+                      readOnly={String(selectedProject.taskStatus || "").toLowerCase() !== "in progress" && String(selectedProject.taskStatus || "").toLowerCase() !== "revision requested"}
                       placeholder="https://github.com/..."
                       className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 bg-white text-sm outline-none focus:border-[#009689] focus:ring-1 focus:ring-[#009689] transition-all read-only:bg-slate-50 read-only:text-slate-500"
                     />
@@ -416,7 +427,7 @@ export default function FreelancerActiveProjectsPanel({ initialProjects = [], fr
                   </label>
                   <textarea
                     rows={4}
-                    readOnly={String(selectedProject.taskStatus || "").toLowerCase() !== "in progress"}
+                    readOnly={String(selectedProject.taskStatus || "").toLowerCase() !== "in progress" && String(selectedProject.taskStatus || "").toLowerCase() !== "revision requested"}
                     value={deliveryNotes}
                     onChange={(e) => setDeliveryNotes(e.target.value)}
                     placeholder="Hello! I've completed the milestones. Here are the instructions to review the work..."
@@ -434,16 +445,16 @@ export default function FreelancerActiveProjectsPanel({ initialProjects = [], fr
                 >
                   Cancel
                 </button>
-                {String(selectedProject.taskStatus || "").toLowerCase() === "in progress" && (
+                {(String(selectedProject.taskStatus || "").toLowerCase() === "in progress" || String(selectedProject.taskStatus || "").toLowerCase() === "revision requested") && (
                   <button 
                     type="submit" 
                     disabled={isSubmitting}
-                    className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-sm font-semibold shadow-sm transition-all disabled:opacity-70 disabled:cursor-not-allowed"
+                    className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[#009689] hover:bg-[#238B81] text-white text-xs sm:text-sm font-semibold shadow-sm transition-all disabled:opacity-70 disabled:cursor-not-allowed"
                   >
                     {isSubmitting ? (
                       <><Loader2 className="w-4 h-4 animate-spin" /> Submitting...</>
                     ) : (
-                      <><CheckCircle2 className="w-4 h-4" /> Send to Client</>
+                      <><CheckCircle2 className="w-4 h-4" /> {String(selectedProject.taskStatus || "").toLowerCase() === "revision requested" ? "Submit Updated Work" : "Send to Client"}</>
                     )}
                   </button>
                 )}
