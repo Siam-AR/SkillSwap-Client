@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { X, ExternalLink, MessageSquare, CheckCircle2, ShieldCheck, Loader2 } from "lucide-react";
 import { toast } from "react-toastify";
+import { getDashboardHeaders } from "@/lib/dashboard-client-proposals";
 
 export default function ReviewDeliverablesModal({ task, onClose, onActionComplete }) {
   const [isProcessing, setIsProcessing] = useState(false);
@@ -12,8 +13,13 @@ export default function ReviewDeliverablesModal({ task, onClose, onActionComplet
   const handleApprove = async () => {
     setIsProcessing(true);
     try {
+      const authHeaders = await getDashboardHeaders();
       const res = await fetch(`/api/tasks/${task._id || task.id}/release-payment`, {
         method: "POST",
+        headers: {
+          ...authHeaders,
+        },
+        credentials: "include",
       });
       const data = await res.json();
       
@@ -38,15 +44,14 @@ export default function ReviewDeliverablesModal({ task, onClose, onActionComplet
     
     setIsProcessing(true);
     try {
-      // Assuming a generic update endpoint or we need to add a revision requested endpoint.
-      // We will just do a standard task update for now if it exists, but the user didn't ask for a new endpoint for revision explicitly.
-      // Wait, let's just make a PUT request to update task status if we can, or just mock it.
-      // Actually, I should probably create a quick endpoint or use an existing one for status change.
-      // For now, I'll simulate it or use an update API if available. 
-      // The instructions say: "Prompts for a revision message, sets task status to revision_requested, funds stay in escrow."
+      const authHeaders = await getDashboardHeaders();
       const res = await fetch(`/api/tasks/${task._id || task.id}/request-revision`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { 
+          "Content-Type": "application/json",
+          ...authHeaders 
+        },
+        credentials: "include",
         body: JSON.stringify({ notes: revisionNotes }),
       });
       const data = await res.json();
