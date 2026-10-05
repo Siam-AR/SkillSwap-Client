@@ -127,6 +127,7 @@ export async function getFreelancerActiveProjects(freelancerEmail) {
         proposalId: normalizeId(proposal._id || proposal.id || ""),
         taskId: taskKey,
         taskTitle: taskDoc.title || proposal.task_title || proposal.taskTitle || "Untitled task",
+        taskCategory: taskDoc.category?.name || taskDoc.category || taskDoc.taskCategory || proposal.category?.name || proposal.category || proposal.taskCategory || "General",
         taskStatus,
         clientName: taskDoc.clientName || taskDoc.client?.name || taskDoc.client?.fullName || taskDoc.clientEmail || taskDoc.client_email || "Client",
         clientEmail: taskDoc.clientEmail || taskDoc.client_email || taskDoc.client?.email || "",

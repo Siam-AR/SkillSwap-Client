@@ -246,7 +246,22 @@ export default function FreelancerActiveProjectsPanel({ initialProjects = [], fr
       {/* 3. Projects List or Empty State */}
       {filteredProjects.length > 0 ? (
         <div className="space-y-4">
-          {filteredProjects.map((project) => (
+          {filteredProjects.map((project) => {
+            const task = project.taskId || project;
+            const rawCategory =
+              task.category?.name ||
+              task.category ||
+              task.taskCategory ||
+              project.category?.name ||
+              project.category ||
+              project.taskCategory;
+
+            const displayCategory =
+              typeof rawCategory === "string" && rawCategory.trim()
+                ? rawCategory.trim()
+                : "General";
+
+            return (
             <div key={project.id || project.taskId} className="bg-white border border-slate-200 rounded-3xl p-5 sm:p-6 shadow-sm hover:shadow-md transition-shadow">
               <div className="flex flex-col lg:flex-row gap-5 lg:items-start justify-between">
                 
@@ -257,9 +272,9 @@ export default function FreelancerActiveProjectsPanel({ initialProjects = [], fr
                       <Link href={`/task/${project.taskId}`} className="text-xl font-bold text-slate-900 hover:text-[#009689] transition-colors line-clamp-2">
                         {project.taskTitle || "Project Title"}
                       </Link>
-                      <div className="flex items-center gap-2 flex-wrap">
-                        <span className="px-2 py-0.5 rounded border border-slate-200 bg-slate-50 text-[10px] font-semibold text-slate-500 uppercase tracking-wide">
-                          {project.taskCategory || "General"}
+                      <div className="flex items-center gap-2 flex-wrap mb-2">
+                        <span className="text-[10px] font-bold text-slate-600 bg-teal-50 border border-teal-200/70 px-2.5 py-0.5 rounded-md uppercase tracking-wider">
+                          {displayCategory}
                         </span>
                         <div className="flex items-center gap-1.5 text-xs text-slate-500">
                           <div className="w-5 h-5 rounded-full bg-slate-200 flex items-center justify-center text-[10px] font-bold text-slate-600">
@@ -324,7 +339,8 @@ export default function FreelancerActiveProjectsPanel({ initialProjects = [], fr
                 </div>
               </div>
             </div>
-          ))}
+            );
+          })}
         </div>
       ) : (
         <div className="rounded-3xl border border-slate-200 bg-white p-12 flex flex-col items-center justify-center text-center shadow-sm">
