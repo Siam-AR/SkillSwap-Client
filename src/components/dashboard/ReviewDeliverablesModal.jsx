@@ -10,16 +10,20 @@ export default function ReviewDeliverablesModal({ task, onClose, onActionComplet
   const [revisionNotes, setRevisionNotes] = useState("");
   const [showRevisionForm, setShowRevisionForm] = useState(false);
 
+  const targetTaskId = task?._id || task?.id || task?.taskId;
+
   const handleApprove = async () => {
     setIsProcessing(true);
     try {
       const authHeaders = await getDashboardHeaders();
-      const res = await fetch(`/api/tasks/${task._id || task.id}/release-payment`, {
+      const res = await fetch(`/api/tasks/${targetTaskId}/release-payment`, {
         method: "POST",
         headers: {
+          "Content-Type": "application/json",
           ...authHeaders,
         },
         credentials: "include",
+        body: JSON.stringify({ taskId: targetTaskId }),
       });
       const data = await res.json();
       
@@ -45,14 +49,14 @@ export default function ReviewDeliverablesModal({ task, onClose, onActionComplet
     setIsProcessing(true);
     try {
       const authHeaders = await getDashboardHeaders();
-      const res = await fetch(`/api/tasks/${task._id || task.id}/request-revision`, {
+      const res = await fetch(`/api/tasks/${targetTaskId}/request-revision`, {
         method: "POST",
         headers: { 
           "Content-Type": "application/json",
           ...authHeaders 
         },
         credentials: "include",
-        body: JSON.stringify({ notes: revisionNotes }),
+        body: JSON.stringify({ taskId: targetTaskId, notes: revisionNotes }),
       });
       const data = await res.json();
       

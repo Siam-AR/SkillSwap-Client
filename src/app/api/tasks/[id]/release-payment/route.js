@@ -15,7 +15,10 @@ export async function POST(req, { params }) {
       return NextResponse.json({ success: false, message: "Unauthorized: Missing user identity" }, { status: 401 });
     }
 
-    const { id } = params;
+    const resolvedParams = params ? await params : {};
+    const body = await req.json().catch(() => ({}));
+    
+    const id = resolvedParams?.id || body?.taskId || body?.id;
     if (!id) {
       return NextResponse.json({ success: false, message: "Task ID is required" }, { status: 400 });
     }
