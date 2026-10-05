@@ -37,7 +37,7 @@ export default function ClientSidebar({ user }) {
   };
 
   return (
-    <div className="flex h-full flex-col justify-between">
+    <div className="flex flex-1 w-full h-full flex-col justify-between">
       <div>
         <div className="mb-8 px-2 flex items-center justify-between pb-3 border-b border-slate-100">
           <div>

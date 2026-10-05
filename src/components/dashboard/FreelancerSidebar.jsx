@@ -12,7 +12,6 @@ const navItems = [
   { href: "/dashboard/freelancer/my-proposals", label: "My Proposals", icon: FileText },
   { href: "/dashboard/freelancer/active-projects", label: "Active Projects", icon: Briefcase },
   { href: "/dashboard/freelancer/earnings", label: "Earnings & Payouts", icon: DollarSign },
-  { href: "/profile", label: "My Profile", icon: User },
 ];
 
 export default function FreelancerSidebar({ user }) {
@@ -35,7 +34,7 @@ export default function FreelancerSidebar({ user }) {
   const avatarInitial = user?.name ? user.name.charAt(0).toUpperCase() : "U";
 
   const sidebarContent = (
-    <div className="flex h-full flex-col justify-between">
+    <div className="flex flex-1 w-full h-full flex-col justify-between">
       <div>
         <div className="mb-8 px-2 flex items-center justify-between pb-3 border-b border-slate-100">
           <div>
@@ -123,7 +122,7 @@ export default function FreelancerSidebar({ user }) {
         </button>
       </div>
 
-      <aside className="hidden w-64 xl:w-72 shrink-0 border-r border-slate-200/80 bg-white min-h-screen p-5 lg:flex flex-col justify-between sticky top-0">
+      <aside className="hidden w-64 xl:w-72 shrink-0 border-r border-slate-200/80 bg-white h-screen p-5 lg:flex flex-col justify-between sticky top-0 overflow-y-auto">
         {sidebarContent}
       </aside>
 

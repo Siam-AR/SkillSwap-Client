@@ -27,10 +27,10 @@ export default async function FreelancerActiveProjectsPage() {
 
         {/* Clean Action & Queue Badge */}
         <div className="flex items-center gap-3 shrink-0">
-          <div className="hidden sm:inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-semibold bg-teal-50 text-[#009689] border border-teal-200/70">
+          {/* <div className="hidden sm:inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-semibold bg-teal-50 text-[#009689] border border-teal-200/70">
             <span className="w-2 h-2 rounded-full bg-[#009689]" />
             <span>{projects.length || 0} In Queue</span>
-          </div>
+          </div> */}
 
           <Link className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[#009689] hover:bg-[#238B81] text-white text-xs sm:text-sm font-semibold shadow-sm shadow-teal-900/15 transition-all" href="/browse-tasks">
             <Search className="w-4 h-4"/>

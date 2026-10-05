@@ -11,7 +11,7 @@ export default async function ClientDashboardLayout({ children }) {
   return (
     <div className="min-h-screen bg-slate-50/70 flex">
       {/* Persistent Left Sidebar */}
-      <aside className="flex w-64 shrink-0 border-r border-slate-200/80 bg-white min-h-screen sticky top-0 flex-col justify-between p-5 z-30">
+      <aside className="flex w-64 shrink-0 border-r border-slate-200/80 bg-white h-screen sticky top-0 flex-col justify-between p-5 z-30 overflow-y-auto">
         <ClientSidebar user={user} />
       </aside>
 
