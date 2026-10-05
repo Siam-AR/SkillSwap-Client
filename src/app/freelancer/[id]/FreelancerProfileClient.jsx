@@ -55,67 +55,79 @@ export default function FreelancerProfileClient({ freelancer }) {
           <ArrowLeft className="w-4 h-4" /> Back to Freelancers
         </Link>
 
-        {/* Profile Hero Header Card */}
-        <div className="bg-white rounded-3xl border border-slate-200/90 shadow-sm overflow-hidden">
-          {/* Cover Banner */}
-          <div className="h-36 sm:h-44 w-full bg-gradient-to-r from-teal-500/15 via-emerald-500/10 to-slate-100 border-b border-slate-200/60 relative overflow-hidden">
-            {/* Subtle watermark / pattern decoration can go here */}
-            <div className="absolute -bottom-10 -right-10 w-40 h-40 bg-white/20 rounded-full blur-3xl"></div>
-          </div>
+        {/* Unified Single-Card Container */}
+        <div className="bg-white rounded-3xl border border-slate-200/90 shadow-sm p-6 sm:p-8 flex flex-col lg:flex-row lg:items-center justify-between gap-6">
           
-          {/* Profile Identity Row */}
-          <div className="px-6 sm:px-8 pb-6 sm:pb-8 pt-0 relative flex flex-col sm:flex-row sm:items-end justify-between gap-6">
-            
-            {/* Left side: Avatar + Identity */}
-            <div className="flex flex-col sm:flex-row sm:items-end gap-5">
-              {/* Avatar */}
-              <div className="relative -mt-12 sm:-mt-14 w-24 h-24 sm:w-28 sm:h-28 shrink-0">
-                {(freelancer?.image || freelancer?.avatar) && !imgError ? (
-                  <img
-                    src={freelancer.image || freelancer.avatar}
-                    alt={freelancer.name}
-                    onError={() => setImgError(true)}
-                    className="w-full h-full rounded-3xl border-4 border-white shadow-lg shadow-slate-200/80 object-cover bg-white ring-1 ring-slate-200/50"
-                  />
-                ) : (
-                  <div className="w-full h-full rounded-3xl border-4 border-white shadow-lg shadow-slate-200/80 bg-teal-50 text-[#009689] flex items-center justify-center text-3xl font-extrabold ring-1 ring-slate-200/50">
-                    {initial}
-                  </div>
-                )}
-              </div>
-
-              {/* Name & Headline */}
-              <div className="pb-1">
-                <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3">
-                  <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight flex items-center gap-3">
-                    {freelancer?.name || "Freelancer"}
-                  </h1>
-                  <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-emerald-50 text-emerald-700 border border-emerald-200/80 w-fit">
-                    <span className="relative flex h-2 w-2">
-                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                      <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
-                    </span>
-                    Available for work
-                  </span>
+          {/* Left Identity & Competency Section */}
+          <div className="flex items-start sm:items-center gap-5 sm:gap-6">
+            {/* Avatar */}
+            <div className="relative w-20 h-20 sm:w-24 sm:h-24 rounded-2xl object-cover border-2 border-slate-100 shadow-sm shrink-0 bg-slate-50">
+              {(freelancer?.image || freelancer?.avatar) && !imgError ? (
+                <img
+                  src={freelancer.image || freelancer.avatar}
+                  alt={freelancer.name}
+                  onError={() => setImgError(true)}
+                  className="w-full h-full rounded-2xl object-cover bg-white"
+                />
+              ) : (
+                <div className="w-full h-full rounded-2xl bg-teal-50 text-[#009689] flex items-center justify-center text-3xl font-extrabold">
+                  {initial}
                 </div>
-                <p className="text-sm sm:text-base text-slate-500 font-medium mt-1.5">
-                  {freelancer?.headline || freelancer?.role || "Professional Freelancer"}
-                </p>
-              </div>
+              )}
+              {/* Active status indicator ring */}
+              <div className="absolute -bottom-1 -right-1 w-4 h-4 rounded-full bg-emerald-500 ring-4 ring-white" title="Active"></div>
             </div>
 
-            {/* CTAs */}
-            <div className="flex items-center gap-3 shrink-0 mt-2 sm:mt-0 pb-1">
-              <button 
-                onClick={() => setIsInviteModalOpen(true)}
-                className="px-5 py-2.5 rounded-xl bg-[#009689] hover:bg-[#238B81] text-white text-sm font-semibold shadow-sm shadow-teal-900/15 flex items-center gap-2 transition-all"
-              >
-                <Briefcase className="w-4 h-4" /> Invite to Task
-              </button>
-              <button className="px-4 py-2.5 rounded-xl border border-slate-200 hover:bg-slate-50 text-slate-700 text-sm font-semibold flex items-center gap-2 transition-all">
-                <Mail className="w-4 h-4" /> Message
-              </button>
+            {/* Freelancer Name, Badges & Headline */}
+            <div className="flex flex-col gap-1.5">
+              {/* Top Row */}
+              <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3">
+                <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
+                  {freelancer?.name || "Freelancer"}
+                </h1>
+                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-emerald-50 text-emerald-700 border border-emerald-200 w-fit">
+                  <span className="relative flex h-2 w-2">
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                    <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+                  </span>
+                  Available for work
+                </span>
+              </div>
+              
+              {/* Middle Row (Professional Title) */}
+              <p className="text-sm sm:text-base font-semibold text-[#009689]">
+                {freelancer?.headline || freelancer?.role || "Professional Freelancer"}
+              </p>
+
+              {/* Bottom Row (Quick Trust Tags) */}
+              <div className="flex flex-wrap items-center gap-4 mt-1">
+                <span className="inline-flex items-center gap-1.5 text-xs text-slate-500 font-medium">
+                  <MapPin className="w-3.5 h-3.5 text-slate-400" />
+                  {freelancer?.location || "Remote"}
+                </span>
+                <span className="inline-flex items-center gap-1.5 text-xs text-slate-500 font-medium">
+                  <ShieldCheck className="w-3.5 h-3.5 text-emerald-500" />
+                  Verified Freelancer
+                </span>
+                <span className="inline-flex items-center gap-1.5 text-xs text-slate-500 font-medium">
+                  <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-400" />
+                  {displayRating} Rating
+                </span>
+              </div>
             </div>
+          </div>
+
+          {/* Right Action & Quick Stat Cluster */}
+          <div className="flex flex-col sm:flex-row lg:flex-col xl:flex-row items-stretch sm:items-center gap-3 shrink-0 mt-2 sm:mt-0">
+            <button 
+              onClick={() => setIsInviteModalOpen(true)}
+              className="px-5 py-2.5 rounded-xl bg-[#009689] hover:bg-[#238B81] text-white text-sm font-semibold shadow-sm shadow-teal-900/15 flex items-center justify-center gap-2 transition-all"
+            >
+              <Briefcase className="w-4 h-4" /> Invite to Task
+            </button>
+            <button className="px-4 py-2.5 rounded-xl border border-slate-200 hover:bg-slate-50 text-slate-700 text-sm font-semibold flex items-center justify-center gap-2 transition-all">
+              <Mail className="w-4 h-4" /> Message
+            </button>
           </div>
         </div>
 
