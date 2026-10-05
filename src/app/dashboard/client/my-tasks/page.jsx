@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { PlusCircle, Briefcase, FolderOpen, Clock, CheckCircle2, Search, FolderSearch, X, Edit3, Calendar, DollarSign, Users } from "lucide-react";
 import EditTaskForm from "@/components/dashboard/EditTaskForm";
+import ReviewDeliverablesModal from "@/components/dashboard/ReviewDeliverablesModal";
 import { fetchMyTasks } from "@/lib/api";
 
 const getStatusCount = (tasks, statusMatcher) =>
@@ -19,6 +20,7 @@ export default function ClientMyTasksPage() {
 
   const [editingTask, setEditingTask] = useState(null);
   const [updateSuccessTask, setUpdateSuccessTask] = useState(null);
+  const [reviewingTask, setReviewingTask] = useState(null);
 
   useEffect(() => {
     let mounted = true;
@@ -47,6 +49,7 @@ export default function ClientMyTasksPage() {
   const totalTasks = tasks.length;
   const openTasks = getStatusCount(tasks, (status) => status === "open");
   const inProgressTasks = getStatusCount(tasks, (status) => status.includes("progress"));
+  const underReviewTasks = getStatusCount(tasks, (status) => status.includes("review") || status === "submitted");
   const completedTasks = getStatusCount(tasks, (status) => status.includes("complete"));
 
   const filteredTasks = tasks.filter((task) => {
@@ -55,6 +58,7 @@ export default function ClientMyTasksPage() {
     let matchesStatus = true;
     if (selectedFilter === "open") matchesStatus = status === "open";
     if (selectedFilter === "progress") matchesStatus = status.includes("progress");
+    if (selectedFilter === "review") matchesStatus = status.includes("review") || status === "submitted";
     if (selectedFilter === "completed") matchesStatus = status.includes("complete");
 
     // 2. Filter by Search Query
@@ -80,6 +84,8 @@ export default function ClientMyTasksPage() {
     const s = String(status || "").toLowerCase();
     if (s === "open") return "bg-emerald-50 text-emerald-600 border-emerald-100";
     if (s.includes("progress")) return "bg-amber-50 text-amber-600 border-amber-100";
+    if (s.includes("review") || s === "submitted") return "bg-indigo-50 text-indigo-600 border-indigo-100";
+    if (s.includes("revision")) return "bg-rose-50 text-rose-600 border-rose-100";
     if (s.includes("complete")) return "bg-sky-50 text-sky-600 border-sky-100";
     return "bg-slate-50 text-slate-600 border-slate-200";
   };
@@ -175,6 +181,7 @@ export default function ClientMyTasksPage() {
             { id: "all", label: "All Tasks", count: totalTasks },
             { id: "open", label: "Open", count: openTasks },
             { id: "progress", label: "In Progress", count: inProgressTasks },
+            { id: "review", label: "Under Review", count: underReviewTasks },
             { id: "completed", label: "Completed", count: completedTasks },
           ].map((tab) => (
             <button
@@ -250,6 +257,23 @@ export default function ClientMyTasksPage() {
                 <p className="text-xs text-slate-500 line-clamp-2 mt-1.5 leading-relaxed">
                   {task.description}
                 </p>
+
+                {(String(task.status || "").toLowerCase().includes("review") || String(task.status || "").toLowerCase() === "submitted") && (
+                  <div className="mt-4 p-3 bg-indigo-50 border border-indigo-100 rounded-xl">
+                    <p className="text-xs font-bold text-indigo-800 mb-2">Freelancer has submitted the project deliverables for your review.</p>
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        setReviewingTask(task);
+                      }}
+                      className="w-full py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-xs font-bold transition-colors"
+                    >
+                      Review Deliverables
+                    </button>
+                  </div>
+                )}
 
                 <div className="grid grid-cols-2 gap-3 mt-5 pt-4 border-t border-slate-100">
                   <div className="flex items-center gap-2">
@@ -347,6 +371,16 @@ export default function ClientMyTasksPage() {
               Continue
             </button>
           </div>
+        </div>
+      ) : null}
+
+      {reviewingTask ? (
+        <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-in fade-in duration-200">
+          <ReviewDeliverablesModal 
+            task={reviewingTask} 
+            onClose={() => setReviewingTask(null)} 
+            onActionComplete={handleTaskUpdated} 
+          />
         </div>
       ) : null}
     </div>

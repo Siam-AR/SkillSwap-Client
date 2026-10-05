@@ -38,6 +38,7 @@ export async function POST(request) {
     const result = await completeFreelancerProject({
       taskId: body?.taskId,
       deliverableUrl: body?.deliverableUrl,
+      deliveryNotes: body?.deliveryNotes,
       freelancerEmail: userEmail,
     });
 

@@ -35,6 +35,13 @@ const normalizeTaskStatus = (value) => {
   if (["completed", "complete", "done", "finished"].includes(status)) {
     return "completed";
   }
+  if (["under_review", "under review", "submitted"].includes(status)) {
+    return "under review";
+  }
+
+  if (["revision_requested", "revision requested"].includes(status)) {
+    return "revision requested";
+  }
 
   return status || "open";
 };
@@ -111,7 +118,7 @@ export async function getFreelancerActiveProjects(freelancerEmail) {
       }
 
       const taskStatus = normalizeTaskStatus(taskDoc.status);
-      if (!(["in progress", "completed"].includes(taskStatus))) {
+      if (!(["in progress", "under review", "revision requested", "completed"].includes(taskStatus))) {
         return null;
       }
 
@@ -138,7 +145,7 @@ export async function getFreelancerActiveProjects(freelancerEmail) {
     });
 }
 
-export async function completeFreelancerProject({ taskId, deliverableUrl, freelancerEmail }) {
+export async function completeFreelancerProject({ taskId, deliverableUrl, deliveryNotes, freelancerEmail }) {
   const db = await getAppDb();
   const tasksCollection = db.collection("tasks");
   const proposalsCollection = db.collection("proposals");
@@ -186,10 +193,11 @@ export async function completeFreelancerProject({ taskId, deliverableUrl, freela
   const now = new Date();
   await tasksCollection.updateOne(buildTaskQuery(normalizedTaskId), {
     $set: {
-      status: "complete",
+      status: "under_review",
       deliverable_url: trimmedUrl,
       deliverableUrl: trimmedUrl,
-      completedAt: now,
+      deliveryNotes: deliveryNotes || "",
+      submittedAt: now,
       updatedAt: now,
     },
   });

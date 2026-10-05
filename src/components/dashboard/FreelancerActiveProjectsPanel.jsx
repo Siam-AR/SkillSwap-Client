@@ -5,7 +5,7 @@ import Link from "next/link";
 import { 
   Briefcase, CheckCircle2, Clock, Search, FolderKanban, 
   Sparkles, ExternalLink, MessageSquare, Link as LinkIcon, 
-  Github, Code, Loader2 
+  Github, Code, Loader2, FileText 
 } from "lucide-react";
 import { getSession } from "@/lib/auth-client";
 import { toast } from "react-toastify";
