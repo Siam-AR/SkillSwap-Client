@@ -14,6 +14,7 @@ import {
   X,
   Inbox,
   AlertTriangle,
+  Lock,
 } from "lucide-react";
 import { createProposalCheckout, fetchClientProposals, submitClientProposalAction } from "@/lib/dashboard-client-proposals";
 
@@ -288,8 +289,8 @@ export default function ClientProposalsPage() {
                     <tr key={proposal._id || proposal.id} className="hover:bg-slate-50/60 transition-colors">
                       {/* Task details */}
                       <td className="py-4 px-6">
-                        <span className="text-[10px] font-bold text-slate-500 bg-slate-100 px-2 py-0.5 rounded-md uppercase">
-                          General
+                        <span className="text-[10px] font-bold text-slate-600 bg-teal-50 border border-teal-200/70 px-2 py-0.5 rounded-md uppercase tracking-wider">
+                          {proposal.taskCategory || "General"}
                         </span>
                         <h4 className="font-bold text-slate-900 mt-1 line-clamp-1">
                           {proposal.taskTitle || "Untitled Task"}
@@ -397,8 +398,8 @@ export default function ClientProposalsPage() {
             {/* Modal Header */}
             <div className="flex items-start justify-between gap-4">
               <div>
-                <span className="text-[10px] font-bold text-slate-500 bg-slate-100 px-2 py-0.5 rounded-md uppercase">
-                  General
+                <span className="text-[10px] font-bold text-slate-600 bg-teal-50 border border-teal-200/70 px-2 py-0.5 rounded-md uppercase tracking-wider">
+                  {inspectProposal.taskCategory || "General"}
                 </span>
                 <h3 className="text-xl font-extrabold text-slate-900 mt-1">
                   {inspectProposal.taskTitle}
@@ -500,13 +501,22 @@ export default function ClientProposalsPage() {
 
             <div>
               <h3 className="text-lg font-bold text-slate-900">
-                {actionModal.type === "accept" ? "Accept this proposal?" : "Decline proposal?"}
+                {actionModal.type === "accept" ? "Fund Escrow & Award Contract?" : "Decline proposal?"}
               </h3>
               <p className="text-xs text-slate-500 mt-1 leading-relaxed">
                 {actionModal.type === "accept"
-                  ? `You are about to award the contract for "${actionModal.proposal.taskTitle}" to ${actionModal.proposal.freelancerName} for $${actionModal.proposal.proposedBudget}. This will move the task into active progress and open the checkout.`
+                  ? `You are about to award the contract for "${actionModal.proposal.taskTitle}" to ${actionModal.proposal.freelancerName} for $${actionModal.proposal.proposedBudget}. You will deposit the funds into platform escrow. The money will NOT be released to the freelancer until you review and approve the completed work.`
                   : `Are you sure you want to decline the proposal from ${actionModal.proposal.freelancerName}? This action notifies the candidate and rejects the bid.`}
               </p>
+              
+              {actionModal.type === "accept" && (
+                <div className="flex items-start gap-2 bg-slate-50 border border-slate-200 rounded-xl p-3 mt-3">
+                  <Lock className="w-4 h-4 text-[#009689] shrink-0 mt-0.5" />
+                  <p className="text-[11px] text-slate-600 font-medium">
+                    <strong className="text-slate-800">100% Milestone Protection:</strong> Funds remain safely in escrow until you inspect and accept the final deliverable.
+                  </p>
+                </div>
+              )}
             </div>
 
             <div className="flex items-center justify-end gap-3 pt-3">
@@ -531,7 +541,7 @@ export default function ClientProposalsPage() {
                 {isProcessing ? (
                   "Processing..."
                 ) : actionModal.type === "accept" ? (
-                  "Confirm & Award"
+                  "Fund Escrow & Start Task"
                 ) : (
                   "Confirm Decline"
                 )}

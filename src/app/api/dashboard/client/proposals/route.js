@@ -67,6 +67,7 @@ export async function GET(request) {
         _id: normalizeId(proposal._id || proposal.id || ""),
         taskId: normalizeId(proposal.task_id || proposal.taskId || ""),
         taskTitle: task?.title || proposal.task_title || "Untitled Task",
+        taskCategory: task?.category?.name || task?.category || task?.taskCategory || proposal.category || "General",
         taskStatus,
         freelancerName:
           freelancerUser?.name || freelancerUser?.fullName || freelancerUser?.displayName || proposal.freelancer_name || proposal.freelancerName || proposal.freelancer_email || "Freelancer",
