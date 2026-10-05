@@ -28,6 +28,7 @@ export async function getClientDashboardOverview() {
     totalSpent: 0,
     taskError: null,
     transactionError: null,
+    recentTasks: [],
   };
 
   const headers = await buildAuthHeaders();
@@ -48,6 +49,7 @@ export async function getClientDashboardOverview() {
   overview.inProgressTasks = Number(payload.data?.inProgressTasks ?? 0);
   overview.completedTasks = Number(payload.data?.completedTasks ?? 0);
   overview.totalSpent = Number(payload.data?.totalSpent ?? 0);
+  overview.recentTasks = Array.isArray(payload.data?.recentTasks) ? payload.data.recentTasks : [];
 
   return overview;
 }

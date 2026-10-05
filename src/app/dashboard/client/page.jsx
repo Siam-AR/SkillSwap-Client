@@ -161,36 +161,61 @@ export default function ClientDashboardHomePage() {
           </div>
           
           <div className="flex-1 flex flex-col justify-center">
-            {overview.recentTasks && overview.recentTasks.length > 0 ? (
+            {Array.isArray(overview.recentTasks) && overview.recentTasks.length > 0 ? (
               <div className="space-y-3 mt-4">
-                {overview.recentTasks.map(task => (
-                   <div key={task._id} className="p-4 rounded-2xl border border-slate-100 hover:border-slate-200 bg-slate-50/50 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                     <div>
-                       <div className="flex items-center gap-2 mb-1">
-                          <span className="text-[10px] font-bold tracking-wider text-slate-500 bg-slate-200/50 px-2 py-0.5 rounded-md uppercase">{task.category || "General"}</span>
-                          <span className={`text-[10px] font-bold tracking-wider px-2 py-0.5 rounded-md uppercase ${task.status === "open" ? "bg-sky-100 text-sky-700" : task.status === "in_progress" ? "bg-amber-100 text-amber-700" : "bg-emerald-100 text-emerald-700"}`}>
-                            {task.status.replace("_", " ")}
+                {overview.recentTasks.map((task) => {
+                  const taskId = task._id || task.id;
+                  const normalizedStatus = String(task.status || "open").toLowerCase().replace("-", "_");
+
+                  return (
+                    <div
+                      key={taskId}
+                      className="p-4 rounded-2xl border border-slate-200/80 hover:border-[#009689]/40 bg-slate-50/50 hover:bg-white transition-all flex flex-col sm:flex-row sm:items-center justify-between gap-4 group"
+                    >
+                      <div>
+                        <div className="flex items-center gap-2 mb-1.5">
+                          <span className="text-[10px] font-bold tracking-wider text-slate-500 bg-slate-200/60 px-2 py-0.5 rounded-md uppercase">
+                            {task.category || "General"}
                           </span>
-                       </div>
-                       <h4 className="font-semibold text-slate-900">{task.title}</h4>
-                     </div>
-                     <div className="flex items-center gap-4 text-sm font-medium">
-                        <span className="text-slate-600">${task.budget}</span>
-                        <Link href={`/dashboard/client/my-tasks/${task._id}`} className="text-[#009689] hover:underline">View</Link>
-                     </div>
-                   </div>
-                ))}
+
+                          <span
+                            className={`text-[10px] font-bold tracking-wider px-2 py-0.5 rounded-md uppercase ${
+                              normalizedStatus === "open"
+                                ? "bg-sky-50 text-sky-700 border border-sky-200/60"
+                                : normalizedStatus === "in_progress"
+                                ? "bg-amber-50 text-amber-700 border border-amber-200/60"
+                                : "bg-emerald-50 text-emerald-700 border border-emerald-200/60"
+                            }`}
+                          >
+                            {normalizedStatus.replace("_", " ")}
+                          </span>
+                        </div>
+
+                        <h4 className="font-bold text-slate-900 group-hover:text-[#009689] transition-colors text-sm line-clamp-1">
+                          {task.title}
+                        </h4>
+                      </div>
+
+                      <div className="flex items-center justify-between sm:justify-end gap-4 shrink-0 text-sm font-semibold">
+                        <span className="font-extrabold text-[#009689]">${Number(task.budget || 0).toFixed(2)}</span>
+                        <Link className="inline-flex items-center gap-1 text-xs font-bold text-slate-600 hover:text-[#009689] bg-white border border-slate-200 hover:border-teal-200 px-3 py-1.5 rounded-xl transition-all shadow-sm" href={`/tasks/${taskId}`}>
+                          <span>View</span>
+                        </Link>
+                      </div>
+                    </div>
+                  );
+                })}
               </div>
             ) : (
               <div className="flex flex-col items-center justify-center text-center py-10">
-                <div className="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mb-4">
-                  <FolderOpen className="w-8 h-8 text-slate-300" />
+                <div className="w-14 h-14 bg-teal-50 rounded-2xl flex items-center justify-center mb-3 text-[#009689]">
+                  <FolderOpen className="w-7 h-7 text-[#009689]"/>
                 </div>
-                <h3 className="text-slate-900 font-bold mb-2">No active tasks</h3>
-                <p className="text-slate-500 text-sm max-w-sm mb-6">
+                <h3 className="text-slate-900 font-bold mb-1">No tasks posted yet</h3>
+                <p className="text-slate-500 text-xs max-w-sm mb-5">
                   You haven't posted any tasks yet. Create your first project to start receiving bids from top freelancers.
                 </p>
-                <Link href="/dashboard/client/post-task" className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[#009689] hover:bg-[#238B81] text-white text-sm font-semibold shadow-sm shadow-teal-900/15 transition-all">
+                <Link className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[#009689] hover:bg-[#238B81] text-white text-xs font-bold shadow-sm shadow-teal-900/15 transition-all" href="/dashboard/client/post-task">
                   <PlusCircle className="w-4 h-4"/>
                   <span>Post Your First Task</span>
                 </Link>

@@ -70,6 +70,14 @@ export async function GET(request) {
       return sum + safeNumber(payment.amount ?? payment.total ?? payment.value ?? 0);
     }, 0);
 
+    const recentTasks = [...tasks]
+      .sort((a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0))
+      .slice(0, 5)
+      .map(task => ({
+        ...task,
+        _id: String(task._id || task.id || ""),
+      }));
+
     const overview = {
       totalTasks: tasks.length,
       openTasks: tasks.filter((task) => isOpenTask(normalizeStatus(task.status))).length,
@@ -80,6 +88,7 @@ export async function GET(request) {
       totalSpent: payments.length ? paymentSpent : transactionSpent,
       transactionTotal: transactionSpent,
       paymentTotal: paymentSpent,
+      recentTasks,
     };
 
     return NextResponse.json({ success: true, data: overview });
