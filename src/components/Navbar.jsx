@@ -173,7 +173,7 @@ const Navbar = () => {
           </div>
         </Link>
 
-        <nav className="hidden items-center gap-2 md:flex">
+        <nav className="desktop-nav-only items-center gap-2">
           {navItems.map((item) => (
             <a
               key={item.href}
@@ -218,7 +218,7 @@ const Navbar = () => {
           </button>
 
           {isAuthenticated ? (
-            <div className="hidden md:flex w-full items-center justify-end gap-3">
+            <div className="desktop-nav-only w-full items-center justify-end gap-3">
               <div className="relative flex items-center gap-2" ref={profileMenuRef}>
                 <div
                   onClick={() => setShowProfileCard((prev) => !prev)}
@@ -301,7 +301,7 @@ const Navbar = () => {
               </div>
             </div>
           ) : (
-            <div className="hidden items-center gap-2 md:flex">
+            <div className="desktop-nav-only items-center gap-2">
               <Link href="/auth/signin">
                 <Button
                   className={themeClasses.button}
@@ -327,7 +327,7 @@ const Navbar = () => {
           <button
             type="button"
             onClick={() => setIsMenuOpen((current) => !current)}
-            className={`flex h-11 w-11 items-center justify-center rounded-full border md:hidden ${themeClasses.button}`}
+            className={`mobile-nav-only h-11 w-11 items-center justify-center rounded-full border ${themeClasses.button}`}
             aria-label="Toggle navigation menu"
             aria-expanded={isMenuOpen}
           >
@@ -341,8 +341,7 @@ const Navbar = () => {
       </div>
 
       <div
-        className={`absolute left-0 right-0 top-full border-t shadow-xl md:hidden ${isMenuOpen ? "block" : "hidden"
-          } ${isDarkMode ? "border-slate-800" : "border-slate-200"} ${themeClasses.panel}`}
+        className={`absolute left-0 right-0 top-full border-t shadow-xl ${isMenuOpen ? "block" : "hidden"} mobile-nav-only ${isDarkMode ? "border-slate-800" : "border-slate-200"} ${themeClasses.panel}`}
       >
         <div className="mx-auto flex max-w-7xl flex-col gap-2 px-4 py-4 sm:px-6 lg:px-8">
           {navItems.map((item) => (

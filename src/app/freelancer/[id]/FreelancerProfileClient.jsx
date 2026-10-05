@@ -72,7 +72,7 @@ export default function FreelancerProfileClient({ freelancer }) {
 
 
   return (
-    <div className="min-h-screen bg-slate-50/70 text-slate-800 pb-16">
+    <div className="w-full max-w-full overflow-x-hidden min-h-screen bg-slate-50/70 text-slate-800 pb-16">
       {/* Container */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8">
         {/* Breadcrumb */}
@@ -194,12 +194,12 @@ export default function FreelancerProfileClient({ freelancer }) {
                 <h3 className="text-xs font-bold uppercase tracking-wider text-slate-400 mb-3 block">
                   Skills & Technologies
                 </h3>
-                <div className="flex flex-wrap gap-2">
+                <div className="flex flex-wrap gap-2 max-w-full">
                   {freelancer?.skills && freelancer.skills.length > 0 ? (
                     freelancer.skills.map((skill, index) => (
                       <span 
                         key={index} 
-                        className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-teal-50/70 border border-teal-200/60 text-xs font-bold text-[#009689] hover:bg-[#009689] hover:text-white transition-all duration-200 cursor-default"
+                        className="max-w-full truncate inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-teal-50/70 border border-teal-200/60 text-xs font-bold text-[#009689] hover:bg-[#009689] hover:text-white transition-all duration-200 cursor-default"
                       >
                         {/* <Check className="w-3 h-3" /> */}
                         {skill}

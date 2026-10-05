@@ -93,7 +93,7 @@ export default function ProfilePage() {
   }
 
   return (
-    <main className="min-h-screen bg-slate-50/70">
+    <main className="w-full max-w-full overflow-x-hidden min-h-screen bg-slate-50/70">
       <Navbar />
 
       <section className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10 lg:py-14 space-y-8">
@@ -211,10 +211,10 @@ export default function ProfilePage() {
           {/* Right Column (Skills & Expertise) */}
           <div className="lg:col-span-5 bg-white border border-slate-200/90 rounded-2xl p-6 shadow-sm space-y-4 h-fit">
             <h2 className="text-lg font-bold text-slate-900">Skills & Stack</h2>
-            <div className="flex flex-wrap gap-2">
+            <div className="flex flex-wrap gap-2 max-w-full">
               {user?.skills && user.skills.length > 0 ? (
                 user.skills.map((skill, index) => (
-                  <span key={index} className="bg-slate-50 text-slate-700 border border-slate-200 px-3 py-1.5 rounded-xl text-xs font-semibold">
+                  <span key={index} className="max-w-full truncate bg-slate-50 text-slate-700 border border-slate-200 px-3 py-1.5 rounded-xl text-xs font-semibold">
                     {skill}
                   </span>
                 ))
