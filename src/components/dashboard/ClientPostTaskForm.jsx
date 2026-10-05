@@ -1,14 +1,16 @@
 "use client";
 
 import { useState } from "react";
-import { Button, FieldError, Form, Input, Label, TextArea, TextField } from "@heroui/react";
 import { FiCheckCircle, FiAlertCircle } from "react-icons/fi";
+import { UploadCloud, X, Calendar, DollarSign, Sparkles, ShieldCheck, ChevronDown, Loader2 } from "lucide-react";
 import { createTask } from "@/lib/api";
 import { CustomUploadButton } from "@/components/CustomUploadButton";
+import { useRouter } from "next/navigation";
 
 const categories = ["Design", "Writing", "Development", "Marketing", "Other"];
 
 export default function ClientPostTaskForm() {
+  const router = useRouter();
   const [statusMessage, setStatusMessage] = useState({ type: "idle", text: "" });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [formValues, setFormValues] = useState({
@@ -19,8 +21,6 @@ export default function ClientPostTaskForm() {
     deadline: "",
     imageUrl: "",
   });
-  const [successMessage, setSuccessMessage] = useState("");
-  const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
 
   const resetForm = () => {
     setFormValues({ title: "", category: "", description: "", budget: "", deadline: "", imageUrl: "" });
@@ -58,207 +58,246 @@ export default function ClientPostTaskForm() {
 
     try {
       await createTask(payload);
-      setSuccessMessage("Your task was posted successfully.");
       resetForm();
-      setIsSuccessModalOpen(true);
+      router.push("/dashboard/client/my-tasks");
     } catch (error) {
       const message = error?.message || "Unable to post your task right now.";
       setStatusMessage({ type: "error", text: message });
-    } finally {
       setIsSubmitting(false);
     }
   };
 
   return (
-    <div className="rounded-[1.75rem] border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-950">
-      <div className="space-y-2">
-        <p className="text-sm font-semibold uppercase tracking-[0.24em] text-sky-600">Post a task</p>
-        <h3 className="text-2xl font-semibold text-slate-950 dark:text-white">Share your project with skilled freelancers</h3>
-        <p className="text-sm leading-7 text-slate-600 dark:text-slate-400">
-          Add a clear task description, your preferred budget, and when you need it completed.
-        </p>
+    <>
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <span className="text-[11px] font-bold tracking-wider text-slate-400 uppercase">
+            CLIENT WORKSPACE • NEW PROJECT
+          </span>
+          <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight mt-1">
+            Create a New Task
+          </h1>
+          <p className="text-sm text-slate-500 mt-1">
+            Specify deliverables, timeline, and budget to connect with verified freelance specialists.
+          </p>
+        </div>
       </div>
 
-      <Form className="mt-6 flex flex-col gap-5" onSubmit={handleSubmit}>
-        <TextField
-          isRequired
-          name="title"
-          validate={(value) => {
-            if (!value?.trim()) return "Please enter a task title";
-            if (value.trim().length < 5) return "Title should be at least 5 characters";
-            return null;
-          }}
-        >
-          <Label>Task title</Label>
-          <Input
-            name="title"
-            placeholder="Design a landing page for my startup"
-            value={formValues.title}
-            onChange={(event) => updateField("title", event.target.value)}
-          />
-          <FieldError />
-        </TextField>
-
-        <div className="flex flex-col gap-2">
-          <Label>Category</Label>
-          <select
-            name="category"
-            value={formValues.category}
-            onChange={(event) => updateField("category", event.target.value)}
-            className="rounded-2xl border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 outline-none transition focus:border-sky-500 focus:ring-2 focus:ring-sky-200 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100"
-          >
-            <option value="">Choose a category</option>
-            {categories.map((category) => (
-              <option key={category} value={category}>
-                {category}
-              </option>
-            ))}
-          </select>
-          {!formValues.category ? <p className="text-sm text-rose-600 dark:text-rose-400">Please choose a category</p> : null}
-        </div>
-
-        <TextField
-          isRequired
-          name="description"
-          validate={(value) => {
-            if (!value?.trim()) return "Please describe what you need";
-            if (value.trim().length < 20) return "Description should be at least 20 characters";
-            return null;
-          }}
-        >
-          <Label>Description</Label>
-          <TextArea
-            name="description"
-            placeholder="Describe the task, deliverables, style, and any requirements."
-            value={formValues.description}
-            onChange={(event) => updateField("description", event.target.value)}
-          />
-          <FieldError />
-        </TextField>
-
-        <div className="grid gap-4 md:grid-cols-2">
-          <TextField
-            isRequired
-            name="budget"
-            type="number"
-            validate={(value) => {
-              const numericValue = Number(value);
-              if (!value) return "Please enter a budget";
-              if (numericValue <= 0) return "Budget must be greater than zero";
-              return null;
-            }}
-          >
-            <Label>Budget (USD)</Label>
-            <Input
-              name="budget"
-              min="1"
-              step="1"
-              placeholder="150"
-              type="number"
-              value={formValues.budget}
-              onChange={(event) => updateField("budget", event.target.value)}
-            />
-            <FieldError />
-          </TextField>
-
-          <TextField
-            isRequired
-            name="deadline"
-            type="date"
-            validate={(value) => {
-              if (!value) return "Please select a deadline";
-              return null;
-            }}
-          >
-            <Label>Deadline</Label>
-            <Input
-              name="deadline"
-              type="date"
-              value={formValues.deadline}
-              onChange={(event) => updateField("deadline", event.target.value)}
-            />
-            <FieldError />
-          </TextField>
-        </div>
-
-        <div className="flex flex-col gap-2">
-          <Label>Banner Image (Optional)</Label>
-          <div className="rounded-2xl border border-slate-200 p-4 dark:border-slate-800 flex flex-col items-center justify-center gap-4">
-            {formValues.imageUrl ? (
-              <div className="relative w-full overflow-hidden rounded-xl">
-                <img src={formValues.imageUrl} alt="Banner Preview" className="h-48 w-full object-cover" />
-                <button
-                  type="button"
-                  onClick={() => updateField("imageUrl", "")}
-                  className="absolute right-2 top-2 rounded-full bg-slate-900/50 p-1.5 text-white hover:bg-slate-900/80 transition"
-                >
-                  <FiAlertCircle className="h-4 w-4" /> {/* Use as a clear icon for now or just text */}
-                  Clear
-                </button>
-              </div>
-            ) : (
-              <CustomUploadButton
-                onUploadComplete={(res) => {
-                  if (res && res[0]) {
-                    updateField("imageUrl", res[0].url);
-                  }
-                }}
-                onUploadError={(error) => {
-                  setStatusMessage({ type: "error", text: `Upload failed: ${error.message}` });
-                }}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 mt-6">
+        {/* Main Form Card (Span 8) */}
+        <div className="lg:col-span-8 bg-white rounded-3xl border border-slate-200/90 p-6 sm:p-8 shadow-sm">
+          <form className="space-y-6" onSubmit={handleSubmit}>
+            
+            {/* Task Title */}
+            <div className="flex flex-col gap-2">
+              <label className="text-xs font-bold uppercase tracking-wider text-slate-500">
+                Task Title <span className="text-rose-500">*</span>
+              </label>
+              <input
+                type="text"
+                placeholder="Design a landing page for my startup"
+                value={formValues.title}
+                onChange={(event) => updateField("title", event.target.value)}
+                className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-[#009689] focus:ring-2 focus:ring-teal-500/15 outline-none transition-all text-sm font-medium text-slate-800 placeholder:text-slate-400"
               />
+            </div>
+
+            {/* Category */}
+            <div className="flex flex-col gap-2">
+              <label className="text-xs font-bold uppercase tracking-wider text-slate-500">
+                Category <span className="text-rose-500">*</span>
+              </label>
+              <div className="relative">
+                <select
+                  value={formValues.category}
+                  onChange={(event) => updateField("category", event.target.value)}
+                  className="w-full appearance-none px-4 py-3 rounded-xl border border-slate-200 focus:border-[#009689] focus:ring-2 focus:ring-teal-500/15 outline-none transition-all text-sm font-medium text-slate-800 bg-white"
+                >
+                  <option value="" disabled>Choose a category</option>
+                  {categories.map((cat) => (
+                    <option key={cat} value={cat}>{cat}</option>
+                  ))}
+                </select>
+                <div className="pointer-events-none absolute inset-y-0 right-4 flex items-center text-slate-400">
+                  <ChevronDown className="w-4 h-4" />
+                </div>
+              </div>
+            </div>
+
+            {/* Description */}
+            <div className="flex flex-col gap-2">
+              <label className="text-xs font-bold uppercase tracking-wider text-slate-500">
+                Task Scope & Requirements <span className="text-rose-500">*</span>
+              </label>
+              <textarea
+                placeholder="Describe the task, deliverables, style, and any requirements..."
+                value={formValues.description}
+                onChange={(event) => updateField("description", event.target.value)}
+                className="w-full min-h-[140px] px-4 py-3 rounded-2xl border border-slate-200 focus:border-[#009689] focus:ring-2 focus:ring-teal-500/15 outline-none transition-all text-sm font-medium text-slate-800 placeholder:text-slate-400 resize-y"
+              />
+              <p className="text-xs text-slate-500">
+                Include tools, deliverables, milestones, or repo requirements.
+              </p>
+            </div>
+
+            {/* Budget & Deadline */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="flex flex-col gap-2">
+                <label className="text-xs font-bold uppercase tracking-wider text-slate-500">
+                  Fixed Budget (USD) <span className="text-rose-500">*</span>
+                </label>
+                <div className="relative">
+                  <div className="pointer-events-none absolute inset-y-0 left-0 pl-4 flex items-center text-slate-400">
+                    <DollarSign className="w-4 h-4" />
+                  </div>
+                  <input
+                    type="number"
+                    min="1"
+                    step="1"
+                    placeholder="150"
+                    value={formValues.budget}
+                    onChange={(event) => updateField("budget", event.target.value)}
+                    className="w-full pl-10 pr-4 py-3 rounded-xl border border-slate-200 focus:border-[#009689] focus:ring-2 focus:ring-teal-500/15 outline-none transition-all text-sm font-medium text-slate-800 placeholder:text-slate-400"
+                  />
+                </div>
+              </div>
+
+              <div className="flex flex-col gap-2">
+                <label className="text-xs font-bold uppercase tracking-wider text-slate-500">
+                  Deadline <span className="text-rose-500">*</span>
+                </label>
+                <div className="relative">
+                  <input
+                    type="date"
+                    value={formValues.deadline}
+                    onChange={(event) => updateField("deadline", event.target.value)}
+                    className="w-full pl-4 pr-10 py-3 rounded-xl border border-slate-200 focus:border-[#009689] focus:ring-2 focus:ring-teal-500/15 outline-none transition-all text-sm font-medium text-slate-800 [&::-webkit-calendar-picker-indicator]:opacity-0 [&::-webkit-calendar-picker-indicator]:absolute [&::-webkit-calendar-picker-indicator]:w-full [&::-webkit-calendar-picker-indicator]:cursor-pointer"
+                  />
+                  <div className="pointer-events-none absolute inset-y-0 right-4 flex items-center text-slate-400">
+                    <Calendar className="w-4 h-4" />
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Banner Image */}
+            <div className="flex flex-col gap-2">
+              <label className="text-xs font-bold uppercase tracking-wider text-slate-500">
+                Banner Image (Optional)
+              </label>
+              
+              {formValues.imageUrl ? (
+                <div className="relative w-full overflow-hidden rounded-2xl border border-slate-200">
+                  <img src={formValues.imageUrl} alt="Banner Preview" className="h-48 w-full object-cover" />
+                  <button
+                    type="button"
+                    onClick={() => updateField("imageUrl", "")}
+                    className="absolute right-3 top-3 flex items-center gap-1 rounded-lg bg-slate-900/70 backdrop-blur px-3 py-1.5 text-xs font-semibold text-white hover:bg-rose-600 transition"
+                  >
+                    <X className="h-3 w-3" /> Remove
+                  </button>
+                </div>
+              ) : (
+                <div className="relative overflow-hidden rounded-2xl border-2 border-dashed border-slate-200 bg-slate-50/60 hover:bg-teal-50/30 hover:border-teal-300 transition-all text-center min-h-[160px]">
+                  <div className="absolute inset-0 z-10 opacity-0 cursor-pointer">
+                    <CustomUploadButton
+                      onUploadComplete={(res) => {
+                        if (res && res[0]) {
+                          updateField("imageUrl", res[0].url);
+                        }
+                      }}
+                      onUploadError={(error) => {
+                        setStatusMessage({ type: "error", text: `Upload failed: ${error.message}` });
+                      }}
+                    />
+                  </div>
+                  <div className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center gap-2.5 p-6">
+                    <div className="w-12 h-12 rounded-2xl bg-teal-50 text-[#009689] flex items-center justify-center border border-teal-100">
+                      <UploadCloud className="w-6 h-6" />
+                    </div>
+                    <div>
+                      <p className="text-sm font-semibold text-slate-700">Drop your task banner here or click to browse</p>
+                      <p className="text-xs text-slate-500 mt-1">PNG, JPG, or WEBP up to 4MB</p>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* Error Message */}
+            {statusMessage.text && statusMessage.type === "error" && (
+              <div className="flex items-start gap-2 rounded-2xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700">
+                <FiAlertCircle className="mt-0.5 h-4 w-4 shrink-0" />
+                <span>{statusMessage.text}</span>
+              </div>
             )}
-          </div>
+
+            {/* Actions */}
+            <div className="flex items-center gap-3 pt-3 border-t border-slate-100">
+              <button 
+                type="submit" 
+                disabled={isSubmitting}
+                className="px-6 py-3 rounded-xl bg-[#009689] hover:bg-[#238B81] text-white text-sm font-semibold shadow-sm shadow-teal-900/15 flex items-center gap-2 transition-all disabled:opacity-70 disabled:cursor-not-allowed"
+              >
+                {isSubmitting && <Loader2 className="w-4 h-4 animate-spin" />}
+                Post Task
+              </button>
+              <button
+                type="button"
+                onClick={resetForm}
+                disabled={isSubmitting}
+                className="px-5 py-3 rounded-xl border border-slate-200 hover:bg-slate-50 text-slate-600 text-sm font-semibold transition-all"
+              >
+                Reset
+              </button>
+            </div>
+
+          </form>
         </div>
 
-        <div className="flex flex-wrap items-center gap-3">
-          <Button color="primary" isLoading={isSubmitting} type="submit">
-            Post task
-          </Button>
-          <Button
-            type="reset"
-            variant="bordered"
-            onPress={() => {
-              resetForm();
-            }}
-          >
-            Reset
-          </Button>
-        </div>
-
-        {statusMessage.text ? (
-          <div className="flex items-start gap-2 rounded-2xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700 dark:border-rose-900/40 dark:bg-rose-500/10 dark:text-rose-300">
-            <FiAlertCircle className="mt-0.5 h-4 w-4 shrink-0" />
-            <span>{statusMessage.text}</span>
-          </div>
-        ) : null}
-      </Form>
-
-      {isSuccessModalOpen ? (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/60 px-4" onClick={() => setIsSuccessModalOpen(false)}>
-          <div className="w-full max-w-md rounded-[1.5rem] border border-slate-200 bg-white p-6 shadow-2xl dark:border-slate-800 dark:bg-slate-950" onClick={(event) => event.stopPropagation()}>
-            <div className="flex flex-col gap-3">
-              <div className="flex items-center gap-2">
-                <div className="flex h-10 w-10 items-center justify-center rounded-full bg-emerald-100 text-emerald-600 dark:bg-emerald-500/10 dark:text-emerald-300">
-                  <FiCheckCircle className="h-5 w-5" />
-                </div>
+        {/* Right Sticky Guidance Rail (Span 4) */}
+        <div className="lg:col-span-4 space-y-6 lg:sticky lg:top-24 h-fit">
+          {/* Tips Card */}
+          <div className="bg-white rounded-3xl border border-slate-200/90 p-6 shadow-sm space-y-4">
+            <h3 className="text-sm font-bold text-slate-900 flex items-center gap-2">
+              <Sparkles className="w-4 h-4 text-amber-500" />
+              Posting Best Practices
+            </h3>
+            <ul className="space-y-4 text-sm">
+              <li className="flex items-start gap-3">
+                <div className="mt-1 w-1.5 h-1.5 rounded-full bg-slate-300 shrink-0"></div>
                 <div>
-                  <h4 className="text-lg font-semibold text-slate-950 dark:text-white">Task posted successfully</h4>
-                  <p className="text-sm text-slate-600 dark:text-slate-400">Your task is now live for freelancers to review.</p>
+                  <span className="font-semibold text-slate-800">Specific Deliverables:</span>
+                  <p className="text-slate-500 mt-0.5">Mention exact outputs (e.g., Figma mockups, Next.js components).</p>
                 </div>
-              </div>
-              <div className="rounded-2xl border border-emerald-200 bg-emerald-50 p-4 text-sm text-emerald-700 dark:border-emerald-900/40 dark:bg-emerald-500/10 dark:text-emerald-300">
-                {successMessage}
-              </div>
-            </div>
-            <div className="mt-6 flex justify-end">
-              <Button color="primary" onPress={() => setIsSuccessModalOpen(false)}>
-                Continue
-              </Button>
-            </div>
+              </li>
+              <li className="flex items-start gap-3">
+                <div className="mt-1 w-1.5 h-1.5 rounded-full bg-slate-300 shrink-0"></div>
+                <div>
+                  <span className="font-semibold text-slate-800">Realistic Budgets:</span>
+                  <p className="text-slate-500 mt-0.5">Market-rate compensation attracts verified senior developers.</p>
+                </div>
+              </li>
+              <li className="flex items-start gap-3">
+                <div className="mt-1 w-1.5 h-1.5 rounded-full bg-slate-300 shrink-0"></div>
+                <div>
+                  <span className="font-semibold text-slate-800">Clear Timelines:</span>
+                  <p className="text-slate-500 mt-0.5">Set clear milestones for drafts and revisions.</p>
+                </div>
+              </li>
+            </ul>
+          </div>
+
+          {/* Escrow & Quality Card */}
+          <div className="bg-teal-50/60 rounded-3xl border border-teal-100 p-6 space-y-3">
+            <ShieldCheck className="text-[#009689] w-6 h-6" />
+            <h3 className="font-bold text-slate-900">Protected Payments</h3>
+            <p className="text-sm text-slate-600 leading-relaxed">
+              Funds are held securely in milestone escrow and only released once you inspect and approve submitted deliverables.
+            </p>
           </div>
         </div>
-      ) : null}
-    </div>
+      </div>
+    </>
   );
 }
