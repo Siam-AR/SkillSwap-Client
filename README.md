@@ -15,7 +15,7 @@ A modern, full-stack freelance platform engineering seamless collaboration betwe
 [![MongoDB](https://img.shields.io/badge/MongoDB-Atlas%20%2F%20Native-47A248?style=flat-square&logo=mongodb)](https://www.mongodb.com/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=flat-square)](LICENSE)
 
-[![Live Demonstration](https://img.shields.io/badge/Live%20Demonstration-000000?style=for-the-badge&logo=vercel&logoColor=white)](https://taskify-live.vercel.app/)
+[![Live Demonstration](https://img.shields.io/badge/Live%20Demonstration-009689?style=for-the-badge&logo=vercel&logoColor=white)](https://taskify-live.vercel.app/)
 [![Report Bug](https://img.shields.io/badge/Report%20Bug-d93a00?style=for-the-badge&logo=github&logoColor=white)](https://github.com/Siam-AR/taskify/issues)
 [![Request Feature](https://img.shields.io/badge/Request%20Feature-0052cc?style=for-the-badge&logo=github&logoColor=white)](https://github.com/Siam-AR/taskify/issues)
 
