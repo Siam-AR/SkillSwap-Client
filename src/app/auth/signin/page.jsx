@@ -77,10 +77,12 @@ function SignInContent() {
             
             <div className="w-full max-w-5xl bg-white rounded-3xl border border-slate-200/90 shadow-xl shadow-slate-200/50 overflow-hidden grid grid-cols-1 lg:grid-cols-12">
                 
-                {/* Brand Hero Side Banner */}
+                {/* Left Brand Banner: Minimal & Elegant */}
                 <div className="hidden lg:flex lg:col-span-5 bg-gradient-to-br from-slate-900 via-slate-800 to-teal-950 p-10 flex-col justify-between relative overflow-hidden text-white">
-                    <div className="absolute -bottom-24 -right-24 w-72 h-72 bg-[#009689]/20 rounded-full blur-2xl pointer-events-none" />
+                    {/* Ambient decorative glow */}
+                    <div className="absolute -bottom-20 -right-20 w-64 h-64 bg-[#009689]/20 rounded-full blur-3xl pointer-events-none" />
 
+                    {/* Top: Logo & Exit to Website */}
                     <div className="relative z-10 flex items-center justify-between">
                         <Link className="inline-flex items-center gap-2 group" href="/">
                             <div className="w-8 h-8 rounded-xl bg-[#009689] flex items-center justify-center font-black text-white text-base shadow-sm">
@@ -94,35 +96,22 @@ function SignInContent() {
                         </Link>
                     </div>
 
-                    <div className="relative z-10 my-auto py-8 space-y-4">
-                        <span className="text-[11px] font-bold tracking-widest text-[#009689] uppercase bg-teal-500/15 border border-teal-500/30 px-3 py-1 rounded-full inline-block">
-                            SMART FREELANCE ECOSYSTEM
+                    {/* Center: Clean & Punchy Hero Statement */}
+                    <div className="relative z-10 my-auto py-10 space-y-4">
+                        <span className="text-[10px] font-bold tracking-widest text-[#009689] uppercase bg-teal-500/15 border border-teal-500/30 px-3 py-1 rounded-full inline-block">
+                            FREELANCE WORKSPACE
                         </span>
                         <h2 className="text-3xl font-extrabold tracking-tight leading-snug">
-                            Find top talent or discover high-value contracts.
+                            Where top talent connects with high-impact work.
                         </h2>
-                        <p className="text-slate-300 text-sm leading-relaxed">
-                            A decentralized workflow engine equipped with secure escrow settlements, milestone approvals, and verified contractor ratings.
+                        <p className="text-slate-400 text-xs sm:text-sm leading-relaxed">
+                            Safe milestone escrows, direct proposals, and transparent reviews.
                         </p>
-
-                        <div className="pt-2 space-y-2.5 text-xs text-slate-300">
-                            <div className="flex items-center gap-2">
-                                <CheckCircle2 className="w-4 h-4 text-[#009689] shrink-0"/>
-                                <span>Instant escrow protection for every milestone</span>
-                            </div>
-                            <div className="flex items-center gap-2">
-                                <CheckCircle2 className="w-4 h-4 text-[#009689] shrink-0"/>
-                                <span>Direct proposal submissions with verified skills</span>
-                            </div>
-                            <div className="flex items-center gap-2">
-                                <CheckCircle2 className="w-4 h-4 text-[#009689] shrink-0"/>
-                                <span>Transparent client & freelancer review scores</span>
-                            </div>
-                        </div>
                     </div>
 
+                    {/* Bottom: Minimal Footer */}
                     <div className="relative z-10 pt-4 border-t border-white/10 flex items-center justify-between text-xs text-slate-400">
-                        <span>Trusted by top developers</span>
+                        <span>Taskify Platform</span>
                         <Link className="hover:text-white font-medium transition-colors" href="/browse-tasks">
                             Browse Tasks →
                         </Link>
