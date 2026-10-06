@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { FiArrowRight, FiLock, FiRefreshCcw, FiUser } from "react-icons/fi";
+import { Users, Briefcase, UserCheck, ShieldAlert, Search, RefreshCw, Lock, Unlock, Mail, AlertTriangle, X } from "lucide-react";
 import { fetchAdminUsers, updateAdminUserBlockStatus } from "@/lib/api";
 import { getSession } from "@/lib/auth-client";
 
@@ -12,6 +12,14 @@ export default function AdminManageUsersPage() {
   const [savingIds, setSavingIds] = useState([]);
   const [currentUser, setCurrentUser] = useState(null);
   const [notification, setNotification] = useState({ open: false, message: "", type: "info" });
+  
+  // Filtering & Search
+  const [selectedTab, setSelectedTab] = useState("all");
+  const [searchQuery, setSearchQuery] = useState("");
+  
+  // Modal state
+  const [blockModalOpen, setBlockModalOpen] = useState(false);
+  const [userToBlock, setUserToBlock] = useState(null);
 
   const loadUsers = async () => {
     setLoading(true);
@@ -56,7 +64,16 @@ export default function AdminManageUsersPage() {
       return;
     }
 
-    const nextBlocked = !user.isBlocked;
+    if (!user.isBlocked) {
+      setUserToBlock(user);
+      setBlockModalOpen(true);
+      return;
+    } else {
+      await performToggle(user, false);
+    }
+  };
+
+  const performToggle = async (user, nextBlocked) => {
     setSavingIds((current) => [...current, user.id]);
     setError(null);
 
@@ -64,7 +81,7 @@ export default function AdminManageUsersPage() {
       const response = await updateAdminUserBlockStatus(user.id, nextBlocked);
       const updated = response?.data;
       if (updated) {
-        setUsers((current) => current.map((currentUser) => (currentUser.id === updated.id ? updated : currentUser)));
+        setUsers((current) => current.map((u) => (u.id === updated.id ? updated : u)));
         setNotification({
           open: true,
           message: `User ${updated.name || updated.email} has been ${updated.isBlocked ? "blocked" : "unblocked"}.`,
@@ -77,117 +94,247 @@ export default function AdminManageUsersPage() {
       setNotification({ open: true, message, type: "error" });
     } finally {
       setSavingIds((current) => current.filter((id) => id !== user.id));
+      if (blockModalOpen) {
+        setBlockModalOpen(false);
+        setUserToBlock(null);
+      }
     }
   };
 
-  const blockedCount = useMemo(() => users.filter((user) => user.isBlocked).length, [users]);
+  const totalUsers = users.length;
+  const freelancerCount = users.filter((u) => u.role?.toLowerCase() === "freelancer").length;
+  const clientCount = users.filter((u) => u.role?.toLowerCase() === "client").length;
+  const blockedCount = users.filter((u) => u.isBlocked).length;
+
+  const filteredUsers = useMemo(() => {
+    let filtered = users;
+    if (selectedTab !== "all") {
+      if (selectedTab === "blocked") {
+        filtered = filtered.filter(u => u.isBlocked);
+      } else {
+        filtered = filtered.filter(u => u.role?.toLowerCase() === selectedTab);
+      }
+    }
+    if (searchQuery.trim()) {
+      const query = searchQuery.toLowerCase();
+      filtered = filtered.filter(u => 
+        u.name?.toLowerCase().includes(query) || 
+        u.email?.toLowerCase().includes(query) ||
+        u.id?.toLowerCase().includes(query)
+      );
+    }
+    return filtered;
+  }, [users, selectedTab, searchQuery]);
 
   const closeNotification = () => {
     setNotification((current) => ({ ...current, open: false }));
   };
 
-  const notificationClasses = notification.type === "success"
-    ? "border-emerald-400 bg-emerald-950 text-emerald-200"
-    : notification.type === "warning"
-    ? "border-amber-400 bg-amber-950 text-amber-200"
-    : "border-rose-400 bg-rose-950 text-rose-200";
-
   return (
     <div className="space-y-6">
       {notification.open ? (
-        <div className={`fixed right-4 top-4 z-50 max-w-sm rounded-2xl border p-4 shadow-xl shadow-slate-950/40 ${notificationClasses}`}>
+        <div className={`fixed right-4 top-4 z-50 max-w-sm rounded-2xl border p-4 shadow-xl ${
+          notification.type === "success"
+            ? "border-emerald-200 bg-emerald-50 text-emerald-800"
+            : notification.type === "warning"
+            ? "border-amber-200 bg-amber-50 text-amber-800"
+            : "border-rose-200 bg-rose-50 text-rose-800"
+        }`}>
           <div className="flex items-start justify-between gap-4">
-            <p className="text-sm leading-6">{notification.message}</p>
-            <button type="button" onClick={closeNotification} className="text-slate-300 hover:text-white">
-              ×
+            <p className="text-sm font-medium">{notification.message}</p>
+            <button type="button" onClick={closeNotification} className="text-slate-500 hover:text-slate-900">
+              <X className="w-4 h-4" />
             </button>
           </div>
         </div>
       ) : null}
 
-      <div className="rounded-[2rem] border border-slate-800 bg-slate-950/95 p-6 shadow-sm shadow-slate-950/30">
-        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-          <div>
-            <p className="text-sm font-semibold uppercase tracking-[0.24em] text-sky-400">Admin dashboard</p>
-            <h1 className="mt-2 text-3xl font-semibold text-white">Manage Users</h1>
-            <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-400">
-              Review and manage user accounts across the platform. Block or unblock access directly from this admin view.
-            </p>
-          </div>
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <span className="text-[11px] font-bold tracking-wider text-slate-400 uppercase">
+            ADMIN CONSOLE • USER DIRECTORY
+          </span>
+          <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight mt-1">
+            Manage Platform Users
+          </h1>
+          <p className="text-sm text-slate-500 mt-1">
+            Inspect user accounts, verify roles, and toggle access permissions across Taskify.
+          </p>
+        </div>
 
-          <div className="flex flex-wrap items-center gap-3">
-            <button
-              type="button"
-              onClick={loadUsers}
-              disabled={loading}
-              className="inline-flex items-center gap-2 rounded-2xl border border-slate-800 bg-slate-900 px-4 py-2 text-sm font-semibold text-slate-100 transition hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-50"
-            >
-              <FiRefreshCcw className="h-4 w-4" />
-              Refresh
-            </button>
-            <div className="rounded-2xl border border-slate-800 bg-slate-900 px-4 py-2 text-sm text-slate-300">
-              <span className="font-semibold text-white">Blocked users:</span> {blockedCount}
-            </div>
-          </div>
+        <div className="flex items-center gap-3 shrink-0">
+          <button
+            onClick={loadUsers}
+            disabled={loading}
+            className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 text-xs sm:text-sm font-semibold transition-all shadow-sm disabled:opacity-50"
+          >
+            <RefreshCw className={`w-4 h-4 text-[#009689] ${loading ? "animate-spin text-slate-500" : ""}`}/>
+            <span>Refresh Directory</span>
+          </button>
         </div>
       </div>
 
       {error ? (
-        <div className="rounded-[1.5rem] border border-rose-800 bg-rose-950/60 p-4 text-sm text-rose-200">
+        <div className="rounded-xl border border-rose-200 bg-rose-50 p-4 text-sm text-rose-700">
           {error}
         </div>
       ) : null}
 
-      <div className="overflow-hidden rounded-[2rem] border border-slate-800 bg-slate-900/95 shadow-sm shadow-slate-950/20">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="bg-white rounded-2xl border border-slate-200/90 p-4 shadow-sm flex items-center gap-4">
+          <div className="bg-teal-50 text-[#009689] p-3 rounded-xl">
+            <Users className="w-5 h-5" />
+          </div>
+          <div>
+            <p className="text-xs font-bold text-slate-500 uppercase">Total Registered</p>
+            <p className="text-xl font-bold text-slate-900">{totalUsers}</p>
+          </div>
+        </div>
+        <div className="bg-white rounded-2xl border border-slate-200/90 p-4 shadow-sm flex items-center gap-4">
+          <div className="bg-sky-50 text-sky-600 p-3 rounded-xl">
+            <Briefcase className="w-5 h-5" />
+          </div>
+          <div>
+            <p className="text-xs font-bold text-slate-500 uppercase">Active Freelancers</p>
+            <p className="text-xl font-bold text-slate-900">{freelancerCount}</p>
+          </div>
+        </div>
+        <div className="bg-white rounded-2xl border border-slate-200/90 p-4 shadow-sm flex items-center gap-4">
+          <div className="bg-indigo-50 text-indigo-600 p-3 rounded-xl">
+            <UserCheck className="w-5 h-5" />
+          </div>
+          <div>
+            <p className="text-xs font-bold text-slate-500 uppercase">Active Clients</p>
+            <p className="text-xl font-bold text-slate-900">{clientCount}</p>
+          </div>
+        </div>
+        <div className="bg-white rounded-2xl border border-slate-200/90 p-4 shadow-sm flex items-center gap-4">
+          <div className="bg-rose-50 text-rose-600 p-3 rounded-xl">
+            <ShieldAlert className="w-5 h-5" />
+          </div>
+          <div>
+            <p className="text-xs font-bold text-slate-500 uppercase">Blocked / Suspended</p>
+            <p className="text-xl font-bold text-slate-900">{blockedCount}</p>
+          </div>
+        </div>
+      </div>
+
+      <div className="bg-white rounded-2xl border border-slate-200/90 p-3.5 flex flex-col md:flex-row items-center justify-between gap-3 shadow-sm">
+        <div className="flex items-center gap-1.5 overflow-x-auto w-full md:w-auto p-1 bg-slate-100/70 rounded-xl">
+          {[
+            { id: "all", label: "All Users", count: totalUsers },
+            { id: "freelancer", label: "Freelancers", count: freelancerCount },
+            { id: "client", label: "Clients", count: clientCount },
+            { id: "blocked", label: "Blocked", count: blockedCount },
+          ].map((tab) => (
+            <button
+              key={tab.id}
+              type="button"
+              onClick={() => setSelectedTab(tab.id)}
+              className={`px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 whitespace-nowrap ${
+                selectedTab === tab.id
+                  ? "bg-white text-slate-900 shadow-sm"
+                  : "text-slate-500 hover:text-slate-800"
+              }`}
+            >
+              <span>{tab.label}</span>
+              <span className={`px-1.5 py-0.5 rounded-md text-[10px] ${
+                selectedTab === tab.id ? "bg-slate-100 text-slate-700" : "bg-slate-200/70 text-slate-500"
+              }`}>
+                {tab.count}
+              </span>
+            </button>
+          ))}
+        </div>
+
+        <div className="relative w-full md:w-80 shrink-0">
+          <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2"/>
+          <input
+            type="text"
+            placeholder="Search by name, email, or ID..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="w-full pl-9 pr-4 py-2 rounded-xl border border-slate-200 bg-slate-50/50 text-xs text-slate-800 placeholder:text-slate-400 focus:outline-none focus:border-[#009689] focus:bg-white transition-all"
+          />
+        </div>
+      </div>
+
+      <div className="overflow-hidden rounded-3xl border border-slate-200/90 bg-white shadow-sm">
         <div className="overflow-x-auto">
-          <table className="min-w-full divide-y divide-slate-800 text-left text-sm text-slate-200">
-            <thead className="bg-slate-950/90 text-slate-400">
+          <table className="min-w-full divide-y divide-slate-100 text-left text-sm text-slate-800">
+            <thead className="bg-slate-50/50 text-slate-500">
               <tr>
-                <th className="px-6 py-4 font-medium">User</th>
-                <th className="px-6 py-4 font-medium">Email</th>
-                <th className="px-6 py-4 font-medium">Role</th>
-                <th className="px-6 py-4 font-medium">Status</th>
-                <th className="px-6 py-4 font-medium text-right">Actions</th>
+                <th className="px-6 py-4 font-semibold text-xs uppercase tracking-wider">User</th>
+                <th className="px-6 py-4 font-semibold text-xs uppercase tracking-wider">Email</th>
+                <th className="px-6 py-4 font-semibold text-xs uppercase tracking-wider">Role</th>
+                <th className="px-6 py-4 font-semibold text-xs uppercase tracking-wider">Status</th>
+                <th className="px-6 py-4 font-semibold text-xs uppercase tracking-wider text-right">Actions</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-800">
+            <tbody className="divide-y divide-slate-100">
               {loading ? (
                 <tr>
-                  <td colSpan="5" className="px-6 py-12 text-center text-slate-400">
-                    Loading users...
+                  <td colSpan="5" className="px-6 py-12 text-center text-slate-500">
+                    <div className="flex flex-col items-center justify-center">
+                      <RefreshCw className="w-6 h-6 animate-spin text-[#009689] mb-3" />
+                      <p className="font-medium">Loading user directory...</p>
+                    </div>
                   </td>
                 </tr>
-              ) : users.length === 0 ? (
+              ) : filteredUsers.length === 0 ? (
                 <tr>
-                  <td colSpan="5" className="px-6 py-12 text-center text-slate-400">
-                    No users found.
+                  <td colSpan="5" className="px-6 py-12 text-center text-slate-500">
+                    <div className="flex flex-col items-center justify-center">
+                      <Users className="w-8 h-8 text-slate-300 mb-3" />
+                      <p className="font-medium">No users found.</p>
+                      <p className="text-xs text-slate-400 mt-1">Try adjusting your filters or search query.</p>
+                    </div>
                   </td>
                 </tr>
               ) : (
-                users.map((user) => {
+                filteredUsers.map((user) => {
                   const isSaving = savingIds.includes(user.id);
                   const isSelf = currentUser?.id === user.id;
+                  const roleLower = user.role?.toLowerCase() || "client";
+                  
                   return (
-                    <tr key={user.id} className="bg-slate-950/50 transition hover:bg-slate-900/80">
+                    <tr key={user.id} className="bg-white hover:bg-slate-50/70 transition-colors">
                       <td className="px-6 py-4">
                         <div className="flex items-center gap-3">
-                          <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-slate-800 text-sm font-semibold text-sky-400">
-                            <FiUser className="h-5 w-5" />
+                          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-teal-50 border border-teal-100 text-sm font-bold text-[#009689]">
+                            {user.name ? user.name.charAt(0).toUpperCase() : <Users className="w-4 h-4" />}
                           </div>
                           <div>
-                            <p className="font-semibold text-white">{user.name || "Unknown"}</p>
-                            <p className="text-xs text-slate-500">{user.id}</p>
+                            <p className="font-bold text-slate-900">{user.name || "Unknown User"}</p>
+                            <p className="font-mono text-[11px] text-slate-400">ID: {user.id}</p>
                           </div>
                         </div>
                       </td>
-                      <td className="px-6 py-4 text-slate-300">{user.email || "-"}</td>
-                      <td className="px-6 py-4 capitalize text-slate-300">{user.role || "Client"}</td>
                       <td className="px-6 py-4">
-                        <span
-                          className={`inline-flex rounded-full px-3 py-1 text-xs font-semibold ${
-                            user.isBlocked ? "bg-rose-500/10 text-rose-300" : "bg-emerald-500/10 text-emerald-300"
-                          }`}
-                        >
+                        <div className="flex items-center gap-2 text-slate-600">
+                          <Mail className="w-3.5 h-3.5 text-slate-400" />
+                          <span>{user.email || "-"}</span>
+                        </div>
+                      </td>
+                      <td className="px-6 py-4 capitalize">
+                        <span className={`inline-flex items-center px-2.5 py-1 rounded-lg text-[11px] font-bold border ${
+                          roleLower === "freelancer"
+                            ? "bg-teal-50 text-teal-700 border-teal-200/60"
+                            : roleLower === "admin"
+                            ? "bg-purple-50 text-purple-700 border-purple-200/60"
+                            : "bg-sky-50 text-sky-700 border-sky-200/60"
+                        }`}>
+                          {user.role || "Client"}
+                        </span>
+                      </td>
+                      <td className="px-6 py-4">
+                        <span className={`inline-flex items-center gap-1.5 rounded-lg px-2.5 py-1 text-[11px] font-bold border ${
+                          user.isBlocked 
+                            ? "bg-rose-50 text-rose-700 border-rose-200/80" 
+                            : "bg-emerald-50 text-emerald-700 border-emerald-200/80"
+                        }`}>
+                          {!user.isBlocked && <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>}
+                          {user.isBlocked && <span className="w-1.5 h-1.5 rounded-full bg-rose-500"></span>}
                           {user.isBlocked ? "Blocked" : "Active"}
                         </span>
                       </td>
@@ -196,16 +343,16 @@ export default function AdminManageUsersPage() {
                           type="button"
                           onClick={() => handleToggleBlock(user)}
                           disabled={isSaving || isSelf}
-                          className={`inline-flex items-center gap-2 rounded-2xl px-4 py-2 text-sm font-semibold transition ${
+                          className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border text-xs font-semibold transition-all ${
                             isSelf
-                              ? "bg-slate-700 text-slate-300 cursor-not-allowed"
+                              ? "border-slate-200 bg-slate-50 text-slate-400 cursor-not-allowed"
                               : user.isBlocked
-                              ? "bg-emerald-500 text-slate-950 hover:bg-emerald-400"
-                              : "bg-rose-500 text-white hover:bg-rose-400"
+                              ? "border-emerald-200 bg-emerald-50/60 hover:bg-emerald-600 hover:text-white text-emerald-700"
+                              : "border-rose-200 bg-rose-50/60 hover:bg-rose-600 hover:text-white text-rose-700"
                           } ${isSaving ? "cursor-not-allowed opacity-70" : ""}`}
                         >
-                          {user.isBlocked ? <FiArrowRight className="h-4 w-4" /> : <FiLock className="h-4 w-4" />}
-                          {isSaving ? "Saving..." : isSelf ? "Your account" : user.isBlocked ? "Unblock" : "Block"}
+                          {user.isBlocked ? <Unlock className="w-3.5 h-3.5" /> : <Lock className="w-3.5 h-3.5" />}
+                          {isSaving ? "Saving..." : isSelf ? "Your Account" : user.isBlocked ? "Unblock" : "Block"}
                         </button>
                       </td>
                     </tr>
@@ -216,6 +363,53 @@ export default function AdminManageUsersPage() {
           </table>
         </div>
       </div>
+
+      {blockModalOpen && userToBlock && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-sm">
+          <div className="bg-white rounded-3xl border border-slate-200 shadow-2xl w-full max-w-md overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+            <div className="p-6">
+              <div className="w-12 h-12 rounded-2xl bg-rose-50 text-rose-600 flex items-center justify-center mb-4">
+                <AlertTriangle className="w-6 h-6" />
+              </div>
+              <h3 className="text-xl font-bold text-slate-900">Confirm Suspension</h3>
+              <p className="text-sm text-slate-500 mt-2 leading-relaxed">
+                Are you sure you want to block <span className="font-bold text-slate-800">{userToBlock.name}</span> (<span className="text-slate-700 font-mono text-xs">{userToBlock.email}</span>)?
+              </p>
+              <p className="text-sm text-slate-500 mt-2 leading-relaxed">
+                This will revoke access to their workspace, halt active bids, and freeze transactions until unblocked.
+              </p>
+            </div>
+            <div className="p-4 bg-slate-50 border-t border-slate-100 flex items-center justify-end gap-3">
+              <button
+                type="button"
+                onClick={() => {
+                  setBlockModalOpen(false);
+                  setUserToBlock(null);
+                }}
+                className="px-4 py-2 rounded-xl text-sm font-semibold text-slate-600 hover:bg-slate-200/50 transition-colors"
+                disabled={savingIds.includes(userToBlock.id)}
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                onClick={() => performToggle(userToBlock, true)}
+                className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-rose-600 hover:bg-rose-700 text-white text-sm font-semibold shadow-sm transition-colors"
+                disabled={savingIds.includes(userToBlock.id)}
+              >
+                {savingIds.includes(userToBlock.id) ? (
+                  <>
+                    <RefreshCw className="w-4 h-4 animate-spin" />
+                    <span>Suspending...</span>
+                  </>
+                ) : (
+                  <span>Confirm Suspension</span>
+                )}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
