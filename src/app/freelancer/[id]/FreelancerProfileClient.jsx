@@ -167,18 +167,7 @@ export default function FreelancerProfileClient({ freelancer }) {
             </div>
           </div>
 
-          {/* Right Action & Quick Stat Cluster */}
-          <div className="flex flex-col sm:flex-row lg:flex-col xl:flex-row items-stretch sm:items-center gap-3 shrink-0 mt-2 sm:mt-0">
-            <button 
-              onClick={() => setIsInviteModalOpen(true)}
-              className="px-5 py-2.5 rounded-xl bg-[#009689] hover:bg-[#238B81] text-white text-sm font-semibold shadow-sm shadow-teal-900/15 flex items-center justify-center gap-2 transition-all"
-            >
-              <Briefcase className="w-4 h-4" /> Invite to Task
-            </button>
-            <button className="px-4 py-2.5 rounded-xl border border-slate-200 hover:bg-slate-50 text-slate-700 text-sm font-semibold flex items-center justify-center gap-2 transition-all">
-              <Mail className="w-4 h-4" /> Message
-            </button>
-          </div>
+
         </div>
 
         {/* Split Two-Column Layout */}

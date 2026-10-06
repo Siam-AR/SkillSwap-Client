@@ -62,9 +62,6 @@ export default function FeatureServices({ tasks }) {
                     alt={task.title}
                     className="h-full w-full object-cover"
                   />
-                  <button className="absolute right-3 top-3 flex h-8 w-8 items-center justify-center rounded-full bg-white/90 text-slate-400 shadow backdrop-blur transition hover:bg-white hover:text-rose-500">
-                    <FiHeart className="h-4 w-4" />
-                  </button>
                 </div>
 
                 {/* Body */}
