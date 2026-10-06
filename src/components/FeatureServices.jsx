@@ -5,10 +5,10 @@ import Link from "next/link";
 import { FiHeart } from "react-icons/fi";
 import { FaStar } from "react-icons/fa";
 
-const TABS = ["Graphic & Design", "Digital Marketing", "Development", "UI/UX Design", "Writing"];
+const TABS = ["Development", "Graphic & Design", "Digital Marketing", "Writing"];
 
 export default function FeatureServices({ tasks }) {
-  const [activeTab, setActiveTab] = useState("Graphic & Design");
+  const [activeTab, setActiveTab] = useState("Development");
 
   const filteredTasks = tasks.filter((task) => {
     // Map existing categories to tabs
@@ -16,7 +16,6 @@ export default function FeatureServices({ tasks }) {
     if (activeTab === "Development" && task.category === "Development") return true;
     if (activeTab === "Writing" && task.category === "Writing") return true;
     if (activeTab === "Digital Marketing" && task.category === "Marketing") return true;
-    if (activeTab === "UI/UX Design" && task.category === "Design") return true;
     return task.category === activeTab;
   });
 
@@ -47,19 +46,13 @@ export default function FeatureServices({ tasks }) {
       </div>
 
       {/* Grid */}
-      <div className="mt-10 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+      <div className="mt-10 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
         {filteredTasks.length > 0 ? (
-          filteredTasks.slice(0, 8).map((task, i) => (
+          filteredTasks.slice(0, 6).map((task, i) => (
             <Link 
               key={task._id} 
               href={`/task/${task._id}`} 
-              className={`group ${
-                i < 4 
-                  ? "block" 
-                  : i < 6 
-                  ? "block md:hidden lg:block" 
-                  : "block md:hidden xl:block"
-              }`}
+              className="group block"
             >
               <div className="flex h-full flex-col overflow-hidden rounded-xl border border-teal-100 bg-white/90 backdrop-blur-sm shadow-sm transition-all hover:border-teal-300 hover:shadow-md">
                 {/* Image Box */}

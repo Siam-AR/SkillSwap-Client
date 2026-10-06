@@ -89,7 +89,7 @@ export async function getHomepageData() {
   const latestTasks = await tasksCollection
     .find({ status: "open" })
     .sort({ createdAt: -1 })
-    .limit(6)
+    .limit(40)
     .toArray();
 
   const latestTasksWithClient = await attachClientInfo(latestTasks, authDb, reviewsCollection);
