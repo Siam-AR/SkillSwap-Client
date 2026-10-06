@@ -38,7 +38,11 @@ export default function TopFreelancers({ freelancers }) {
         className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 w-full mt-10"
       >
         {freelancers.slice(0, 3).map((freelancer) => {
-          const isAvailable = true; // matches current AVAILABLE badge
+          const rawStatus = (
+            freelancer.status ||
+            freelancer.availabilityStatus ||
+            "available"
+          ).toLowerCase();
           
           const rateText = freelancer.hourlyRate
             ? `$${freelancer.hourlyRate}/hr`
@@ -60,14 +64,20 @@ export default function TopFreelancers({ freelancers }) {
                     
                     {/* 1. Header: Status & Rate */}
                     <div className="flex items-center justify-between gap-2 mb-4">
-                      {isAvailable ? (
-                        <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider bg-emerald-50 text-emerald-700 border border-emerald-200/60">
-                          <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                          Available
+                      {rawStatus === "busy" ? (
+                        <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider bg-amber-50 text-amber-700 border border-amber-200/80">
+                          <span className="w-1.5 h-1.5 rounded-full bg-amber-500" />
+                          Busy
+                        </span>
+                      ) : rawStatus === "unavailable" ? (
+                        <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider bg-rose-50 text-rose-700 border border-rose-200/80">
+                          <span className="w-1.5 h-1.5 rounded-full bg-rose-500" />
+                          Unavailable
                         </span>
                       ) : (
-                        <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider bg-slate-100 text-slate-600 border border-slate-200">
-                          Busy
+                        <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider bg-emerald-50 text-emerald-700 border border-emerald-200/80">
+                          <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                          Available
                         </span>
                       )}
 

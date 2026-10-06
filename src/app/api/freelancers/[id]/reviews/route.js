@@ -17,12 +17,12 @@ export async function GET(req, { params }) {
       $or: [
         ...(emailParam
           ? [
-              { email: emailParam },
-              { freelancer_email: emailParam },
-              { freelancerEmail: emailParam },
-              { reviewee_email: emailParam },
-              { revieweeEmail: emailParam }
-            ]
+            { email: emailParam },
+            { freelancer_email: emailParam },
+            { freelancerEmail: emailParam },
+            { reviewee_email: emailParam },
+            { revieweeEmail: emailParam }
+          ]
           : []),
         ...(ObjectId.isValid(id)
           ? [{ freelancerId: new ObjectId(id) }, { reviewee_id: new ObjectId(id) }, { freelancerId: id }]
