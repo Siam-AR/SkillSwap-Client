@@ -327,7 +327,7 @@ const Navbar = () => {
           <button
             type="button"
             onClick={() => setIsMenuOpen((current) => !current)}
-            className={`mobile-nav-only h-11 w-11 items-center justify-center rounded-full border ${themeClasses.button}`}
+            className={`flex lg:hidden h-11 w-11 items-center justify-center rounded-full border ${themeClasses.button}`}
             aria-label="Toggle navigation menu"
             aria-expanded={isMenuOpen}
           >
@@ -341,7 +341,7 @@ const Navbar = () => {
       </div>
 
       <div
-        className={`absolute left-0 right-0 top-full border-t shadow-xl ${isMenuOpen ? "block" : "hidden"} mobile-nav-only ${isDarkMode ? "border-slate-800" : "border-slate-200"} ${themeClasses.panel}`}
+        className={`absolute left-0 right-0 top-full border-t shadow-xl ${isMenuOpen ? "block" : "hidden"} lg:hidden ${isDarkMode ? "border-slate-800" : "border-slate-200"} ${themeClasses.panel}`}
       >
         <div className="mx-auto flex max-w-7xl flex-col gap-2 px-4 py-4 sm:px-6 lg:px-8">
           {navItems.map((item) => (
