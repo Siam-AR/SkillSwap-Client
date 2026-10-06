@@ -107,7 +107,7 @@ export async function getHomepageData() {
 
   const freelancerUsers = await usersCollection
     .find({ role: { $regex: /^freelancer$/i } })
-    .project({ name: 1, email: 1, image: 1, skills: 1, hourlyRate: 1 })
+    .project({ name: 1, email: 1, image: 1, skills: 1, hourlyRate: 1, rating: 1, reviewCount: 1, reviewsCount: 1, completedTasks: 1, finishedJobs: 1 })
     .toArray();
 
   const reviewDocs = await reviewsCollection.find({}).toArray();
@@ -132,9 +132,9 @@ export async function getHomepageData() {
       return {
         ...freelancer,
         skills: freelancer.skills || [],
-        rating: Number(averageRating.toFixed(1)),
-        reviewCount: stats.count,
-        finishedJobs: stats.count,
+        rating: freelancer.rating || Number(averageRating.toFixed(1)) || 5.0,
+        reviewCount: freelancer.reviewCount || freelancer.reviewsCount || stats.count || 0,
+        finishedJobs: freelancer.completedTasks || freelancer.finishedJobs || stats.count || 0,
       };
     })
     .sort((a, b) => b.rating - a.rating || b.finishedJobs - a.finishedJobs)

@@ -145,7 +145,7 @@ export default function FreelancerProfileClient({ freelancer }) {
                 </span>
                 <span className="inline-flex items-center gap-1.5 text-xs text-slate-500 font-medium">
                   <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-400" />
-                  {displayRating} Rating
+                  {displayRating} ({freelancer?.reviewCount || 0} Reviews)
                 </span>
               </div>
             </div>

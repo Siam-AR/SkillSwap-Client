@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { PlusCircle, Briefcase, FolderOpen, Clock, CheckCircle2, Search, FolderSearch, X, Edit3, Calendar, DollarSign, Users } from "lucide-react";
 import EditTaskForm from "@/components/dashboard/EditTaskForm";
 import ReviewDeliverablesModal from "@/components/dashboard/ReviewDeliverablesModal";
+import RateFreelancerModal from "@/components/dashboard/RateFreelancerModal";
 import { fetchMyTasks } from "@/lib/api";
 
 const getStatusCount = (tasks, statusMatcher) =>
@@ -21,6 +22,7 @@ export default function ClientMyTasksPage() {
   const [editingTask, setEditingTask] = useState(null);
   const [updateSuccessTask, setUpdateSuccessTask] = useState(null);
   const [reviewingTask, setReviewingTask] = useState(null);
+  const [ratingTask, setRatingTask] = useState(null);
 
   useEffect(() => {
     let mounted = true;
@@ -379,6 +381,21 @@ export default function ClientMyTasksPage() {
           <ReviewDeliverablesModal 
             task={reviewingTask} 
             onClose={() => setReviewingTask(null)} 
+            onActionComplete={(updatedTask) => {
+              handleTaskUpdated(updatedTask);
+              if (String(updatedTask.status || "").toLowerCase() === "completed") {
+                setRatingTask(updatedTask);
+              }
+            }} 
+          />
+        </div>
+      ) : null}
+
+      {ratingTask ? (
+        <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-in fade-in duration-200">
+          <RateFreelancerModal 
+            task={ratingTask} 
+            onClose={() => setRatingTask(null)} 
             onActionComplete={handleTaskUpdated} 
           />
         </div>
