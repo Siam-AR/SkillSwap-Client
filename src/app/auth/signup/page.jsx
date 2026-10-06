@@ -78,6 +78,8 @@ function SignUpContent() {
         setIsGoogleRoleModalOpen(false);
 
         try {
+            document.cookie = `taskify_oauth_role=${googleRole}; path=/; max-age=600; SameSite=Lax`;
+
             const { data, error } = await signIn.social({
                 provider: "google",
                 callbackURL: redirectTo,

@@ -1,5 +1,6 @@
 import { betterAuth } from "better-auth";
 import { customSession, jwt } from "better-auth/plugins";
+import { cookies } from "next/headers";
 import { MongoClient } from "mongodb";
 import { mongodbAdapter } from "better-auth/adapters/mongodb";
 
@@ -73,6 +74,23 @@ export const auth = betterAuth({
         type: "string",
         required: false,
         defaultValue: "Client",
+      },
+    },
+  },
+  databaseHooks: {
+    user: {
+      create: {
+        before: async (user) => {
+          const cookieStore = await cookies();
+          const pendingRole = cookieStore.get("taskify_oauth_role")?.value;
+
+          return {
+            data: {
+              ...user,
+              role: pendingRole === "Freelancer" ? "Freelancer" : (user.role || "Client"),
+            },
+          };
+        },
       },
     },
   },
