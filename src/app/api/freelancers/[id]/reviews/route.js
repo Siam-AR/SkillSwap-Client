@@ -1,33 +1,32 @@
 import { NextResponse } from "next/server";
-import clientPromise from "@/lib/server-db";
+
+import { getAppDb } from "@/lib/server-db";
 import { ObjectId } from "mongodb";
 
 export async function GET(req, { params }) {
   try {
-    const client = await clientPromise;
+    const db = await getAppDb();
     const { id } = await params;
     const { searchParams } = new URL(req.url);
-    const emailQuery = searchParams.get("email");
+    const emailParam = searchParams.get("email");
 
-    const appDbName = process.env.APP_DB_NAME || process.env.AUTH_DB_NAME || "skill-swap";
-    const db = client.db(appDbName);
     const reviewsCollection = db.collection("reviews");
 
-    // Match by email or ObjectId across standard schema variations
+    // Match reviews by email variations or ObjectId
     const query = {
       $or: [
-        ...(emailQuery ? [
-          { email: emailQuery },
-          { freelancer_email: emailQuery },
-          { freelancerEmail: emailQuery },
-          { reviewee_email: emailQuery },
-          { revieweeEmail: emailQuery }
-        ] : []),
-        ...(ObjectId.isValid(id) ? [
-          { freelancerId: new ObjectId(id) },
-          { reviewee_id: new ObjectId(id) },
-          { freelancerId: id }
-        ] : []),
+        ...(emailParam
+          ? [
+              { email: emailParam },
+              { freelancer_email: emailParam },
+              { freelancerEmail: emailParam },
+              { reviewee_email: emailParam },
+              { revieweeEmail: emailParam }
+            ]
+          : []),
+        ...(ObjectId.isValid(id)
+          ? [{ freelancerId: new ObjectId(id) }, { reviewee_id: new ObjectId(id) }, { freelancerId: id }]
+          : []),
         { email: id },
         { freelancer_email: id },
         { freelancerEmail: id },
@@ -39,7 +38,6 @@ export async function GET(req, { params }) {
       .sort({ created_at: -1, createdAt: -1 })
       .toArray();
 
-    // Normalize keys for the frontend
     const normalizedReviews = reviews.map((r) => ({
       _id: r._id.toString(),
       rating: Number(r.rating) || 5,
@@ -51,7 +49,10 @@ export async function GET(req, { params }) {
 
     return NextResponse.json({ success: true, data: normalizedReviews });
   } catch (error) {
-    console.error("Reviews API Error:", error);
-    return NextResponse.json({ success: false, error: error.message }, { status: 500 });
+    console.error("Failed to fetch freelancer reviews:", error);
+    return NextResponse.json(
+      { success: false, error: error.message },
+      { status: 500 }
+    );
   }
 }
