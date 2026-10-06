@@ -66,10 +66,6 @@ A modern, full-stack freelance platform engineering seamless collaboration betwe
 | :---: | :---: |
 | ![Admin Dashboard](./public/screenshots/preview-admin-dashboard.png) | ![Stripe Checkout](./public/screenshots/preview-stripe-checkout.png) |
 
-| Freelancer Profile & Ratings | Task Proposal Board |
-| :---: | :---: |
-| ![Freelancer Profile](./public/screenshots/preview-freelancer.png) | ![Browse Tasks](./public/screenshots/preview-tasks.png) |
-
 ---
 
 ## Key Features

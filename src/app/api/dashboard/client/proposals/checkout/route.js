@@ -65,8 +65,8 @@ export async function POST(request) {
     const budget = Number(proposal.proposed_budget ?? proposal.budget ?? 0);
     const amountCents = Math.round(budget * 100);
     const origin = request.headers.get("origin") || new URL(request.url).origin;
-    const successUrl = `${origin}/payment/success?proposalId=${encodeURIComponent(proposalId)}&sessionId={CHECKOUT_SESSION_ID}`;
-    const cancelUrl = `${origin}/dashboard/client/proposals?canceled=true`;
+    const successUrl = `${origin}/dashboard/client/my-tasks?payment=success&session_id={CHECKOUT_SESSION_ID}`;
+    const cancelUrl = `${origin}/tasks/${taskId}?payment=cancelled`;
     const fallbackUrl = createFallbackCheckoutUrl({
       proposalId,
       taskTitle: task.title || "",
@@ -83,12 +83,16 @@ export async function POST(request) {
       const session = await stripe.checkout.sessions.create({
         payment_method_types: ["card"],
         mode: "payment",
+        payment_intent_data: {
+          statement_descriptor: "Taskify Escrow",
+          statement_descriptor_suffix: "Taskify",
+        },
         line_items: [
           {
             price_data: {
               currency: "usd",
               product_data: {
-                name: task.title || "TaskHive project payment",
+                name: task.title || "Taskify project payment",
                 description: proposal.cover_note || proposal.message || "Proposal payment",
               },
               unit_amount: amountCents,
