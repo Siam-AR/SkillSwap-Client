@@ -111,11 +111,6 @@ export default function LatestTasksSection({ tasks }) {
                     </div>
                     <span className="w-1 h-1 rounded-full bg-slate-300" />
                     <div className="flex items-center gap-1.5">
-                      <MapPin className="w-3.5 h-3.5 text-slate-400"/>
-                      <span>{task.location || "Remote"}</span>
-                    </div>
-                    <span className="w-1 h-1 rounded-full bg-slate-300" />
-                    <div className="flex items-center gap-1.5">
                       <Send className="w-3.5 h-3.5 text-slate-400"/>
                       <span>{proposalsCount} proposals</span>
                     </div>

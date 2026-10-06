@@ -84,6 +84,7 @@ export async function getHomepageData() {
   const tasksCollection = appDb.collection("tasks");
   const reviewsCollection = appDb.collection("reviews");
   const paymentsCollection = appDb.collection("payments");
+  const proposalsCollection = appDb.collection("proposals");
 
   const latestTasks = await tasksCollection
     .find({ status: "open" })
@@ -92,6 +93,17 @@ export async function getHomepageData() {
     .toArray();
 
   const latestTasksWithClient = await attachClientInfo(latestTasks, authDb, reviewsCollection);
+
+  for (const task of latestTasksWithClient) {
+    const taskIdStr = task._id?.toString() || task.id?.toString();
+    if (taskIdStr) {
+      task.proposalsCount = await proposalsCollection.countDocuments({
+        $or: [{ taskId: taskIdStr }, { task_id: taskIdStr }]
+      });
+    } else {
+      task.proposalsCount = 0;
+    }
+  }
 
   const freelancerUsers = await usersCollection
     .find({ role: { $regex: /^freelancer$/i } })
