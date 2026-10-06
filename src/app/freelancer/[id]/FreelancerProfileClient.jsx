@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { 
   ArrowLeft, 
   Briefcase, 
@@ -23,6 +23,22 @@ export default function FreelancerProfileClient({ freelancer }) {
   const [imgError, setImgError] = useState(false);
   const [copiedEmail, setCopiedEmail] = useState(false);
   const [isInviteModalOpen, setIsInviteModalOpen] = useState(false);
+  const [reviews, setReviews] = useState([]);
+
+  useEffect(() => {
+    if (freelancer?.email || freelancer?._id || freelancer?.id) {
+      const identifier = freelancer._id || freelancer.id;
+      const email = freelancer.email;
+      fetch(`/api/freelancers/${identifier}/reviews?email=${encodeURIComponent(email || "")}`)
+        .then((res) => res.json())
+        .then((payload) => {
+          if (payload.success) {
+            setReviews(payload.data);
+          }
+        })
+        .catch(console.error);
+    }
+  }, [freelancer]);
 
   const handleCopyEmail = () => {
     if (freelancer?.email) {
@@ -219,20 +235,25 @@ export default function FreelancerProfileClient({ freelancer }) {
                 <h3 className="text-xs font-bold uppercase tracking-wider text-slate-400 mb-3 block">
                   Client Feedback & Project History
                 </h3>
-                {freelancer?.reviews && freelancer.reviews.length > 0 ? (
+                {reviews && reviews.length > 0 ? (
                   <div className="space-y-4">
-                    {freelancer.reviews.map((review, i) => (
+                    {reviews.map((review, i) => (
                       <div key={i} className="p-4 rounded-2xl border border-slate-100 bg-slate-50/50 space-y-2">
-                        <div className="flex items-center gap-1 text-amber-500">
-                          {[1, 2, 3, 4, 5].map((star) => (
-                            <Star 
-                              key={star} 
-                              className={`w-4 h-4 ${star <= (review.rating || 5) ? "fill-current text-amber-500" : "text-slate-200"}`} 
-                            />
-                          ))}
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center gap-1 text-amber-500">
+                            {[1, 2, 3, 4, 5].map((star) => (
+                              <Star 
+                                key={star} 
+                                className={`w-4 h-4 ${star <= (review.rating || 5) ? "fill-current text-amber-500" : "text-slate-200"}`} 
+                              />
+                            ))}
+                          </div>
+                          <span className="text-xs text-slate-400 font-medium">
+                            {new Date(review.createdAt).toLocaleDateString()}
+                          </span>
                         </div>
-                        <p className="text-sm text-slate-700">"{review.comment}"</p>
-                        <p className="text-xs text-slate-400 font-medium">{review.taskTitle} • {new Date(review.createdAt).toLocaleDateString()}</p>
+                        <p className="text-sm text-slate-700 font-medium">"{review.comment}"</p>
+                        <p className="text-xs text-slate-500 font-medium">{review.clientName} ({review.clientEmail})</p>
                       </div>
                     ))}
                   </div>

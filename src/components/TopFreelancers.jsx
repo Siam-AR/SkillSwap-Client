@@ -100,8 +100,8 @@ export default function TopFreelancers({ freelancers }) {
                       <h3 className="text-lg sm:text-xl font-extrabold text-slate-900 group-hover:text-[#009689] transition-colors line-clamp-1">
                         {freelancer.name}
                       </h3>
-                      <p className="text-sm text-slate-500 font-medium mt-1">
-                        {freelancer.designation || freelancer.title || freelancer.role || "Freelancer"}
+                      <p className="text-xs text-slate-500 font-medium mt-0.5 line-clamp-1 max-w-[90%]">
+                        {freelancer.designation || freelancer.title || freelancer.headline || freelancer.professionalTitle || "Full Stack Developer"}
                       </p>
 
                       {/* 3. Compact Metrics Strip */}
