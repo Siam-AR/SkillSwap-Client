@@ -43,13 +43,20 @@ function SignUpContent() {
         setMessage("");
 
         try {
-            await signUp.email({
+            const { data, error } = await signUp.email({
                 name: formData.name,
                 email: formData.email,
                 password: formData.password,
                 role,
                 callbackURL: redirectTo,
             });
+
+            if (error) {
+                setMessageType("error");
+                setMessage(error.message || "Unable to create your account.");
+                setIsLoading(false);
+                return;
+            }
 
             const sessionResponse = await getSession();
             const selectedRole = sessionResponse?.data?.user?.role || role;
@@ -68,12 +75,19 @@ function SignUpContent() {
         setMessage("");
 
         try {
-            await signIn.social({
+            const { data, error } = await signIn.social({
                 provider: "google",
                 callbackURL: redirectTo,
                 requestSignUp: true,
                 additionalData: { role: "Client" },
             });
+
+            if (error) {
+                setMessageType("error");
+                setMessage(error.message || "Google sign up failed. Please try again.");
+                setIsLoading(false);
+                return;
+            }
         } catch (error) {
             setMessageType("error");
             setMessage(error?.message || "Google sign up failed. Please try again.");

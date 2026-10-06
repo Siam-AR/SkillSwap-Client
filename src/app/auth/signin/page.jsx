@@ -35,11 +35,18 @@ function SignInContent() {
         setMessage("");
 
         try {
-            await signIn.email({
+            const { data, error } = await signIn.email({
                 email: formData.email,
                 password: formData.password,
                 callbackURL: redirectTo,
             });
+
+            if (error) {
+                setMessageType("error");
+                setMessage(error.message || "Invalid credentials.");
+                setIsLoading(false);
+                return;
+            }
 
             const sessionResponse = await getSession();
             const role = sessionResponse?.data?.user?.role || "Client";
@@ -58,12 +65,19 @@ function SignInContent() {
         setMessage("");
 
         try {
-            await signIn.social({
+            const { data, error } = await signIn.social({
                 provider: "google",
                 callbackURL: redirectTo,
                 requestSignUp: true,
                 additionalData: { role: "Client" },
             });
+
+            if (error) {
+                setMessageType("error");
+                setMessage(error.message || "Google sign in failed. Please try again.");
+                setIsLoading(false);
+                return;
+            }
         } catch (error) {
             setMessageType("error");
             setMessage(error?.message || "Google sign in failed. Please try again.");
