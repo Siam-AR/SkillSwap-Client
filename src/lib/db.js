@@ -105,40 +105,31 @@ export async function getHomepageData() {
     }
   }
 
-  const freelancerUsers = await usersCollection
-    .find({ role: { $regex: /^freelancer$/i } })
-    .project({ name: 1, email: 1, image: 1, skills: 1, hourlyRate: 1, rating: 1, reviewCount: 1, reviewsCount: 1, completedTasks: 1, finishedJobs: 1 })
-    .toArray();
-
-  const reviewDocs = await reviewsCollection.find({}).toArray();
-  const reviewStats = reviewDocs.reduce((acc, review) => {
-    if (!review.reviewee_email) {
-      return acc;
+  const topFreelancers = await usersCollection.aggregate([
+    { $match: { role: { $regex: /^freelancer$/i } } },
+    {
+      $addFields: {
+        computedRating: { $ifNull: ["$rating", 5.0] },
+        computedReviewCount: { $ifNull: ["$reviewCount", { $ifNull: ["$reviewsCount", 0] }] },
+        computedFinishedJobs: {
+          $max: [
+            { $ifNull: ["$completedTasks", 0] },
+            { $ifNull: ["$finishedJobs", 0] }
+          ]
+        }
+      }
+    },
+    { $sort: { computedRating: -1, computedFinishedJobs: -1 } },
+    { $limit: 8 },
+    {
+      $project: {
+        name: 1, email: 1, image: 1, avatar: 1, skills: 1, hourlyRate: 1, rate: 1, designation: 1, title: 1, role: 1,
+        rating: { $round: ["$computedRating", 1] },
+        reviewCount: "$computedReviewCount",
+        finishedJobs: "$computedFinishedJobs"
+      }
     }
-
-    const key = review.reviewee_email;
-    const current = acc[key] || { total: 0, count: 0 };
-    acc[key] = {
-      total: current.total + Number(review.rating || 0),
-      count: current.count + 1,
-    };
-    return acc;
-  }, {});
-
-  const topFreelancers = freelancerUsers
-    .map((freelancer) => {
-      const stats = reviewStats[freelancer.email] || { total: 0, count: 0 };
-      const averageRating = stats.count ? stats.total / stats.count : 0;
-      return {
-        ...freelancer,
-        skills: freelancer.skills || [],
-        rating: freelancer.rating || Number(averageRating.toFixed(1)) || 5.0,
-        reviewCount: freelancer.reviewCount || freelancer.reviewsCount || stats.count || 0,
-        finishedJobs: freelancer.completedTasks || freelancer.finishedJobs || stats.count || 0,
-      };
-    })
-    .sort((a, b) => b.rating - a.rating || b.finishedJobs - a.finishedJobs)
-    .slice(0, 8);
+  ]).toArray();
 
   const totalUsers = await usersCollection.countDocuments();
   const totalTasks = await tasksCollection.countDocuments();
