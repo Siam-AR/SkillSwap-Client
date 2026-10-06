@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { Clock, MapPin, ArrowRight } from "lucide-react";
+import { Clock, MapPin, ArrowRight, Send, ArrowUpRight, Sparkles } from "lucide-react";
 
 function formatTimeAgo(dateString) {
   if (!dateString) return "Recently";
@@ -65,77 +65,75 @@ export default function LatestTasksSection({ tasks }) {
           viewport={{ once: true, margin: "-50px" }}
           className="grid grid-cols-1 lg:grid-cols-2 gap-5"
         >
-          {displayTasks.map((task) => {
-            const timeAgo = formatTimeAgo(task.createdAt);
-            const proposalsCount = task.proposalsCount || 0;
+        {displayTasks.map((task) => {
+          const timeAgo = formatTimeAgo(task.createdAt);
+          const proposalsCount = task.proposalsCount || task.proposals?.length || 0;
+          const budgetAmount = task.budget || task.price || 0;
+          const budgetType = task.budgetType || "Fixed";
+          const categoryName = typeof task.category === "object" ? task.category?.name : task.category || "General";
 
-            return (
-              <motion.div key={task._id} variants={cardVariants} className="h-full">
-                <Link href={`/task/${task._id}`} className="block h-full group">
-                  <div className="relative bg-white/90 backdrop-blur-sm border border-slate-200/80 border-l-[4px] border-l-transparent rounded-2xl p-6 transition-all duration-300 hover:border-[#2CA99F] hover:shadow-[0_12px_30px_rgba(0,150,137,0.08)] hover:-translate-y-0.5 flex flex-col justify-between h-full">
-                    
-                    <div>
-                      {/* Top Row: Header & Budget Badge */}
-                      <div className="flex items-start justify-between gap-3">
-                        <span className="bg-teal-50 text-[#009689] font-medium text-xs px-2.5 py-1 rounded-md">
-                          {task.category || "General"}
-                        </span>
-                        
-                        <div className="bg-slate-900 text-white text-sm font-bold px-3 py-1 rounded-full group-hover:bg-[#009689] transition-colors shrink-0">
-                          ${task.budget} Fixed
-                        </div>
-                      </div>
+          return (
+            <motion.div key={task._id} variants={cardVariants} className="h-full">
+              <Link href={`/task/${task._id || task.id}`} className="block h-full group outline-none">
+                <div className="group relative bg-white rounded-3xl border border-slate-200/90 p-6 flex flex-col justify-between shadow-sm hover:shadow-xl hover:shadow-teal-900/5 hover:-translate-y-1 hover:border-teal-300/80 transition-all duration-300 h-full">
+                  
+                  {/* 1. Header: Category Pill & Elevated Budget Badge */}
+                  <div className="flex items-center justify-between gap-3 pb-4">
+                    <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-xl text-xs font-bold uppercase tracking-wider bg-teal-50 text-[#009689] border border-teal-100">
+                      <Sparkles className="w-3 h-3 text-[#009689]"/>
+                      {categoryName}
+                    </span>
 
-                      {/* Middle Area: Title, Metadata & Snippet */}
-                      <h3 className="text-lg font-bold text-slate-900 group-hover:text-[#009689] transition-colors line-clamp-1 mt-4">
-                        {task.title}
-                      </h3>
-
-                      {/* Meta Strip */}
-                      <div className="flex flex-wrap items-center gap-1.5 text-xs font-medium text-slate-500 mt-2">
-                        <div className="flex items-center gap-1">
-                          <Clock className="w-3.5 h-3.5" />
-                          <span>{timeAgo}</span>
-                        </div>
-                        <span className="text-slate-300 mx-0.5">•</span>
-                        <div className="flex items-center gap-1">
-                          <MapPin className="w-3.5 h-3.5" />
-                          <span>Remote</span>
-                        </div>
-                        <span className="text-slate-300 mx-0.5">•</span>
-                        <span>
-                          {proposalsCount} {proposalsCount === 1 ? "proposal" : "proposals"}
-                        </span>
-                      </div>
-
-                      {/* Description */}
-                      <p className="text-sm text-slate-500 line-clamp-2 mt-3 leading-relaxed">
-                        {task.description || "No description provided for this task."}
-                      </p>
+                    <div className="inline-flex items-center gap-1 px-3 py-1 rounded-xl bg-slate-900 text-white text-xs font-bold shadow-sm">
+                      <span>${budgetAmount}</span>
+                      <span className="text-[10px] text-slate-400 font-medium">/{budgetType}</span>
                     </div>
-
-                    {/* Bottom Action Row */}
-                    <div className="flex items-center justify-between mt-6 pt-5 border-t border-slate-100">
-                      {/* Left: Skill Tags */}
-                      <div className="flex flex-wrap gap-2">
-                        {task.skills && task.skills.slice(0, 3).map((skill) => (
-                          <span key={skill} className="bg-slate-50 text-slate-600 border border-slate-200 text-xs px-2.5 py-1 rounded-md font-medium">
-                            {skill}
-                          </span>
-                        ))}
-                      </div>
-
-                      {/* Right: Quick Apply Link */}
-                      <div className="text-sm font-semibold text-[#009689] flex items-center gap-1 group-hover:gap-2 transition-all shrink-0 pl-4">
-                        Quick Apply <ArrowRight className="w-4 h-4" />
-                      </div>
-                    </div>
-                    
                   </div>
-                </Link>
-              </motion.div>
-            );
-          })}
+
+                  {/* 2. Task Title & Description Snippet */}
+                  <div className="space-y-2 py-1 flex-1">
+                    <h3 className="text-lg font-extrabold text-slate-900 group-hover:text-[#009689] transition-colors line-clamp-1">
+                      {task.title}
+                    </h3>
+                    
+                    <p className="text-xs sm:text-sm text-slate-500 line-clamp-2 leading-relaxed min-h-[38px]">
+                      {task.description && task.description.trim().length > 0 
+                        ? task.description 
+                        : "No description provided for this task. Review scope requirements before submitting a proposal."}
+                    </p>
+                  </div>
+
+                  {/* 3. Structured Metadata Strip */}
+                  <div className="flex items-center flex-wrap gap-y-2 gap-x-4 py-3 my-2 border-y border-slate-100 text-xs text-slate-500 font-medium">
+                    <div className="flex items-center gap-1.5">
+                      <Clock className="w-3.5 h-3.5 text-slate-400"/>
+                      <span>{timeAgo}</span>
+                    </div>
+                    <span className="w-1 h-1 rounded-full bg-slate-300" />
+                    <div className="flex items-center gap-1.5">
+                      <MapPin className="w-3.5 h-3.5 text-slate-400"/>
+                      <span>{task.location || "Remote"}</span>
+                    </div>
+                    <span className="w-1 h-1 rounded-full bg-slate-300" />
+                    <div className="flex items-center gap-1.5">
+                      <Send className="w-3.5 h-3.5 text-slate-400"/>
+                      <span>{proposalsCount} proposals</span>
+                    </div>
+                  </div>
+
+                  {/* 4. Action Button Footer */}
+                  <div className="pt-2">
+                    <div className="w-full inline-flex items-center justify-center gap-2 py-2.5 rounded-xl bg-slate-50 group-hover:bg-[#009689] text-slate-700 group-hover:text-white border border-slate-200/80 group-hover:border-[#009689] text-xs sm:text-sm font-bold transition-all duration-200 group/btn shadow-sm">
+                      <span>Quick Apply</span>
+                      <ArrowUpRight className="w-4 h-4 text-slate-400 group-hover/btn:text-white group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5 transition-all"/>
+                    </div>
+                  </div>
+
+                </div>
+              </Link>
+            </motion.div>
+          );
+        })}
         </motion.div>
 
         {/* Bottom Link */}
