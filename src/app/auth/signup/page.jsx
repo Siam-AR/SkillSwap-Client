@@ -26,6 +26,8 @@ function SignUpContent() {
     const [message, setMessage] = useState("");
     const [messageType, setMessageType] = useState("info");
     const [showPassword, setShowPassword] = useState(false);
+    const [isGoogleRoleModalOpen, setIsGoogleRoleModalOpen] = useState(false);
+    const [googleRole, setGoogleRole] = useState("Client");
 
     const redirectByRole = (selectedRole) => {
         if (selectedRole === "Freelancer") return "/dashboard/freelancer";
@@ -73,13 +75,14 @@ function SignUpContent() {
     const handleGoogleSignUp = async () => {
         setIsLoading(true);
         setMessage("");
+        setIsGoogleRoleModalOpen(false);
 
         try {
             const { data, error } = await signIn.social({
                 provider: "google",
                 callbackURL: redirectTo,
                 requestSignUp: true,
-                additionalData: { role: "Client" },
+                additionalData: { role: googleRole },
             });
 
             if (error) {
@@ -99,6 +102,78 @@ function SignUpContent() {
         <div className="min-h-screen bg-slate-50/70 flex items-center justify-center p-4 sm:p-6 lg:p-10 relative overflow-hidden">
             {/* Ambient background aura */}
             <div className="pointer-events-none absolute -top-40 -right-40 w-96 h-96 bg-teal-500/10 rounded-full blur-3xl" />
+
+            {/* Google Role Selection Modal */}
+            {isGoogleRoleModalOpen && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 backdrop-blur-sm p-4">
+                    <div className="w-full max-w-md bg-white rounded-3xl p-6 shadow-2xl border border-slate-200">
+                        <div className="mb-6">
+                            <h2 className="text-xl font-bold text-slate-900">Join Taskify with Google</h2>
+                            <p className="text-sm text-slate-500 mt-1">Select your account type to complete registration.</p>
+                        </div>
+                        
+                        <div className="space-y-3 mb-6">
+                            <button
+                                type="button"
+                                onClick={() => setGoogleRole("Client")}
+                                className={`w-full flex items-center gap-3 p-4 rounded-2xl border text-left transition-all ${
+                                    googleRole === "Client"
+                                        ? "border-[#009689] bg-teal-50/50 shadow-xs ring-2 ring-teal-500/20"
+                                        : "border-slate-200 bg-white hover:border-slate-300"
+                                }`}
+                            >
+                                <div className={`p-2.5 rounded-xl shrink-0 ${
+                                    googleRole === "Client" ? "bg-[#009689] text-white" : "bg-slate-100 text-slate-500"
+                                }`}>
+                                    <UserCheck className="w-5 h-5"/>
+                                </div>
+                                <div>
+                                    <p className="font-extrabold text-sm text-slate-900 leading-tight">Client</p>
+                                    <p className="text-xs text-slate-500 mt-0.5">Post tasks, hire talent, and manage projects</p>
+                                </div>
+                            </button>
+
+                            <button
+                                type="button"
+                                onClick={() => setGoogleRole("Freelancer")}
+                                className={`w-full flex items-center gap-3 p-4 rounded-2xl border text-left transition-all ${
+                                    googleRole === "Freelancer"
+                                        ? "border-[#009689] bg-teal-50/50 shadow-xs ring-2 ring-teal-500/20"
+                                        : "border-slate-200 bg-white hover:border-slate-300"
+                                }`}
+                            >
+                                <div className={`p-2.5 rounded-xl shrink-0 ${
+                                    googleRole === "Freelancer" ? "bg-[#009689] text-white" : "bg-slate-100 text-slate-500"
+                                }`}>
+                                    <Briefcase className="w-5 h-5"/>
+                                </div>
+                                <div>
+                                    <p className="font-extrabold text-sm text-slate-900 leading-tight">Freelancer</p>
+                                    <p className="text-xs text-slate-500 mt-0.5">Apply to tasks, submit bids, and earn money</p>
+                                </div>
+                            </button>
+                        </div>
+
+                        <div className="flex gap-3">
+                            <button
+                                type="button"
+                                onClick={() => setIsGoogleRoleModalOpen(false)}
+                                className="flex-1 py-2.5 rounded-xl border border-slate-200 bg-white text-slate-700 font-semibold hover:bg-slate-50 transition-all text-sm"
+                            >
+                                Cancel
+                            </button>
+                            <button
+                                type="button"
+                                onClick={handleGoogleSignUp}
+                                disabled={isLoading}
+                                className="flex-1 inline-flex items-center justify-center gap-2 py-2.5 rounded-xl bg-[#009689] hover:bg-[#238B81] text-white text-sm font-bold shadow-md shadow-teal-900/15 hover:shadow-lg transition-all disabled:opacity-50"
+                            >
+                                {isLoading ? <Loader2 className="w-4 h-4 animate-spin"/> : "Continue with Google"}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
 
             {/* Main Balanced Auth Container (Max-W-5xl, Identical to Sign In) */}
             <div className="w-full max-w-5xl bg-white rounded-3xl border border-slate-200/90 shadow-xl shadow-slate-200/50 overflow-hidden grid grid-cols-1 lg:grid-cols-12 min-h-[620px]">
@@ -298,7 +373,7 @@ function SignUpContent() {
                         {/* Google OAuth Button */}
                         <button
                             type="button"
-                            onClick={handleGoogleSignUp}
+                            onClick={() => setIsGoogleRoleModalOpen(true)}
                             className="w-full inline-flex items-center justify-center gap-2.5 py-2.5 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 text-xs sm:text-sm font-semibold transition-all shadow-xs"
                         >
                             <svg className="w-4 h-4" viewBox="0 0 24 24">
