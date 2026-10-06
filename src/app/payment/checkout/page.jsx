@@ -27,7 +27,7 @@ export default function PaymentCheckoutPage() {
             <div className="flex items-center gap-3 text-sky-600">
               <div className="grid h-12 w-12 place-items-center rounded-2xl bg-sky-100 text-xl">💳</div>
               <div>
-                <p className="text-sm uppercase tracking-[0.24em] text-sky-500">TaskHive</p>
+                <p className="text-sm uppercase tracking-[0.24em] text-sky-500">Taskify</p>
                 <p className="text-xs text-slate-500 dark:text-slate-400">Secure Checkout</p>
               </div>
             </div>
