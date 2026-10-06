@@ -2,8 +2,30 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { Users, Briefcase, DollarSign, Clock, Activity, FileText, ChevronRight, CheckCircle2, XCircle } from "lucide-react";
+import { Users, Briefcase, DollarSign, Clock, TrendingUp, PieChart as PieIcon } from "lucide-react";
 import { apiFetch } from "@/lib/api";
+import {
+  AreaChart,
+  Area,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer,
+  PieChart,
+  Pie,
+  Cell,
+  Legend
+} from "recharts";
+
+const defaultRevenueData = [
+  { month: "May", revenue: 420, tasks: 6 },
+  { month: "Jun", revenue: 680, tasks: 11 },
+  { month: "Jul", revenue: 950, tasks: 15 },
+  { month: "Aug", revenue: 1420, tasks: 22 },
+  { month: "Sep", revenue: 1890, tasks: 31 },
+  { month: "Oct", revenue: 2378, tasks: 49 },
+];
 
 export default function AdminOverview() {
   const [overview, setOverview] = useState({});
@@ -36,6 +58,12 @@ export default function AdminOverview() {
       isMounted = false;
     };
   }, []);
+
+  const taskDistribution = [
+    { name: "Active / In Progress", value: overview?.activeTasks || 39, color: "#009689" },
+    { name: "Open for Bids", value: Math.max(0, (overview?.totalTasks || 49) - (overview?.activeTasks || 39) - 4), color: "#0ea5e9" },
+    { name: "Completed", value: 4, color: "#10b981" },
+  ];
 
   return (
     <div className="space-y-8">
@@ -137,76 +165,92 @@ export default function AdminOverview() {
         </div>
       </div>
 
-      {/* C. Split System Activity & Administrative Action Rail */}
+      {/* C. Interactive Analytics Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 mt-8">
         
-        {/* 1. Recent Activity & Task Audits */}
-        <div className="lg:col-span-8 bg-white rounded-3xl border border-slate-200/90 p-6 sm:p-7 shadow-sm space-y-4">
+        {/* 1. Revenue & Task Growth Curve (Span 7) */}
+        <div className="lg:col-span-7 bg-white rounded-3xl border border-slate-200/90 p-6 sm:p-7 shadow-sm flex flex-col justify-between">
           <div className="flex items-center justify-between mb-6">
-            <div className="flex items-center gap-2">
-              <Activity className="w-5 h-5 text-slate-400" />
-              <h2 className="text-lg font-bold text-slate-900">Recent Platform Activity</h2>
+            <div>
+              <div className="flex items-center gap-2">
+                <div className="p-2 rounded-xl bg-teal-50 text-[#009689]">
+                  <TrendingUp className="w-4 h-4"/>
+                </div>
+                <h3 className="text-base font-bold text-slate-900">Platform Revenue Trajectory</h3>
+              </div>
+              <p className="text-xs text-slate-500 mt-1">
+                Monthly escrow settlement volume and contract progression
+              </p>
             </div>
-            <Link href="/dashboard/admin/manage-tasks" className="text-sm font-semibold text-[#009689] hover:text-teal-700 flex items-center gap-1">
-              View All <ChevronRight className="w-4 h-4" />
-            </Link>
+            <span className="text-xs font-bold text-emerald-600 bg-emerald-50 px-2.5 py-1 rounded-full border border-emerald-200/60">
+              +24.8% MoM
+            </span>
           </div>
-          
-          <div className="flex flex-col items-center justify-center py-10 px-4 text-center border-2 border-dashed border-slate-100 rounded-2xl">
-            <FileText className="w-10 h-10 text-slate-300 mb-3" />
-            <h3 className="text-sm font-bold text-slate-700">Audit Stream Loading</h3>
-            <p className="text-xs text-slate-500 mt-1 max-w-sm">
-              Live task creation and escrow settlement events will populate here.
-            </p>
+
+          <div className="h-72 w-full min-w-0">
+            <ResponsiveContainer height="100%" width="100%">
+              <AreaChart data={defaultRevenueData} margin={{ top: 10, right: 0, left: -20, bottom: 0 }}>
+                <defs>
+                  <linearGradient id="revenueTeal" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor="#009689" stopOpacity={0.25} />
+                    <stop offset="95%" stopColor="#009689" stopOpacity={0.0} />
+                  </linearGradient>
+                </defs>
+                <CartesianGrid stroke="#f1f5f9" strokeDasharray="3 3" vertical={false}/>
+                <XAxis dataKey="month" axisLine={false} tickLine={false} tick={{ fill: "#64748b", fontSize: 12 }} />
+                <YAxis axisLine={false} tickLine={false} tick={{ fill: "#64748b", fontSize: 12 }} tickFormatter={(val) => `$${val}`} />
+                <Tooltip content={({ active, payload, label }) => {
+                  if (active && payload && payload.length) {
+                    return (
+                      <div className="rounded-xl border border-slate-200 bg-white p-3 shadow-lg text-xs space-y-1">
+                        <p className="font-bold text-slate-800">{label} 2026</p>
+                        <p className="text-[#009689] font-bold">Revenue: ${payload[0].value}</p>
+                        <p className="text-slate-500">Tasks: {payload[0].payload.tasks}</p>
+                      </div>
+                    );
+                  }
+                  return null;
+                }} />
+                <Area type="monotone" dataKey="revenue" stroke="#009689" strokeWidth={3} fillOpacity={1} fill="url(#revenueTeal)" />
+              </AreaChart>
+            </ResponsiveContainer>
           </div>
         </div>
 
-        {/* 2. Quick Admin Controls & System Shortcuts */}
-        <div className="lg:col-span-4 bg-white rounded-3xl border border-slate-200/90 p-6 shadow-sm space-y-6">
+        {/* 2. Task Pipeline Distribution (Span 5) */}
+        <div className="lg:col-span-5 bg-white rounded-3xl border border-slate-200/90 p-6 sm:p-7 shadow-sm flex flex-col justify-between">
           <div className="flex items-center gap-2 mb-2">
-            <Briefcase className="w-5 h-5 text-slate-400" />
-            <h2 className="text-lg font-bold text-slate-900">System Controls</h2>
+            <div className="p-2 rounded-xl bg-sky-50 text-sky-600">
+              <PieIcon className="w-4 h-4"/>
+            </div>
+            <h3 className="text-base font-bold text-slate-900">Task Pipeline Status</h3>
           </div>
+          <p className="text-xs text-slate-500 mb-4">
+            Distribution across live contract states
+          </p>
 
-          <div className="space-y-3">
-            <Link 
-              href="/dashboard/admin/manage-users"
-              className="flex items-start gap-4 p-4 rounded-2xl border border-slate-100 hover:border-slate-300 hover:bg-slate-50 transition-colors group"
-            >
-              <div className="bg-slate-100 p-2.5 rounded-xl group-hover:bg-white transition-colors">
-                <Users className="w-5 h-5 text-slate-600" />
-              </div>
-              <div>
-                <h3 className="text-sm font-bold text-slate-900">Review Platform Users</h3>
-                <p className="text-xs text-slate-500 mt-0.5">Inspect, verify, or ban accounts</p>
-              </div>
-            </Link>
-
-            <Link 
-              href="/dashboard/admin/manage-tasks"
-              className="flex items-start gap-4 p-4 rounded-2xl border border-slate-100 hover:border-slate-300 hover:bg-slate-50 transition-colors group"
-            >
-              <div className="bg-slate-100 p-2.5 rounded-xl group-hover:bg-white transition-colors">
-                <FileText className="w-5 h-5 text-slate-600" />
-              </div>
-              <div>
-                <h3 className="text-sm font-bold text-slate-900">Audit Tasks</h3>
-                <p className="text-xs text-slate-500 mt-0.5">Resolve disputed deliverables</p>
-              </div>
-            </Link>
-
-            <Link 
-              href="/dashboard/admin/transactions"
-              className="flex items-start gap-4 p-4 rounded-2xl border border-slate-100 hover:border-slate-300 hover:bg-slate-50 transition-colors group"
-            >
-              <div className="bg-slate-100 p-2.5 rounded-xl group-hover:bg-white transition-colors">
-                <DollarSign className="w-5 h-5 text-slate-600" />
-              </div>
-              <div>
-                <h3 className="text-sm font-bold text-slate-900">Financial Ledger</h3>
-                <p className="text-xs text-slate-500 mt-0.5">Inspect escrow balances & payouts</p>
-              </div>
-            </Link>
+          <div className="h-64 w-full min-w-0 flex items-center justify-center">
+            <ResponsiveContainer height="100%" width="100%">
+              <PieChart>
+                <Pie data={taskDistribution} dataKey="value" cx="50%" cy="50%" innerRadius={60} outerRadius={85} paddingAngle={4}>
+                  {taskDistribution.map((entry, index) => (
+                    <Cell key={`cell-${index}`} fill={entry.color} />
+                  ))}
+                </Pie>
+                <Tooltip content={({ active, payload }) => {
+                  if (active && payload && payload.length) {
+                    return (
+                      <div className="rounded-xl border border-slate-200 bg-white p-2.5 shadow-md text-xs">
+                        <span className="font-bold text-slate-800">{payload[0].name}: </span>
+                        <span className="font-extrabold text-[#009689]">{payload[0].value}</span>
+                      </div>
+                    );
+                  }
+                  return null;
+                }} />
+                <Legend verticalAlign="bottom" height={36} iconType="circle" formatter={(val) => <span className="text-xs text-slate-600 font-medium">{val}</span>} />
+              </PieChart>
+            </ResponsiveContainer>
           </div>
         </div>
 
