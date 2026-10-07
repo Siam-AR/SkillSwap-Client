@@ -1,52 +1,11 @@
 import { betterAuth } from "better-auth";
 import { customSession, jwt } from "better-auth/plugins";
 import { cookies } from "next/headers";
-import { MongoClient } from "mongodb";
 import { mongodbAdapter } from "better-auth/adapters/mongodb";
+import { client, clientPromise } from "./server-db";
 
-const uri = process.env.MONGO_DB_URI;
 const authDbName = process.env.AUTH_DB_NAME || "taskify";
 
-if (!uri) {
-  throw new Error("Missing MONGO_DB_URI environment variable");
-}
-
-const createMongoClient = () => {
-  const existingClient = globalThis._betterAuthMongoClient;
-  const existingPromise = globalThis._betterAuthMongoClientPromise;
-
-  if (existingClient && typeof existingClient.topology?.isConnected === "function") {
-    try {
-      if (existingClient.topology.isConnected()) {
-        return {
-          client: existingClient,
-          clientPromise: existingPromise,
-        };
-      }
-    } catch {
-      // ignore and recreate below
-    }
-  }
-
-  const client = new MongoClient(uri, {
-    appName: "TaskifyAuth",
-  });
-  const clientPromise = client.connect();
-
-  globalThis._betterAuthMongoClient = client;
-  globalThis._betterAuthMongoClientPromise = clientPromise;
-
-  clientPromise.catch((error) => {
-    console.error("Mongo client connection error:", error);
-  });
-
-  return {
-    client,
-    clientPromise,
-  };
-};
-
-const { client, clientPromise } = createMongoClient();
 const db = client.db(authDbName);
 
 const appUrl =

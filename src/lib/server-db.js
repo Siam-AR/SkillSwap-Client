@@ -11,11 +11,15 @@ if (!appDbName) {
   throw new Error("Missing APP_DB_NAME or AUTH_DB_NAME environment variable");
 }
 
-let clientPromise;
+export let clientPromise;
+export let client;
 
 if (!globalThis._mongoClientPromise) {
-  const client = new MongoClient(uri);
+  client = new MongoClient(uri);
   globalThis._mongoClientPromise = client.connect();
+  globalThis._mongoClient = client;
+} else {
+  client = globalThis._mongoClient;
 }
 
 clientPromise = globalThis._mongoClientPromise;
