@@ -104,8 +104,8 @@ A modern, full-stack freelance platform engineering seamless collaboration betwe
 | :--- | :--- | :--- |
 | **Database** | MongoDB Atlas | Distributed NoSQL document storage |
 | **Driver / ODM** | Native MongoDB / Mongoose | High-throughput aggregation pipelines and schema models |
-| **Authentication** | Better-Auth / NextAuth Engine | Secure session cookies, OAuth 2.0 integration, and RBAC |
-| **Hosting** | Vercel / Cloud Container | Edge deployment with automatic CI/CD |
+| **Authentication** | Better-Auth | Secure session cookies, OAuth 2.0 integration, and RBAC |
+| **Hosting** | Vercel | Edge deployment with automatic CI/CD |
 
 ---
 
