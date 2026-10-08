@@ -82,15 +82,6 @@ export default function Footer() {
                   <MapPin className="w-4 h-4 text-slate-500" />
                   Dhaka, Bangladesh
                 </li>
-                <li className="pt-2">
-                  <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-slate-900/50 border border-slate-800/80 text-xs font-medium text-slate-400">
-                    <span className="relative flex h-2 w-2">
-                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                      <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
-                    </span>
-                    Platform Operational
-                  </div>
-                </li>
               </ul>
             </div>
           </div>
@@ -102,9 +93,15 @@ export default function Footer() {
             © {new Date().getFullYear()} Taskify. All rights reserved.
           </p>
           <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 flex-1">
-            <Link href="#" className="flex items-center text-xs text-slate-500 lg:hover:text-slate-300 transition-colors min-h-[44px]">Privacy Policy</Link>
-            <Link href="#" className="flex items-center text-xs text-slate-500 lg:hover:text-slate-300 transition-colors min-h-[44px]">Terms of Service</Link>
-            <Link href="#" className="flex items-center text-xs text-slate-500 lg:hover:text-slate-300 transition-colors min-h-[44px]">Trust & Safety</Link>
+            <Link href="/privacy" className="text-xs text-slate-500 hover:text-teal-400 transition-colors">
+              Privacy Policy
+            </Link>
+            <Link href="/terms" className="text-xs text-slate-500 hover:text-teal-400 transition-colors">
+              Terms of Service
+            </Link>
+            <Link href="/trust-safety" className="text-xs text-slate-500 hover:text-teal-400 transition-colors">
+              Trust & Safety
+            </Link>
           </div>
           
           <button 
