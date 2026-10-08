@@ -77,14 +77,14 @@ export default function StatsSection({ stats }) {
   };
 
   return (
-    <section className="w-full relative z-20 py-10 sm:py-16 bg-white border-y border-slate-100 shadow-[0_8px_30px_rgba(0,150,137,0.04)]">
-      <div className="w-full max-w-6xl mx-auto px-8 sm:px-12 lg:px-16">
+    <section className="w-full relative z-20 py-6 md:py-16 bg-white border-y border-slate-100 shadow-[0_8px_30px_rgba(0,150,137,0.04)]">
+      <div className="w-full max-w-6xl mx-auto px-4 md:px-12 lg:px-16">
         <motion.div
           variants={containerVariants}
           initial="hidden"
           whileInView="show"
           viewport={{ once: true, margin: "-50px" }}
-          className="grid grid-cols-1 md:grid-cols-3 gap-6 items-center"
+          className="grid grid-cols-3 gap-2 sm:gap-4 md:gap-6 items-center"
         >
           {items.map((item) => (
             <motion.div
@@ -92,19 +92,19 @@ export default function StatsSection({ stats }) {
               variants={itemVariants}
               className="flex items-center justify-center w-full"
             >
-              {/* Fixed width content block prevents wide text from distorting column centers */}
-              <div className="flex items-center gap-4 sm:gap-5 p-2 rounded-2xl lg:hover:bg-slate-50 transition-colors duration-300 w-[240px] sm:w-[260px]">
+              {/* Responsive content block: stacked on mobile, row on desktop */}
+              <div className="flex flex-col md:flex-row items-center md:items-center gap-1.5 md:gap-5 p-1 md:p-2 rounded-2xl lg:hover:bg-slate-50 transition-colors duration-300 w-full md:w-[260px]">
                 {/* ICON BOX */}
-                <div className="flex-shrink-0 h-12 w-12 rounded-xl flex items-center justify-center border border-teal-100 bg-teal-50 text-[#009689]">
-                  <item.icon className="w-6 h-6" strokeWidth={2.25} />
+                <div className="flex-shrink-0 h-8 w-8 md:h-12 md:w-12 rounded-lg md:rounded-xl flex items-center justify-center border border-teal-100 bg-teal-50 text-[#009689]">
+                  <item.icon className="w-4 h-4 md:w-6 md:h-6" strokeWidth={2.25} />
                 </div>
 
                 {/* TEXT */}
-                <div className="flex flex-col items-start gap-1 min-w-0">
-                  <p className="text-sm font-medium text-slate-500 whitespace-nowrap">
+                <div className="flex flex-col items-center md:items-start gap-0.5 md:gap-1 min-w-0">
+                  <p className="order-2 md:order-1 text-[10px] sm:text-xs md:text-sm font-medium text-slate-500 text-center md:text-left leading-tight whitespace-normal md:whitespace-nowrap">
                     {item.label}
                   </p>
-                  <p className="text-4xl sm:text-5xl font-extrabold text-slate-950 tracking-tight whitespace-nowrap">
+                  <p className="order-1 md:order-2 text-xl sm:text-2xl md:text-4xl lg:text-5xl font-black md:font-extrabold text-slate-950 tracking-tight whitespace-nowrap">
                     <CountUp value={item.value} isCurrency={item.isCurrency} />
                   </p>
                 </div>
