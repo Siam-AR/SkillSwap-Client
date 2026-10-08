@@ -13,7 +13,7 @@ const categories = [
 
 export default function HomeHero() {
   return (
-    <section className="relative flex w-full flex-col items-center justify-end overflow-hidden -mt-[80px] min-h-[100dvh] lg:min-h-screen pb-12 lg:pb-16 pt-32">
+    <section className="relative flex w-full flex-col items-center justify-end overflow-hidden -mt-[80px] min-h-[100dvh] lg:min-h-screen pb-12 md:pb-16 lg:pb-20 xl:pb-24 2xl:pb-28 pt-32">
       <img 
         src="/images/hero-image-1.jpg" 
         alt="Hero Background" 
@@ -26,22 +26,22 @@ export default function HomeHero() {
         
         {/* Left Side: Text and Search */}
         <div className="w-full lg:w-1/2 flex flex-col items-center lg:items-start text-center lg:text-left">
-          <h1 className="text-4xl sm:text-5xl md:text-6xl xl:text-6xl 2xl:text-7xl font-black leading-tight tracking-tight text-white mb-6">
+          <h1 className="text-4xl sm:text-5xl md:text-6xl xl:text-6xl 2xl:text-7xl font-black leading-tight 2xl:leading-[1.1] tracking-tight text-white mb-6">
             Your Project, Our Talent
           </h1>
-          <p className="w-full max-w-2xl xl:max-w-xl 2xl:max-w-2xl text-base md:text-lg xl:text-lg 2xl:text-xl text-slate-200 mb-10">
+          <p className="w-full max-w-2xl xl:max-w-xl 2xl:max-w-2xl text-base md:text-lg xl:text-lg 2xl:text-xl text-slate-200 mb-10 2xl:mt-4 2xl:mb-8">
             Find and hire expert freelancers to bring your projects to life. Explore a variety of services and skills.
           </p>
 
-          <div className="w-full max-w-2xl xl:max-w-xl 2xl:max-w-2xl bg-white rounded-full p-1.5 md:p-2 xl:py-3.5 xl:px-6 shadow-xl flex flex-row items-center gap-1 md:gap-2 border border-slate-200 md:border-none">
+          <div className="w-full max-w-2xl xl:max-w-xl 2xl:max-w-3xl bg-white rounded-full p-1.5 md:p-2 xl:py-3.5 xl:px-6 2xl:py-4 2xl:px-6 shadow-xl flex flex-row items-center gap-1 md:gap-2 border border-slate-200 md:border-none">
             
             {/* Search Input */}
             <div className="flex flex-1 items-center px-3 md:px-4 min-h-[44px]">
-              <FiSearch className="h-4 w-4 md:h-5 md:w-5 xl:h-6 xl:w-6 text-slate-400 shrink-0" />
+              <FiSearch className="h-4 w-4 md:h-5 md:w-5 xl:h-6 xl:w-6 2xl:h-7 2xl:w-7 text-slate-400 shrink-0" />
               <input 
                 type="text" 
                 placeholder="Job title or keywords" 
-                className="flex-1 w-full bg-transparent px-2 md:px-3 py-2 text-sm xl:text-base text-slate-800 placeholder-slate-400 focus:outline-none min-h-[44px] min-w-0"
+                className="flex-1 w-full bg-transparent px-2 md:px-3 py-2 text-sm xl:text-base 2xl:text-lg text-slate-800 placeholder-slate-400 focus:outline-none min-h-[44px] min-w-0"
               />
             </div>
             
@@ -49,7 +49,7 @@ export default function HomeHero() {
             
             {/* Category Dropdown */}
             <div className="flex items-center px-1 md:px-2 min-h-[44px]">
-              <select className="bg-transparent px-1 md:px-3 py-2 text-xs md:text-sm xl:text-base text-slate-600 focus:outline-none cursor-pointer border-none appearance-none md:pr-8 min-h-[44px] max-w-[80px] md:max-w-none text-ellipsis overflow-hidden whitespace-nowrap shrink-0">
+              <select className="bg-transparent px-1 md:px-3 py-2 text-xs md:text-sm xl:text-base 2xl:text-lg text-slate-600 focus:outline-none cursor-pointer border-none appearance-none md:pr-8 min-h-[44px] max-w-[80px] md:max-w-none text-ellipsis overflow-hidden whitespace-nowrap shrink-0">
                 <option value="">Categories</option>
                 {categories.map((c) => (
                   <option key={c.name} value={c.name}>{c.name}</option>
@@ -60,18 +60,18 @@ export default function HomeHero() {
             {/* Search Action */}
             <button className="flex items-center justify-center w-11 h-11 md:w-auto md:h-auto md:px-7 md:py-3 xl:px-8 xl:py-3.5 rounded-full bg-[#009689] hover:bg-[#238B81] text-white font-semibold transition-all shrink-0 md:min-h-[44px]">
               <FiSearch className="h-4 w-4 md:hidden" />
-              <span className="hidden md:inline text-sm xl:text-base">Search</span>
+              <span className="hidden md:inline text-sm xl:text-base 2xl:text-lg">Search</span>
             </button>
           </div>
         </div>
 
         {/* Right Side: Categories Grid */}
         <div className="w-full lg:w-1/2 flex flex-col items-center lg:items-end mt-8 lg:mt-0">
-          <p className="text-sm xl:text-base font-medium text-white/80 mb-4 lg:mb-6">Popular Categories</p>
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 xl:gap-5 w-full lg:max-w-md xl:max-w-xl 2xl:max-w-2xl place-items-end">
+          <p className="text-sm xl:text-base 2xl:text-lg font-medium text-white/80 mb-4 lg:mb-6">Popular Categories</p>
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 xl:gap-5 w-full lg:max-w-md xl:max-w-xl 2xl:max-w-3xl place-items-end">
             {categories.slice(0, 8).map((cat) => (
-              <div key={cat.name} className="group flex flex-col items-center justify-center p-3 rounded-xl border border-white/20 bg-white/5 hover:bg-white/20 hover:border-white/40 transition-all cursor-pointer min-h-[88px] w-full xl:w-28 xl:h-24 2xl:w-32 2xl:h-28">
-                <cat.icon className="h-6 w-6 xl:w-6 xl:h-6 2xl:w-8 2xl:h-8 text-white mb-2" />
+              <div key={cat.name} className="group flex flex-col items-center justify-center p-3 rounded-xl border border-white/20 bg-white/5 hover:bg-white/20 hover:border-white/40 transition-all cursor-pointer min-h-[88px] w-full xl:w-28 xl:h-24 2xl:w-36 2xl:h-28">
+                <cat.icon className="h-6 w-6 xl:w-6 xl:h-6 2xl:w-10 2xl:h-10 text-white mb-2" />
                 <span className="text-center text-xs xl:text-xs 2xl:text-sm font-medium text-white/90 group-hover:text-white line-clamp-1">
                   {cat.name}
                 </span>
