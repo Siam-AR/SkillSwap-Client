@@ -56,11 +56,11 @@ export default function FeatureServices({ tasks }) {
             >
               <div className="flex h-full flex-col overflow-hidden rounded-xl border border-teal-100 bg-white/90 backdrop-blur-sm shadow-sm transition-all lg:hover:border-teal-300 lg:hover:shadow-md">
                 {/* Image Box */}
-                <div className="relative aspect-video w-full bg-slate-100">
+                <div className="relative aspect-video w-full bg-slate-100 overflow-hidden">
                   <img
                     src={task.imageUrl || "https://placehold.co/600x400/e2e8f0/64748b?text=Service"}
                     alt={task.title}
-                    className="absolute inset-0 h-full w-full object-cover"
+                    className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-105"
                   />
                 </div>
 
