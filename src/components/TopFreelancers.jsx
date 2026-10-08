@@ -20,7 +20,7 @@ export default function TopFreelancers({ freelancers }) {
   };
 
   return (
-    <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-6">
+    <section className="w-full max-w-[1500px] 2xl:max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-12 2xl:px-16 py-12 space-y-6">
       {/* Header */}
       <div className="flex flex-col items-center text-center pb-4">
         <h2 className="text-4xl font-bold text-slate-900">Top  <span className="text-[#009689]">Freelancers</span></h2>
@@ -35,9 +35,9 @@ export default function TopFreelancers({ freelancers }) {
         initial="hidden"
         whileInView="show"
         viewport={{ once: true, margin: "-50px" }}
-        className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 w-full mt-10"
+        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 lg:gap-8 w-full mt-10"
       >
-        {freelancers.slice(0, 3).map((freelancer) => {
+        {freelancers.slice(0, 4).map((freelancer) => {
           const rawStatus = (
             freelancer.status ||
             freelancer.availabilityStatus ||
