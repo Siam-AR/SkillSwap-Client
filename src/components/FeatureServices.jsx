@@ -54,7 +54,7 @@ export default function FeatureServices({ tasks }) {
               href={`/task/${task._id}`} 
               className="group block"
             >
-              <div className="flex h-full flex-col overflow-hidden rounded-xl border border-teal-100 bg-white/90 backdrop-blur-sm shadow-sm transition-all lg:hover:border-teal-300 lg:hover:shadow-md">
+              <div className="flex h-full flex-col overflow-hidden rounded-xl border border-teal-100 bg-white/90 backdrop-blur-sm shadow-sm transition-all duration-300 ease-out hover:-translate-y-1.5 hover:shadow-xl hover:shadow-teal-900/5 hover:border-teal-500/40">
                 {/* Image Box */}
                 <div className="relative aspect-video w-full bg-slate-100 overflow-hidden">
                   <img
