@@ -111,7 +111,7 @@ export default function TopFreelancers({ freelancers }) {
                         {freelancer.name}
                       </h3>
                       <p className="text-xs text-slate-500 font-medium mt-0.5 line-clamp-1 max-w-[90%]">
-                        {freelancer.designation || freelancer.title || freelancer.headline || freelancer.professionalTitle || "Full Stack Developer"}
+                        {freelancer.designation || freelancer.title || freelancer.headline || freelancer.professionalTitle || "No designation added"}
                       </p>
 
                       {/* 3. Compact Metrics Strip */}

@@ -116,7 +116,7 @@ export default async function BrowseFreelancersPage({ searchParams }) {
                             {freelancer.name}
                           </h3>
                           <p className="text-xs sm:text-sm text-slate-500 font-medium truncate">
-                            {freelancer.designation || "\u00A0"}
+                            {freelancer.designation || "No designation added"}
                           </p>
                         </div>
                       </div>
