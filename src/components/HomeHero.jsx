@@ -33,26 +33,34 @@ export default function HomeHero() {
             Find and hire expert freelancers to bring your projects to life. Explore a variety of services and skills.
           </p>
 
-          <div className="w-full max-w-2xl bg-white rounded-2xl md:rounded-full p-2 shadow-xl flex flex-col md:flex-row items-center gap-2">
-            <div className="flex w-full flex-1 items-center px-4 min-h-[44px]">
-              <FiSearch className="h-5 w-5 text-slate-400 shrink-0" />
+          <div className="w-full max-w-2xl bg-white rounded-full p-1.5 md:p-2 shadow-xl flex flex-row items-center gap-1 md:gap-2 border border-slate-200 md:border-none">
+            
+            {/* Search Input */}
+            <div className="flex flex-1 items-center px-3 md:px-4 min-h-[44px]">
+              <FiSearch className="h-4 w-4 md:h-5 md:w-5 text-slate-400 shrink-0" />
               <input 
                 type="text" 
                 placeholder="Job title or keywords" 
-                className="flex-1 w-full bg-transparent px-3 py-2 text-sm text-slate-800 placeholder-slate-400 focus:outline-none min-h-[44px]"
+                className="flex-1 w-full bg-transparent px-2 md:px-3 py-2 text-sm text-slate-800 placeholder-slate-400 focus:outline-none min-h-[44px] min-w-0"
               />
             </div>
+            
             <div className="hidden md:block w-px h-8 bg-slate-200 shrink-0"></div>
-            <div className="flex w-full md:w-auto items-center px-2 min-h-[44px]">
-              <select className="w-full md:w-auto bg-transparent px-3 py-2 text-sm text-slate-600 focus:outline-none cursor-pointer border-none appearance-none pr-8 min-h-[44px]">
-                <option value="">All Categories</option>
+            
+            {/* Category Dropdown */}
+            <div className="flex items-center px-1 md:px-2 min-h-[44px]">
+              <select className="bg-transparent px-1 md:px-3 py-2 text-xs md:text-sm text-slate-600 focus:outline-none cursor-pointer border-none appearance-none md:pr-8 min-h-[44px] max-w-[80px] md:max-w-none text-ellipsis overflow-hidden whitespace-nowrap shrink-0">
+                <option value="">Categories</option>
                 {categories.map((c) => (
                   <option key={c.name} value={c.name}>{c.name}</option>
                 ))}
               </select>
             </div>
-            <button className="w-full md:w-auto px-7 py-3 rounded-xl md:rounded-full bg-[#009689] hover:bg-[#238B81] text-white font-semibold text-sm transition-all shrink-0 min-h-[44px]">
-              Search
+            
+            {/* Search Action */}
+            <button className="flex items-center justify-center w-11 h-11 md:w-auto md:h-auto md:px-7 md:py-3 rounded-full bg-[#009689] hover:bg-[#238B81] text-white font-semibold transition-all shrink-0 md:min-h-[44px]">
+              <FiSearch className="h-4 w-4 md:hidden" />
+              <span className="hidden md:inline text-sm">Search</span>
             </button>
           </div>
         </div>
