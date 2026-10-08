@@ -25,7 +25,7 @@ export default function RootLayout({ children }) {
     <html lang="en" suppressHydrationWarning>
       <body className={`${inter.className} min-h-screen flex flex-col antialiased landing-bg overflow-x-hidden`} suppressHydrationWarning>
         <SmoothScrollProvider>
-          <main className="flex-grow overflow-x-hidden">
+          <main className="flex-grow">
             {children}
           </main>
           <ToastContainer position="bottom-right" />

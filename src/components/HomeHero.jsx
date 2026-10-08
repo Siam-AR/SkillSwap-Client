@@ -13,7 +13,7 @@ const categories = [
 
 export default function HomeHero() {
   return (
-    <section className="relative flex w-full flex-col items-center justify-end overflow-hidden -mt-[80px] min-h-[100vh] lg:min-h-[800px] pb-12 lg:pb-16 pt-32">
+    <section className="relative flex w-full flex-col items-center justify-end overflow-hidden -mt-[80px] min-h-[100dvh] lg:min-h-screen pb-12 lg:pb-16 pt-32">
       <img 
         src="/images/hero-image-1.jpg" 
         alt="Hero Background" 
