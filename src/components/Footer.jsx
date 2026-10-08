@@ -33,7 +33,7 @@ export default function Footer() {
             </p>
 
             {/* Social Links */}
-            <div className="mt-8 flex flex-wrap gap-3">
+            {/* <div className="mt-8 flex flex-wrap gap-3">
               <a href="#" aria-label="X" className="w-11 h-11 rounded-xl bg-slate-900/80 border border-slate-800 text-slate-400 lg:hover:text-white lg:hover:bg-[#009689] lg:hover:border-[#009689] flex items-center justify-center transition-all duration-300 shadow-sm">
                 <FaXTwitter className="h-4 w-4" />
               </a>
@@ -46,7 +46,7 @@ export default function Footer() {
               <a href="#" aria-label="GitHub" className="w-11 h-11 rounded-xl bg-slate-900/80 border border-slate-800 text-slate-400 lg:hover:text-white lg:hover:bg-[#009689] lg:hover:border-[#009689] flex items-center justify-center transition-all duration-300 shadow-sm">
                 <FaGithub className="h-4 w-4" />
               </a>
-            </div>
+            </div> */}
           </div>
 
           {/* Column 2: Quick Navigation */}
