@@ -118,17 +118,17 @@ const Navbar = () => {
         ? "border-slate-700 bg-slate-900 text-slate-100"
         : "border-slate-200 bg-white text-slate-900",
       link: (active) => [
-        "relative rounded-full px-3 py-2 min-h-[44px] flex items-center text-sm font-medium transition-colors duration-200",
+        "relative rounded-full px-3 py-2 2xl:px-4 2xl:py-2.5 min-h-[44px] flex items-center text-sm 2xl:text-base font-medium transition-colors duration-200",
         useTransparentTop
           ? "text-white/90 hover:text-white"
           : "text-white/90 hover:text-white"
       ].join(" "),
       button: useTransparentTop
-        ? "bg-transparent text-white border-white hover:bg-white/10 min-h-[44px]"
-        : "bg-transparent text-white border-white hover:bg-white/10 min-h-[44px]",
+        ? "bg-transparent text-white border-white hover:bg-white/10 min-h-[44px] 2xl:text-base 2xl:px-6 2xl:py-2.5"
+        : "bg-transparent text-white border-white hover:bg-white/10 min-h-[44px] 2xl:text-base 2xl:px-6 2xl:py-2.5",
       primaryButton: useTransparentTop
-        ? "border-0 bg-[#009689] text-white hover:bg-[#008f80] min-h-[44px]"
-        : "border-0 bg-white text-[#009689] shadow-sm hover:bg-slate-100 min-h-[44px]",
+        ? "border-0 bg-[#009689] text-white hover:bg-[#008f80] min-h-[44px] 2xl:text-base 2xl:px-6 2xl:py-2.5"
+        : "border-0 bg-white text-[#009689] shadow-sm hover:bg-slate-100 min-h-[44px] 2xl:text-base 2xl:px-6 2xl:py-2.5",
       mobileItem: (active) => [
         "rounded-2xl px-4 py-3 min-h-[44px] flex items-center text-sm font-medium transition-colors",
         active
@@ -154,10 +154,10 @@ const Navbar = () => {
 
   return (
     <header
-      className={`sticky top-0 z-50 transition-colors duration-300 ${themeClasses.shell}`}
+      className={`sticky top-0 z-50 transition-colors duration-300 w-full flex justify-center ${themeClasses.shell}`}
       suppressHydrationWarning
     >
-      <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-4 sm:px-6 lg:px-8">
+      <div className="mx-auto flex w-full max-w-7xl 2xl:max-w-[1500px] items-center justify-between gap-4 px-4 py-4 sm:px-6 lg:px-12">
         <Link href="/" className="group flex items-center gap-3">
           <div className="flex h-12 w-12 items-center justify-center transition-transform duration-200 group-hover:-translate-y-0.5">
             <Image src="/logo.svg" alt="Taskify Logo" width={48} height={48} className="h-full w-full object-contain" />
