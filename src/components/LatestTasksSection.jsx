@@ -42,7 +42,7 @@ export default function LatestTasksSection({ tasks }) {
 
   return (
     <section className="w-full py-12 md:py-16">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8 space-y-8">
+      <div className="w-full max-w-[1500px] 2xl:max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-12 2xl:px-16 space-y-8">
         
         {/* Header */}
         <div className="flex flex-col items-center text-center gap-3">
@@ -63,7 +63,7 @@ export default function LatestTasksSection({ tasks }) {
           initial="hidden"
           whileInView="show"
           viewport={{ once: true, margin: "-50px" }}
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4 gap-6"
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8 w-full"
         >
         {displayTasks.map((task) => {
           const timeAgo = formatTimeAgo(task.createdAt);
@@ -74,17 +74,17 @@ export default function LatestTasksSection({ tasks }) {
 
           return (
             <motion.div key={task._id} variants={cardVariants} className="h-full">
-              <Link href={`/task/${task._id || task.id}`} className="block h-full group outline-none">
-                <div className="group relative bg-white rounded-3xl border border-slate-200/90 p-6 flex flex-col justify-between shadow-sm lg:hover:shadow-xl lg:hover:shadow-teal-900/5 lg:hover:-translate-y-1 lg:hover:border-teal-300/80 transition-all duration-300 h-full">
+              <Link href={`/task/${task._id || task.id}`} className="block h-full outline-none">
+                <div className="bg-white rounded-2xl border border-slate-200/80 p-6 shadow-sm lg:hover:shadow-md lg:hover:border-teal-500/40 transition-all duration-300 flex flex-col justify-between group h-full">
                   
                   {/* 1. Header: Category Pill & Elevated Budget Badge */}
-                  <div className="flex items-center justify-between gap-3 pb-4">
-                    <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-xl text-xs font-bold uppercase tracking-wider bg-teal-50 text-[#009689] border border-teal-100">
+                  <div className="flex items-center justify-between gap-2 pb-4">
+                    <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-teal-50 text-[#009689] border border-teal-100">
                       <Sparkles className="w-3 h-3 text-[#009689]"/>
                       {categoryName}
                     </span>
 
-                    <div className="inline-flex items-center gap-1 px-3 py-1 rounded-xl bg-slate-900 text-white text-xs font-bold shadow-sm">
+                    <div className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-slate-900 text-white text-xs font-bold">
                       <span>${budgetAmount}</span>
                       <span className="text-[10px] text-slate-400 font-medium">/{budgetType}</span>
                     </div>
@@ -92,11 +92,11 @@ export default function LatestTasksSection({ tasks }) {
 
                   {/* 2. Task Title & Description Snippet */}
                   <div className="space-y-2 py-1 flex-1">
-                    <h3 className="text-lg font-extrabold text-slate-900 lg:group-hover:text-[#009689] transition-colors line-clamp-1">
+                    <h3 className="text-lg font-semibold text-slate-900 leading-snug min-h-[3rem] lg:group-hover:text-[#009689] transition-colors line-clamp-2">
                       {task.title}
                     </h3>
                     
-                    <p className="text-xs sm:text-sm text-slate-500 line-clamp-2 leading-relaxed min-h-[38px]">
+                    <p className="text-sm text-slate-500 line-clamp-2 leading-relaxed min-h-[2.5rem]">
                       {task.description && task.description.trim().length > 0 
                         ? task.description 
                         : "No description provided for this task. Review scope requirements before submitting a proposal."}
@@ -104,7 +104,7 @@ export default function LatestTasksSection({ tasks }) {
                   </div>
 
                   {/* 3. Structured Metadata Strip */}
-                  <div className="flex items-center flex-wrap gap-y-2 gap-x-4 py-3 my-2 border-y border-slate-100 text-xs text-slate-500 font-medium">
+                  <div className="flex items-center gap-4 text-xs text-slate-400 font-medium py-2 border-t border-slate-100 mt-4">
                     <div className="flex items-center gap-1.5">
                       <Clock className="w-3.5 h-3.5 text-slate-400"/>
                       <span>{timeAgo}</span>
@@ -118,7 +118,7 @@ export default function LatestTasksSection({ tasks }) {
 
                   {/* 4. Action Button Footer */}
                   <div className="pt-2">
-                    <div className="w-full inline-flex items-center justify-center gap-2 py-2.5 min-h-[44px] rounded-xl bg-slate-50 lg:group-hover:bg-[#009689] text-slate-700 lg:group-hover:text-white border border-slate-200/80 lg:group-hover:border-[#009689] text-xs sm:text-sm font-bold transition-all duration-200 group/btn shadow-sm">
+                    <div className="w-full inline-flex items-center justify-center gap-1.5 py-2.5 px-4 min-h-[44px] rounded-xl border border-slate-200 text-slate-700 text-sm font-semibold lg:group-hover:bg-[#009689] lg:group-hover:text-white lg:group-hover:border-transparent transition-all duration-300 group/btn shadow-sm">
                       <span>Quick Apply</span>
                       <ArrowUpRight className="w-4 h-4 text-slate-400 lg:group-hover/btn:text-white lg:group-hover/btn:translate-x-0.5 lg:group-hover/btn:-translate-y-0.5 transition-all"/>
                     </div>
