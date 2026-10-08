@@ -75,7 +75,7 @@ export default function LatestTasksSection({ tasks }) {
           return (
             <motion.div key={task._id} variants={cardVariants} className="h-full">
               <Link href={`/task/${task._id || task.id}`} className="block h-full outline-none">
-                <div className="bg-white rounded-2xl border border-slate-200/80 p-6 shadow-sm lg:hover:shadow-md lg:hover:border-teal-500/40 transition-all duration-300 flex flex-col justify-between group h-full">
+                <div className="bg-white rounded-2xl border border-slate-200/80 p-6 shadow-sm transition-all duration-300 ease-out hover:-translate-y-1.5 hover:shadow-xl hover:shadow-teal-900/5 hover:border-teal-500/40 cursor-pointer flex flex-col justify-between group h-full">
                   
                   {/* 1. Header: Category Pill & Elevated Budget Badge */}
                   <div className="flex items-center justify-between gap-2 pb-4">
@@ -92,7 +92,7 @@ export default function LatestTasksSection({ tasks }) {
 
                   {/* 2. Task Title & Description Snippet */}
                   <div className="space-y-2 py-1 flex-1">
-                    <h3 className="text-lg font-semibold text-slate-900 leading-snug min-h-[3rem] lg:group-hover:text-[#009689] transition-colors line-clamp-2">
+                    <h3 className="text-lg font-semibold text-slate-900 leading-snug min-h-[3rem] group-hover:text-[#009689] transition-colors line-clamp-2">
                       {task.title}
                     </h3>
                     
