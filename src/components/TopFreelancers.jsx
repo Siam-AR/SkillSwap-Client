@@ -35,7 +35,7 @@ export default function TopFreelancers({ freelancers }) {
         initial="hidden"
         whileInView="show"
         viewport={{ once: true, margin: "-50px" }}
-        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 lg:gap-8 w-full mt-10"
+        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6 2xl:gap-8 w-full mt-10"
       >
         {freelancers.slice(0, 4).map((freelancer) => {
           const rawStatus = (
@@ -60,7 +60,7 @@ export default function TopFreelancers({ freelancers }) {
           return (
             <motion.div key={freelancer._id || freelancer.email} variants={cardVariants} className="w-full h-full">
               <Link href={`/freelancer/${freelancer._id || freelancer.email}`} className="block w-full h-full outline-none">
-                  <div className="group relative w-full bg-white rounded-3xl border border-slate-200/90 p-6 sm:p-7 flex flex-col justify-between h-full shadow-sm lg:hover:shadow-xl lg:hover:shadow-teal-900/5 lg:hover:-translate-y-1 lg:hover:border-teal-300/80 transition-all duration-300">
+                  <div className="group relative w-full bg-white rounded-3xl border border-slate-200/90 p-4 lg:p-4 xl:p-6 flex flex-col justify-between h-full shadow-sm lg:hover:shadow-xl lg:hover:shadow-teal-900/5 lg:hover:-translate-y-1 lg:hover:border-teal-300/80 transition-all duration-300">
                     
                     {/* 1. Header: Status & Rate */}
                     <div className="flex items-center justify-between gap-2 mb-4">
@@ -89,7 +89,7 @@ export default function TopFreelancers({ freelancers }) {
                     {/* 2. Freelancer Identity (Avatar, Name, Role) */}
                     <div className="flex flex-col items-center text-center">
                       <div className="relative mb-3">
-                        <div className="w-20 h-20 rounded-full p-1 border-2 border-[#009689] bg-white shadow-xs overflow-hidden flex items-center justify-center">
+                        <div className="w-14 h-14 lg:w-12 lg:h-12 xl:w-16 xl:h-16 rounded-full p-1 border-2 border-[#009689] bg-white shadow-xs overflow-hidden flex items-center justify-center">
                           {freelancer.image || freelancer.avatar ? (
                             <img
                               src={freelancer.image || freelancer.avatar}
@@ -115,17 +115,19 @@ export default function TopFreelancers({ freelancers }) {
                       </p>
 
                       {/* 3. Compact Metrics Strip */}
-                      <div className="flex items-center justify-center gap-4 mt-4 w-full py-2.5 px-4 rounded-2xl bg-slate-50 border border-slate-100/80 text-xs sm:text-sm">
-                        <div className="flex items-center gap-1 font-bold text-slate-800">
-                          <Star className="w-4 h-4 fill-amber-400 text-amber-400"/>
+                      <div className="flex items-center justify-center gap-1.5 lg:gap-1.5 xl:gap-2.5 mt-4 w-full py-2 px-2 rounded-xl bg-slate-50 border border-slate-100/80 text-xs xl:text-sm whitespace-nowrap">
+                        <span className="flex items-center gap-1 font-bold text-slate-800 shrink-0">
+                          <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-400 shrink-0" />
                           <span>{ratingValue}</span>
                           <span className="text-slate-400 font-normal">({reviewsCount})</span>
-                        </div>
-                        <span className="w-1.5 h-1.5 rounded-full bg-slate-300" />
-                        <div className="flex items-center gap-1.5 font-semibold text-slate-600">
-                          <Briefcase className="w-4 h-4 text-slate-400"/>
+                        </span>
+                        
+                        <span className="text-slate-300 shrink-0 text-[10px]">•</span>
+
+                        <span className="flex items-center gap-1.5 font-semibold text-slate-600 shrink-0 whitespace-nowrap">
+                          <Briefcase className="w-3.5 h-3.5 text-slate-400 shrink-0" />
                           <span>{ordersText}</span>
-                        </div>
+                        </span>
                       </div>
                     </div>
 
@@ -134,13 +136,13 @@ export default function TopFreelancers({ freelancers }) {
                       {skills.slice(0, 2).map((skill, idx) => (
                         <span
                           key={idx}
-                          className="text-[11px] font-semibold text-slate-600 bg-slate-50 border border-slate-200/80 px-2.5 py-1 rounded-xl whitespace-nowrap truncate max-w-[120px]"
+                          className="text-[10px] xl:text-xs font-semibold text-slate-600 bg-slate-50 border border-slate-200/80 px-2 py-0.5 rounded-xl whitespace-nowrap truncate max-w-[120px]"
                         >
                           {skill}
                         </span>
                       ))}
                       {skills.length > 2 && (
-                        <span className="text-[10px] font-bold text-slate-400 bg-slate-100/80 border border-slate-200/60 px-2 py-1 rounded-xl shrink-0 whitespace-nowrap">
+                        <span className="text-[10px] xl:text-[11px] font-bold text-slate-400 bg-slate-100/80 border border-slate-200/60 px-2 py-0.5 rounded-xl shrink-0 whitespace-nowrap">
                           +{skills.length - 2}
                         </span>
                       )}
