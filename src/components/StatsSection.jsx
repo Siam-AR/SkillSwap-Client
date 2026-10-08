@@ -78,7 +78,7 @@ export default function StatsSection({ stats }) {
 
   return (
     <section className="w-full relative z-20 py-6 md:py-16 bg-white border-y border-slate-100 shadow-[0_8px_30px_rgba(0,150,137,0.04)]">
-      <div className="w-full max-w-6xl mx-auto px-4 md:px-12 lg:px-16">
+      <div className="w-full max-w-[1500px] 2xl:max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-12 2xl:px-16">
         <motion.div
           variants={containerVariants}
           initial="hidden"
@@ -86,11 +86,11 @@ export default function StatsSection({ stats }) {
           viewport={{ once: true, margin: "-50px" }}
           className="grid grid-cols-3 gap-2 sm:gap-4 md:gap-6 items-center"
         >
-          {items.map((item) => (
+          {items.map((item, index) => (
             <motion.div
               key={item.label}
               variants={itemVariants}
-              className="flex items-center justify-center w-full"
+              className={`flex items-center w-full ${index === 0 ? "justify-start" : index === 2 ? "justify-end" : "justify-center"}`}
             >
               {/* Responsive content block: stacked on mobile, row on desktop */}
               <div className="flex flex-col md:flex-row items-center md:items-center gap-1.5 md:gap-5 p-1 md:p-2 rounded-2xl lg:hover:bg-slate-50 transition-colors duration-300 w-full md:w-[260px]">
