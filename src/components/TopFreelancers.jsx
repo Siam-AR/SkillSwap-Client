@@ -60,7 +60,7 @@ export default function TopFreelancers({ freelancers }) {
           return (
             <motion.div key={freelancer._id || freelancer.email} variants={cardVariants} className="w-full h-full">
               <Link href={`/freelancer/${freelancer._id || freelancer.email}`} className="block w-full h-full outline-none">
-                <div className="group relative w-full bg-white rounded-3xl border border-slate-200/90 p-6 sm:p-7 flex flex-col justify-between h-full shadow-sm hover:shadow-xl hover:shadow-teal-900/5 hover:-translate-y-1 hover:border-teal-300/80 transition-all duration-300">
+                  <div className="group relative w-full bg-white rounded-3xl border border-slate-200/90 p-6 sm:p-7 flex flex-col justify-between h-full shadow-sm lg:hover:shadow-xl lg:hover:shadow-teal-900/5 lg:hover:-translate-y-1 lg:hover:border-teal-300/80 transition-all duration-300">
                     
                     {/* 1. Header: Status & Rate */}
                     <div className="flex items-center justify-between gap-2 mb-4">
@@ -94,7 +94,7 @@ export default function TopFreelancers({ freelancers }) {
                             <img
                               src={freelancer.image || freelancer.avatar}
                               alt={freelancer.name}
-                              className="w-full h-full rounded-full object-cover group-hover:scale-105 transition-transform duration-200"
+                              className="w-full h-full rounded-full object-cover lg:group-hover:scale-105 transition-transform duration-200"
                             />
                           ) : (
                             <div className="w-full h-full rounded-full bg-gradient-to-tr from-[#009689] to-[#2CA99F] flex items-center justify-center text-white font-extrabold text-2xl">
@@ -107,7 +107,7 @@ export default function TopFreelancers({ freelancers }) {
                         </div>
                       </div>
 
-                      <h3 className="text-lg sm:text-xl font-extrabold text-slate-900 group-hover:text-[#009689] transition-colors line-clamp-1">
+                      <h3 className="text-lg sm:text-xl font-extrabold text-slate-900 lg:group-hover:text-[#009689] transition-colors line-clamp-1">
                         {freelancer.name}
                       </h3>
                       <p className="text-xs text-slate-500 font-medium mt-0.5 line-clamp-1 max-w-[90%]">
@@ -148,9 +148,9 @@ export default function TopFreelancers({ freelancers }) {
 
                     {/* 5. Compact CTA Button */}
                     <div className="pt-2 border-t border-slate-100 mt-auto">
-                      <div className="w-full inline-flex items-center justify-center gap-2 py-3 rounded-2xl bg-teal-50/70 group-hover:bg-[#009689] text-[#009689] group-hover:text-white border border-teal-200/50 group-hover:border-[#009689] text-sm font-bold transition-all duration-200 shadow-sm group/btn">
+                      <div className="w-full inline-flex items-center justify-center gap-2 py-3 min-h-[44px] rounded-2xl bg-teal-50/70 lg:group-hover:bg-[#009689] text-[#009689] lg:group-hover:text-white border border-teal-200/50 lg:group-hover:border-[#009689] text-sm font-bold transition-all duration-200 shadow-sm group/btn">
                         <span>View Profile</span>
-                        <ArrowUpRight className="w-4 h-4 group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5 transition-transform"/>
+                        <ArrowUpRight className="w-4 h-4 lg:group-hover/btn:translate-x-0.5 lg:group-hover/btn:-translate-y-0.5 transition-transform"/>
                       </div>
                     </div>
 
@@ -165,10 +165,10 @@ export default function TopFreelancers({ freelancers }) {
       <div className="pt-4 flex justify-center">
         <Link 
           href="/browse-freelancers"
-          className="flex items-center gap-2 text-[#009689] hover:text-[#238B81] font-semibold text-base transition-colors group"
+          className="flex items-center gap-2 text-[#009689] lg:hover:text-[#238B81] font-semibold text-base transition-colors group min-h-[44px] px-4"
         >
           Browse all freelancers
-          <ArrowRight className="w-5 h-5 transition-transform group-hover:translate-x-1" />
+          <ArrowRight className="w-5 h-5 transition-transform lg:group-hover:translate-x-1" />
         </Link>
       </div>
     </section>

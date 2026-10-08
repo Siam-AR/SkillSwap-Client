@@ -41,29 +41,29 @@ export default function LatestTasksSection({ tasks }) {
   };
 
   return (
-    <section className="w-full">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
+    <section className="w-full py-12 md:py-16">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8 space-y-8">
         
         {/* Header */}
         <div className="flex flex-col items-center text-center gap-3">
           <p className="text-sm font-bold uppercase tracking-wider text-[#009689]">
             Latest Tasks
           </p>
-          <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-slate-900 tracking-tight">
             Explore Recent Opportunities
           </h2>
-          <p className="max-w-2xl text-slate-500 text-lg">
+          <p className="max-w-2xl text-slate-500 text-base md:text-lg">
             Find the perfect project that matches your skills. These freshly posted tasks are waiting for your proposals.
           </p>
         </div>
 
-        {/* Grid - 2 Column Wide Format */}
+        {/* Grid */}
         <motion.div 
           variants={containerVariants}
           initial="hidden"
           whileInView="show"
           viewport={{ once: true, margin: "-50px" }}
-          className="grid grid-cols-1 lg:grid-cols-2 gap-5"
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4 gap-6"
         >
         {displayTasks.map((task) => {
           const timeAgo = formatTimeAgo(task.createdAt);
@@ -75,7 +75,7 @@ export default function LatestTasksSection({ tasks }) {
           return (
             <motion.div key={task._id} variants={cardVariants} className="h-full">
               <Link href={`/task/${task._id || task.id}`} className="block h-full group outline-none">
-                <div className="group relative bg-white rounded-3xl border border-slate-200/90 p-6 flex flex-col justify-between shadow-sm hover:shadow-xl hover:shadow-teal-900/5 hover:-translate-y-1 hover:border-teal-300/80 transition-all duration-300 h-full">
+                <div className="group relative bg-white rounded-3xl border border-slate-200/90 p-6 flex flex-col justify-between shadow-sm lg:hover:shadow-xl lg:hover:shadow-teal-900/5 lg:hover:-translate-y-1 lg:hover:border-teal-300/80 transition-all duration-300 h-full">
                   
                   {/* 1. Header: Category Pill & Elevated Budget Badge */}
                   <div className="flex items-center justify-between gap-3 pb-4">
@@ -92,7 +92,7 @@ export default function LatestTasksSection({ tasks }) {
 
                   {/* 2. Task Title & Description Snippet */}
                   <div className="space-y-2 py-1 flex-1">
-                    <h3 className="text-lg font-extrabold text-slate-900 group-hover:text-[#009689] transition-colors line-clamp-1">
+                    <h3 className="text-lg font-extrabold text-slate-900 lg:group-hover:text-[#009689] transition-colors line-clamp-1">
                       {task.title}
                     </h3>
                     
@@ -112,15 +112,15 @@ export default function LatestTasksSection({ tasks }) {
                     <span className="w-1 h-1 rounded-full bg-slate-300" />
                     <div className="flex items-center gap-1.5">
                       <Send className="w-3.5 h-3.5 text-slate-400"/>
-                      <span>{proposalsCount} proposals</span>
+                      <span>{proposalsCount} props</span>
                     </div>
                   </div>
 
                   {/* 4. Action Button Footer */}
                   <div className="pt-2">
-                    <div className="w-full inline-flex items-center justify-center gap-2 py-2.5 rounded-xl bg-slate-50 group-hover:bg-[#009689] text-slate-700 group-hover:text-white border border-slate-200/80 group-hover:border-[#009689] text-xs sm:text-sm font-bold transition-all duration-200 group/btn shadow-sm">
+                    <div className="w-full inline-flex items-center justify-center gap-2 py-2.5 min-h-[44px] rounded-xl bg-slate-50 lg:group-hover:bg-[#009689] text-slate-700 lg:group-hover:text-white border border-slate-200/80 lg:group-hover:border-[#009689] text-xs sm:text-sm font-bold transition-all duration-200 group/btn shadow-sm">
                       <span>Quick Apply</span>
-                      <ArrowUpRight className="w-4 h-4 text-slate-400 group-hover/btn:text-white group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5 transition-all"/>
+                      <ArrowUpRight className="w-4 h-4 text-slate-400 lg:group-hover/btn:text-white lg:group-hover/btn:translate-x-0.5 lg:group-hover/btn:-translate-y-0.5 transition-all"/>
                     </div>
                   </div>
 
@@ -135,10 +135,10 @@ export default function LatestTasksSection({ tasks }) {
         <div className="pt-4 flex justify-center">
           <Link 
             href="/browse-tasks"
-            className="flex items-center gap-2 text-[#009689] hover:text-[#238B81] font-semibold text-base transition-colors group"
+            className="flex items-center gap-2 text-[#009689] lg:hover:text-[#238B81] font-semibold text-base transition-colors group min-h-[44px] px-4"
           >
             View All Tasks
-            <ArrowRight className="w-5 h-5 transition-transform group-hover:translate-x-1" />
+            <ArrowRight className="w-5 h-5 transition-transform lg:group-hover:translate-x-1" />
           </Link>
         </div>
 

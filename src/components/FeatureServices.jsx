@@ -20,24 +20,24 @@ export default function FeatureServices({ tasks }) {
   });
 
   return (
-    <section className="mt-20">
+    <section className="mt-12 md:mt-20 w-full max-w-7xl mx-auto px-4 sm:px-6 md:px-8">
       <div className="text-center">
-        <h2 className="text-4xl font-bold text-slate-900">Feature  <span className="text-[#009689]">Services</span></h2>
-        <p className="mt-3 text-slate-600">
+        <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-slate-900">Feature  <span className="text-[#009689]">Services</span></h2>
+        <p className="mt-3 text-slate-600 text-sm sm:text-base">
           Discover our featured services designed to elevate your experience
         </p>
       </div>
 
       {/* Tabs */}
-      <div className="mt-8 flex flex-wrap items-center justify-center gap-6 border-b border-slate-200 pb-4">
+      <div className="mt-8 flex flex-row flex-nowrap md:flex-wrap items-center justify-start md:justify-center overflow-x-auto md:overflow-visible gap-4 md:gap-6 border-b border-slate-200 pb-0">
         {TABS.map((tab) => (
           <button
             key={tab}
             onClick={() => setActiveTab(tab)}
-            className={`text-sm font-semibold transition-all ${
+            className={`text-sm font-semibold whitespace-nowrap transition-all min-h-[44px] flex items-center justify-center px-2 ${
               activeTab === tab
-                ? "border-b-2 border-[#009689] text-slate-900 pb-[18px] -mb-[18px]"
-                : "text-slate-500 hover:text-slate-900"
+                ? "border-b-2 border-[#009689] text-slate-900"
+                : "text-slate-500 lg:hover:text-slate-900 border-b-2 border-transparent"
             }`}
           >
             {tab}
@@ -46,7 +46,7 @@ export default function FeatureServices({ tasks }) {
       </div>
 
       {/* Grid */}
-      <div className="mt-10 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+      <div className="mt-8 md:mt-10 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {filteredTasks.length > 0 ? (
           filteredTasks.slice(0, 6).map((task, i) => (
             <Link 
@@ -54,13 +54,13 @@ export default function FeatureServices({ tasks }) {
               href={`/task/${task._id}`} 
               className="group block"
             >
-              <div className="flex h-full flex-col overflow-hidden rounded-xl border border-teal-100 bg-white/90 backdrop-blur-sm shadow-sm transition-all hover:border-teal-300 hover:shadow-md">
+              <div className="flex h-full flex-col overflow-hidden rounded-xl border border-teal-100 bg-white/90 backdrop-blur-sm shadow-sm transition-all lg:hover:border-teal-300 lg:hover:shadow-md">
                 {/* Image Box */}
-                <div className="relative h-48 w-full bg-slate-100">
+                <div className="relative aspect-video w-full bg-slate-100">
                   <img
                     src={task.imageUrl || "https://placehold.co/600x400/e2e8f0/64748b?text=Service"}
                     alt={task.title}
-                    className="h-full w-full object-cover"
+                    className="absolute inset-0 h-full w-full object-cover"
                   />
                 </div>
 
@@ -81,7 +81,7 @@ export default function FeatureServices({ tasks }) {
                     </div>
                   </div>
 
-                  <h3 className="mt-3 line-clamp-2 text-base font-bold text-slate-900 transition group-hover:text-[#009689]">
+                  <h3 className="mt-3 line-clamp-2 text-base md:text-lg font-bold text-slate-900 transition lg:group-hover:text-[#009689]">
                     {task.title}
                   </h3>
 
@@ -94,12 +94,12 @@ export default function FeatureServices({ tasks }) {
                           className="h-full w-full object-cover"
                         />
                       </div>
-                      <span className="text-xs font-medium text-slate-700">
+                      <span className="text-xs md:text-sm font-medium text-slate-700 line-clamp-1">
                         {task.client?.name || "Client"}
                       </span>
                     </div>
-                    <span className="text-xs text-slate-500">
-                      From <strong className="text-sm font-bold text-slate-900">${task.budget}</strong>
+                    <span className="text-xs text-slate-500 whitespace-nowrap pl-2">
+                      From <strong className="text-sm md:text-base font-bold text-slate-900">${task.budget}</strong>
                     </span>
                   </div>
                 </div>

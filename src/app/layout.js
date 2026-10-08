@@ -23,9 +23,9 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`${inter.className} min-h-screen flex flex-col antialiased landing-bg`} suppressHydrationWarning>
+      <body className={`${inter.className} min-h-screen flex flex-col antialiased landing-bg overflow-x-hidden`} suppressHydrationWarning>
         <SmoothScrollProvider>
-          <main className="flex-grow">
+          <main className="flex-grow overflow-x-hidden">
             {children}
           </main>
           <ToastContainer position="bottom-right" />

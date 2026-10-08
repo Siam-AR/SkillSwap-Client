@@ -70,7 +70,7 @@ export default function HowItWorks() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-50px" }}
               transition={{ duration: 0.5, delay: idx * 0.15 }}
-              className={`relative overflow-hidden p-8 lg:p-10 transition-all duration-300 hover:shadow-[0_20px_50px_rgba(0,150,137,0.12)]
+              className={`relative overflow-hidden p-8 lg:p-10 transition-all duration-300 lg:hover:shadow-[0_20px_50px_rgba(0,150,137,0.12)]
                 ${step.cornerDecor === "top-left" ? "rounded-3xl rounded-br-[42px] bg-gradient-to-br from-white/95 via-[#F0FDF9] to-[#E6F4F1] border border-teal-100/70" : ""}
                 ${step.cornerDecor === "bottom-right" ? "rounded-3xl rounded-tl-[42px] bg-gradient-to-br from-[#E6F4F1] via-[#F0FDF9] to-white/95 border border-teal-100/70" : ""}
                 ${step.cornerDecor === "card2" ? "rounded-3xl bg-gradient-to-tr from-teal-50/70 via-emerald-50/40 to-teal-100/50 border border-teal-200/70 shadow-[0_15px_40px_rgba(0,0,0,0.03)]" : ""}

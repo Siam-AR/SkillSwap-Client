@@ -93,7 +93,7 @@ export default function StatsSection({ stats }) {
               className="flex items-center justify-center w-full"
             >
               {/* Fixed width content block prevents wide text from distorting column centers */}
-              <div className="flex items-center gap-4 sm:gap-5 p-2 rounded-2xl hover:bg-slate-50 transition-colors duration-300 w-[240px] sm:w-[260px]">
+              <div className="flex items-center gap-4 sm:gap-5 p-2 rounded-2xl lg:hover:bg-slate-50 transition-colors duration-300 w-[240px] sm:w-[260px]">
                 {/* ICON BOX */}
                 <div className="flex-shrink-0 h-12 w-12 rounded-xl flex items-center justify-center border border-teal-100 bg-teal-50 text-[#009689]">
                   <item.icon className="w-6 h-6" strokeWidth={2.25} />

@@ -79,14 +79,14 @@ export default function TaskCard({ task, actions }) {
   const imageSrc = task.imageUrl || task.image || defaultPlaceholder;
 
   return (
-    <div className="group bg-white rounded-2xl border border-slate-200/90 hover:border-[#009689] overflow-hidden shadow-sm hover:shadow-xl hover:shadow-teal-900/10 transition-all duration-300 flex flex-col justify-between hover:-translate-y-1 h-full">
+    <div className="group bg-white rounded-2xl border border-slate-200/90 lg:hover:border-[#009689] overflow-hidden shadow-sm lg:hover:shadow-xl lg:hover:shadow-teal-900/10 transition-all duration-300 flex flex-col justify-between lg:hover:-translate-y-1 h-full">
       
       {/* 1. Image Thumbnail Banner */}
       <div className="relative w-full h-44 sm:h-48 overflow-hidden bg-slate-100 shrink-0">
         <img
           src={imageSrc}
           alt={task.title}
-          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-out"
+          className="w-full h-full object-cover lg:group-hover:scale-105 transition-transform duration-500 ease-out"
           onError={(e) => {
             e.currentTarget.src = defaultPlaceholder;
           }}
@@ -111,7 +111,7 @@ export default function TaskCard({ task, actions }) {
       {/* 2. Card Content */}
       <div className="p-5 sm:p-6 flex flex-col flex-1">
         {/* Title */}
-        <h3 className="text-base sm:text-lg font-bold text-slate-900 group-hover:text-[#009689] transition-colors line-clamp-1 mb-2">
+        <h3 className="text-base sm:text-lg font-bold text-slate-900 lg:group-hover:text-[#009689] transition-colors line-clamp-1 mb-2">
           {task.title}
         </h3>
 
@@ -137,11 +137,11 @@ export default function TaskCard({ task, actions }) {
 
           <div className="flex flex-col gap-2">
             <Link 
-              className="inline-flex items-center justify-center gap-1.5 px-4 py-2 rounded-xl bg-teal-50 group-hover:bg-[#009689] text-[#009689] group-hover:text-white text-xs sm:text-sm font-semibold transition-all duration-300" 
+              className="inline-flex items-center justify-center gap-1.5 px-4 py-2 min-h-[44px] rounded-xl bg-teal-50 lg:group-hover:bg-[#009689] text-[#009689] lg:group-hover:text-white text-xs sm:text-sm font-semibold transition-all duration-300" 
               href={`/task/${taskId}`}
             >
               View Details
-              <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
+              <ArrowRight className="w-3.5 h-3.5 lg:group-hover:translate-x-1 transition-transform" />
             </Link>
             {actions ? <div className="flex items-center justify-center gap-2">{actions}</div> : null}
           </div>

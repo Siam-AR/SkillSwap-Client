@@ -90,7 +90,7 @@ export default function PaymentMethodsSection() {
                     <motion.div
                       animate={{ rotate: -360 }}
                       transition={spinTransition}
-                      className="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 rounded-full bg-white border border-teal-300/80 shadow-[0_6px_18px_rgba(0,150,137,0.12)] flex items-center justify-center p-2.5 sm:p-3 hover:scale-110 transition-transform duration-200"
+                      className="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 rounded-full bg-white border border-teal-300/80 shadow-[0_6px_18px_rgba(0,150,137,0.12)] flex items-center justify-center p-2.5 sm:p-3 lg:hover:scale-110 transition-transform duration-200"
                     >
                       <Image alt={item.name} className="w-auto h-auto max-w-full max-h-full object-contain" height={36} src={item.icon} width={36} />
                     </motion.div>

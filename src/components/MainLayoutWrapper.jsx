@@ -16,7 +16,7 @@ export default function MainLayoutWrapper({ children }) {
   }
 
   return (
-    <div className="flex min-h-screen flex-col w-full">
+    <div className="flex min-h-screen flex-col w-full overflow-x-hidden">
       <Navbar key="global-navbar" />
       <div className="flex-grow flex flex-col w-full">
         {children}

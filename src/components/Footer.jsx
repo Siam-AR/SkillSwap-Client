@@ -34,16 +34,16 @@ export default function Footer() {
 
             {/* Social Links */}
             <div className="mt-8 flex flex-wrap gap-3">
-              <a href="#" aria-label="X" className="w-10 h-10 rounded-xl bg-slate-900/80 border border-slate-800 text-slate-400 hover:text-white hover:bg-[#009689] hover:border-[#009689] flex items-center justify-center transition-all duration-300 shadow-sm">
+              <a href="#" aria-label="X" className="w-11 h-11 rounded-xl bg-slate-900/80 border border-slate-800 text-slate-400 lg:hover:text-white lg:hover:bg-[#009689] lg:hover:border-[#009689] flex items-center justify-center transition-all duration-300 shadow-sm">
                 <FaXTwitter className="h-4 w-4" />
               </a>
-              <a href="#" aria-label="Instagram" className="w-10 h-10 rounded-xl bg-slate-900/80 border border-slate-800 text-slate-400 hover:text-white hover:bg-[#009689] hover:border-[#009689] flex items-center justify-center transition-all duration-300 shadow-sm">
+              <a href="#" aria-label="Instagram" className="w-11 h-11 rounded-xl bg-slate-900/80 border border-slate-800 text-slate-400 lg:hover:text-white lg:hover:bg-[#009689] lg:hover:border-[#009689] flex items-center justify-center transition-all duration-300 shadow-sm">
                 <FaInstagram className="h-4 w-4" />
               </a>
-              <a href="#" aria-label="LinkedIn" className="w-10 h-10 rounded-xl bg-slate-900/80 border border-slate-800 text-slate-400 hover:text-white hover:bg-[#009689] hover:border-[#009689] flex items-center justify-center transition-all duration-300 shadow-sm">
+              <a href="#" aria-label="LinkedIn" className="w-11 h-11 rounded-xl bg-slate-900/80 border border-slate-800 text-slate-400 lg:hover:text-white lg:hover:bg-[#009689] lg:hover:border-[#009689] flex items-center justify-center transition-all duration-300 shadow-sm">
                 <FaLinkedinIn className="h-4 w-4" />
               </a>
-              <a href="#" aria-label="GitHub" className="w-10 h-10 rounded-xl bg-slate-900/80 border border-slate-800 text-slate-400 hover:text-white hover:bg-[#009689] hover:border-[#009689] flex items-center justify-center transition-all duration-300 shadow-sm">
+              <a href="#" aria-label="GitHub" className="w-11 h-11 rounded-xl bg-slate-900/80 border border-slate-800 text-slate-400 lg:hover:text-white lg:hover:bg-[#009689] lg:hover:border-[#009689] flex items-center justify-center transition-all duration-300 shadow-sm">
                 <FaGithub className="h-4 w-4" />
               </a>
             </div>
@@ -53,7 +53,7 @@ export default function Footer() {
           <div className="flex flex-col md:items-center">
             <div className="flex flex-col space-y-3">
               <h4 className="text-xs font-semibold text-slate-200 tracking-wider uppercase mb-1">Quick Links</h4>
-            <ul className="space-y-3">
+            <ul className="space-y-1">
               {[
                 { label: "Home", href: "/" },
                 { label: "Browse Tasks", href: "/browse-tasks" },
@@ -62,9 +62,9 @@ export default function Footer() {
                 { label: "FAQ", href: "/#faq" },
               ].map((link) => (
                 <li key={link.label}>
-                  <Link href={link.href} className="group flex items-center gap-1.5 text-sm text-slate-400 hover:text-teal-400 transition-colors">
-                    <ArrowRight className="w-3.5 h-3.5 opacity-0 -ml-5 group-hover:opacity-100 group-hover:ml-0 transition-all duration-300" />
-                    <span className="group-hover:translate-x-1 transition-transform duration-300">{link.label}</span>
+                  <Link href={link.href} className="group flex items-center gap-1.5 min-h-[44px] py-1 text-sm text-slate-400 lg:hover:text-teal-400 transition-colors">
+                    <ArrowRight className="w-3.5 h-3.5 opacity-0 -ml-5 lg:group-hover:opacity-100 lg:group-hover:ml-0 transition-all duration-300" />
+                    <span className="lg:group-hover:translate-x-1 transition-transform duration-300">{link.label}</span>
                   </Link>
                 </li>
               ))}
@@ -76,20 +76,20 @@ export default function Footer() {
           <div className="flex flex-col md:items-end">
             <div className="flex flex-col space-y-3">
               <h4 className="text-xs font-semibold text-slate-200 tracking-wider uppercase mb-1">Contact</h4>
-            <ul className="space-y-4">
+            <ul className="space-y-1">
               <li>
-                <a href="mailto:hello@taskify.com" className="group flex items-center gap-3 text-sm text-slate-400 hover:text-white transition-colors">
-                  <Mail className="w-4 h-4 text-slate-500 group-hover:text-[#2CA99F] transition-colors" />
+                <a href="mailto:hello@taskify.com" className="group flex items-center gap-3 min-h-[44px] py-1 text-sm text-slate-400 lg:hover:text-white transition-colors">
+                  <Mail className="w-4 h-4 text-slate-500 lg:group-hover:text-[#2CA99F] transition-colors" />
                   hello@taskify.com
                 </a>
               </li>
               <li>
-                <a href="https://wa.me/8801885373186" target="_blank" rel="noreferrer" className="group flex items-center gap-3 text-sm text-slate-400 hover:text-white transition-colors">
-                  <MessageSquare className="w-4 h-4 text-slate-500 group-hover:text-[#2CA99F] transition-colors" />
+                <a href="https://wa.me/8801885373186" target="_blank" rel="noreferrer" className="group flex items-center gap-3 min-h-[44px] py-1 text-sm text-slate-400 lg:hover:text-white transition-colors">
+                  <MessageSquare className="w-4 h-4 text-slate-500 lg:group-hover:text-[#2CA99F] transition-colors" />
                   +880 1885 373186
                 </a>
               </li>
-              <li className="flex items-center gap-3 text-sm text-slate-400">
+              <li className="flex items-center gap-3 text-sm text-slate-400 min-h-[44px] py-1">
                 <MapPin className="w-4 h-4 text-slate-500" />
                 Dhaka, Bangladesh
               </li>
@@ -103,18 +103,18 @@ export default function Footer() {
           <p className="text-xs text-slate-500 shrink-0">
             © {new Date().getFullYear()} Taskify. All rights reserved.
           </p>
-          <div className="flex items-center justify-center gap-6 flex-1">
-            <Link href="#" className="text-xs text-slate-500 hover:text-slate-300 transition-colors">Privacy Policy</Link>
-            <Link href="#" className="text-xs text-slate-500 hover:text-slate-300 transition-colors">Terms of Service</Link>
-            <Link href="#" className="text-xs text-slate-500 hover:text-slate-300 transition-colors">Trust & Safety</Link>
+          <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 flex-1">
+            <Link href="#" className="flex items-center text-xs text-slate-500 lg:hover:text-slate-300 transition-colors min-h-[44px]">Privacy Policy</Link>
+            <Link href="#" className="flex items-center text-xs text-slate-500 lg:hover:text-slate-300 transition-colors min-h-[44px]">Terms of Service</Link>
+            <Link href="#" className="flex items-center text-xs text-slate-500 lg:hover:text-slate-300 transition-colors min-h-[44px]">Trust & Safety</Link>
           </div>
           
           <button 
             onClick={scrollToTop}
             aria-label="Back to top"
-            className="flex items-center justify-center w-10 h-10 rounded-full bg-slate-900/80 hover:bg-[#009689] text-slate-400 hover:text-white transition-all duration-300 shadow-sm border border-slate-800 hover:border-[#009689] group shrink-0"
+            className="flex items-center justify-center w-11 h-11 rounded-full bg-slate-900/80 lg:hover:bg-[#009689] text-slate-400 lg:hover:text-white transition-all duration-300 shadow-sm border border-slate-800 lg:hover:border-[#009689] group shrink-0"
           >
-            <ChevronUp className="w-5 h-5 group-hover:-translate-y-0.5 transition-transform" />
+            <ChevronUp className="w-5 h-5 lg:group-hover:-translate-y-0.5 transition-transform" />
           </button>
         </div>
       </div>

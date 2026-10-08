@@ -59,7 +59,7 @@ export default function FAQSection() {
                   className={`w-full text-left backdrop-blur-md border rounded-2xl p-5 sm:p-6 transition-all duration-700 ease-out cursor-pointer 
                   ${isOpen 
                     ? "bg-gradient-to-r from-[#009689] to-[#2CA99F] border-[#009689] shadow-lg shadow-teal-900/15 -translate-y-0.5" 
-                    : "bg-white/80 border-slate-200/80 hover:border-slate-300"
+                    : "bg-white/80 border-slate-200/80 lg:hover:border-slate-300"
                   }`}
                 >
                   <div className="flex items-center justify-between gap-4">

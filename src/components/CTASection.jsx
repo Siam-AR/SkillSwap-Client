@@ -62,7 +62,7 @@ export default function CTASection() {
                     <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4 w-full sm:w-auto">
                         <Link
                             href="/post-task"
-                            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-3.5 rounded-xl bg-[#009689] hover:bg-[#238B81] text-white font-semibold text-sm sm:text-base shadow-lg shadow-teal-900/15 hover:shadow-teal-900/25 hover:-translate-y-0.5 transition-all duration-300"
+                            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-3.5 min-h-[44px] rounded-xl bg-[#009689] lg:hover:bg-[#238B81] text-white font-semibold text-sm sm:text-base shadow-lg shadow-teal-900/15 lg:hover:shadow-teal-900/25 lg:hover:-translate-y-0.5 transition-all duration-300"
                         >
                             Post a Task Free
                             <ArrowRight className="w-4 h-4" />
@@ -70,7 +70,7 @@ export default function CTASection() {
 
                         <Link
                             href="/browse-tasks"
-                            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-3.5 rounded-xl bg-white border border-teal-200 text-[#009689] hover:bg-teal-50 font-semibold text-sm sm:text-base hover:-translate-y-0.5 transition-all duration-300 shadow-sm"
+                            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-3.5 min-h-[44px] rounded-xl bg-white border border-teal-200 text-[#009689] lg:hover:bg-teal-50 font-semibold text-sm sm:text-base lg:hover:-translate-y-0.5 transition-all duration-300 shadow-sm"
                         >
                             Browse Open Tasks
                         </Link>

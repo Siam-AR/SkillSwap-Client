@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useMemo, useState, useRef } from "react";
+import { AnimatePresence, motion } from "framer-motion";
 import { FiLogOut, FiMenu, FiMoon, FiSun, FiX } from "react-icons/fi";
 import { ChevronDown, User, LayoutDashboard, Briefcase, LogOut } from "lucide-react";
 import { signOut, useSession } from "@/lib/auth-client";
@@ -112,24 +113,24 @@ const Navbar = () => {
       shell: useTransparentTop
         ? "bg-transparent text-white border-transparent"
         : "bg-[#009689]/80 backdrop-blur-md border-b border-white/10 shadow-lg text-white",
-      panel: isDarkMode ? "bg-slate-900/95" : "bg-white/95",
+      panel: isDarkMode ? "bg-slate-900/95 backdrop-blur-lg" : "bg-white/95 backdrop-blur-lg",
       profileCard: isDarkMode
         ? "border-slate-700 bg-slate-900 text-slate-100"
         : "border-slate-200 bg-white text-slate-900",
       link: (active) => [
-        "relative rounded-full px-3 py-2 text-sm font-medium transition-colors duration-200",
+        "relative rounded-full px-3 py-2 min-h-[44px] flex items-center text-sm font-medium transition-colors duration-200",
         useTransparentTop
           ? "text-white/90 hover:text-white"
           : "text-white/90 hover:text-white"
       ].join(" "),
       button: useTransparentTop
-        ? "bg-transparent text-white border-white hover:bg-white/10"
-        : "bg-transparent text-white border-white hover:bg-white/10",
+        ? "bg-transparent text-white border-white hover:bg-white/10 min-h-[44px]"
+        : "bg-transparent text-white border-white hover:bg-white/10 min-h-[44px]",
       primaryButton: useTransparentTop
-        ? "border-0 bg-[#009689] text-white hover:bg-[#008f80]"
-        : "border-0 bg-white text-[#009689] shadow-sm hover:bg-slate-100",
+        ? "border-0 bg-[#009689] text-white hover:bg-[#008f80] min-h-[44px]"
+        : "border-0 bg-white text-[#009689] shadow-sm hover:bg-slate-100 min-h-[44px]",
       mobileItem: (active) => [
-        "rounded-2xl px-4 py-3 text-sm font-medium transition-colors",
+        "rounded-2xl px-4 py-3 min-h-[44px] flex items-center text-sm font-medium transition-colors",
         active
           ? isDarkMode
             ? "bg-[#009689]/15 text-[#009689]"
@@ -276,11 +277,11 @@ const Navbar = () => {
                     </div>
 
                     <div className="flex flex-col gap-0.5">
-                      <a href="/profile" className="group flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-semibold text-slate-700 hover:text-[#009689] hover:bg-teal-50/60 transition-colors">
+                      <a href="/profile" className="group flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-semibold text-slate-700 hover:text-[#009689] hover:bg-teal-50/60 transition-colors min-h-[44px]">
                         <User className="w-4 h-4 text-slate-400 group-hover:text-[#009689]" />
                         View Profile
                       </a>
-                      <a href={dashboardHref} className="group flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-semibold text-slate-700 hover:text-[#009689] hover:bg-teal-50/60 transition-colors">
+                      <a href={dashboardHref} className="group flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-semibold text-slate-700 hover:text-[#009689] hover:bg-teal-50/60 transition-colors min-h-[44px]">
                         <LayoutDashboard className="w-4 h-4 text-slate-400 group-hover:text-[#009689]" />
                         Dashboard
                       </a>
@@ -291,7 +292,7 @@ const Navbar = () => {
                     <button
                       type="button"
                       onClick={handleLogout}
-                      className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-semibold text-rose-600 hover:bg-rose-50 transition-colors"
+                      className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-semibold text-rose-600 hover:bg-rose-50 transition-colors min-h-[44px]"
                     >
                       <LogOut className="w-4 h-4 text-rose-500" />
                       Logout
@@ -306,7 +307,7 @@ const Navbar = () => {
                 <Button
                   className={themeClasses.button}
                   radius="full"
-                  size="sm"
+                  size="md"
                   variant={useTransparentTop ? "light" : "bordered"}
                 >
                   Login
@@ -316,7 +317,7 @@ const Navbar = () => {
                 <Button
                   className={themeClasses.primaryButton}
                   radius="full"
-                  size="sm"
+                  size="md"
                 >
                   Get Started
                 </Button>
@@ -340,66 +341,74 @@ const Navbar = () => {
         </div>
       </div>
 
-      <div
-        className={`absolute left-0 right-0 top-full border-t shadow-xl ${isMenuOpen ? "block" : "hidden"} lg:hidden ${isDarkMode ? "border-slate-800" : "border-slate-200"} ${themeClasses.panel}`}
-      >
-        <div className="mx-auto flex max-w-7xl flex-col gap-2 px-4 py-4 sm:px-6 lg:px-8">
-          {navItems.map((item) => (
-            <a
-              key={item.href}
-              href={item.href}
-              className={themeClasses.mobileItem(isActive(item.href))}
-              onClick={() => setIsMenuOpen(false)}
-            >
-              {item.label}
-            </a>
-          ))}
+      <AnimatePresence>
+        {isMenuOpen && (
+          <motion.div
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: "auto", opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.3, ease: "easeInOut" }}
+            className={`absolute left-0 right-0 top-full border-t shadow-xl lg:hidden overflow-hidden ${isDarkMode ? "border-slate-800" : "border-slate-200"} ${themeClasses.panel}`}
+          >
+            <div className="mx-auto flex max-w-7xl flex-col gap-2 px-4 py-4 sm:px-6 lg:px-8">
+              {navItems.map((item) => (
+                <a
+                  key={item.href}
+                  href={item.href}
+                  className={themeClasses.mobileItem(isActive(item.href))}
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  {item.label}
+                </a>
+              ))}
 
-          {isAuthenticated ? (
-            <>
-              <a
-                href={dashboardHref}
-                className={themeClasses.mobileItem(isActive("/dashboard"))}
-                onClick={() => setIsMenuOpen(false)}
-              >
-                Dashboard
-              </a>
-              <button
-                type="button"
-                onClick={() => {
-                  setIsMenuOpen(false);
-                  handleLogout();
-                }}
-                className={themeClasses.mobileItem(false)}
-              >
-                Logout
-              </button>
-            </>
-          ) : (
-            <div className="grid grid-cols-2 gap-3 pt-2">
-              <Link href="/auth/signin" onClick={() => setIsMenuOpen(false)}>
-                <Button
-                  className="w-full bg-white text-slate-700 hover:text-[#00A896] dark:bg-slate-900 dark:text-slate-100 dark:hover:text-[#00A896] border border-slate-300 dark:border-slate-700"
-                  radius="full"
-                  size="sm"
-                  variant="bordered"
-                >
-                  Login
-                </Button>
-              </Link>
-              <Link href="/auth/signup" onClick={() => setIsMenuOpen(false)}>
-                <Button
-                  className="w-full border-0 bg-[#00A896] text-white hover:bg-[#008f80]"
-                  radius="full"
-                  size="sm"
-                >
-                  Get Started
-                </Button>
-              </Link>
+              {isAuthenticated ? (
+                <>
+                  <a
+                    href={dashboardHref}
+                    className={themeClasses.mobileItem(isActive("/dashboard"))}
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    Dashboard
+                  </a>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setIsMenuOpen(false);
+                      handleLogout();
+                    }}
+                    className={themeClasses.mobileItem(false)}
+                  >
+                    Logout
+                  </button>
+                </>
+              ) : (
+                <div className="grid grid-cols-2 gap-3 pt-2">
+                  <Link href="/auth/signin" onClick={() => setIsMenuOpen(false)}>
+                    <Button
+                      className="w-full bg-white text-slate-700 hover:text-[#00A896] dark:bg-slate-900 dark:text-slate-100 dark:hover:text-[#00A896] border border-slate-300 dark:border-slate-700 min-h-[44px]"
+                      radius="full"
+                      size="md"
+                      variant="bordered"
+                    >
+                      Login
+                    </Button>
+                  </Link>
+                  <Link href="/auth/signup" onClick={() => setIsMenuOpen(false)}>
+                    <Button
+                      className="w-full border-0 bg-[#00A896] text-white hover:bg-[#008f80] min-h-[44px]"
+                      radius="full"
+                      size="md"
+                    >
+                      Get Started
+                    </Button>
+                  </Link>
+                </div>
+              )}
             </div>
-          )}
-        </div>
-      </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </header>
   );
 };
