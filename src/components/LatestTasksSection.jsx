@@ -69,7 +69,7 @@ export default function LatestTasksSection({ tasks }) {
           const timeAgo = formatTimeAgo(task.createdAt);
           const proposalsCount = task.proposalsCount || task.proposals?.length || 0;
           const budgetAmount = task.budget || task.price || 0;
-          const budgetType = task.budgetType || "Fixed";
+          const budgetType = task.budgetType || "";
           const categoryName = typeof task.category === "object" ? task.category?.name : task.category || "General";
 
           return (
@@ -86,7 +86,7 @@ export default function LatestTasksSection({ tasks }) {
 
                     <div className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-slate-900 text-white text-xs font-bold">
                       <span>${budgetAmount}</span>
-                      <span className="text-[10px] text-slate-400 font-medium">/{budgetType}</span>
+                      {budgetType && <span className="text-[10px] text-slate-400 font-medium">/{budgetType}</span>}
                     </div>
                   </div>
 
