@@ -41,40 +41,40 @@ export default function FAQSection() {
     const isOpen = !!openIndexes[index];
 
     return (
-      <div key={index} className="relative">
+      <div key={index} className="relative group">
         <button
           type="button"
           aria-expanded={isOpen}
           onClick={() => toggleFAQ(index)}
-          className={`w-full text-left rounded-2xl p-5 sm:p-6 transition-all duration-300 ease-in-out cursor-pointer 
+          className={`w-full text-left rounded-2xl p-5 sm:p-6 transition-all duration-300 ease-out cursor-pointer border backdrop-blur-sm
           ${isOpen 
-            ? "bg-[#009689] text-white shadow-lg shadow-teal-900/10 border-teal-600" 
-            : "bg-white/90 lg:hover:bg-white text-slate-800 border border-slate-200/80 shadow-sm lg:hover:border-teal-300"
+            ? "bg-white/95 border-teal-300 shadow-[0_8px_30px_rgba(0,150,137,0.12)] -translate-y-[2px]" 
+            : "bg-white/60 border-white/60 shadow-[0_4px_20px_rgba(0,0,0,0.03)] hover:bg-white/80 hover:border-teal-200 hover:shadow-[0_8px_30px_rgba(0,150,137,0.08)] hover:-translate-y-[2px]"
           }`}
         >
-          <div className="flex items-center justify-between gap-4">
-            <h3 className={`flex-1 text-left min-w-0 text-base lg:text-lg font-semibold transition-colors duration-300 ease-in-out ${!isOpen ? "truncate" : ""} ${isOpen ? "text-white" : "text-slate-900"}`}>
+          <div className="flex items-start justify-between gap-4">
+            <h3 className="flex-1 text-left text-base lg:text-lg font-semibold text-slate-800 leading-snug pt-1 transition-colors duration-300">
               {faq.question}
             </h3>
             <div 
-              className={`flex-shrink-0 flex items-center justify-center w-8 h-8 rounded-full transition-colors duration-300 ease-in-out
-              ${isOpen ? "bg-white/20" : "bg-teal-50/60"}`}
+              className={`flex-shrink-0 flex items-center justify-center w-9 h-9 rounded-full transition-colors duration-300
+              ${isOpen ? "bg-teal-50" : "bg-slate-100/80 group-hover:bg-teal-50/60"}`}
             >
               <ChevronDown 
-                className={`w-5 h-5 shrink-0 transition-transform duration-300 ease-in-out 
-                ${isOpen ? "rotate-180 text-white" : "rotate-0 text-slate-400"}`} 
+                className={`w-5 h-5 shrink-0 transition-transform duration-300 
+                ${isOpen ? "rotate-180 text-teal-600" : "rotate-0 text-slate-400 group-hover:text-teal-500"}`} 
               />
             </div>
           </div>
 
           <div
-            className={`grid transition-all duration-300 ease-in-out overflow-hidden ${
+            className={`grid transition-all duration-300 ease-in-out ${
               isOpen ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"
             }`}
           >
             <div className="overflow-hidden">
-              <div className="mt-4 pt-3 border-t transition-colors duration-300 ease-in-out border-white/20">
-                <p className={`text-sm sm:text-base leading-relaxed transition-colors duration-300 ease-in-out ${isOpen ? "text-teal-50/90" : "text-slate-500"}`}>
+              <div className="mt-5 pt-4 border-t border-slate-200/60">
+                <p className="text-sm sm:text-base leading-relaxed text-slate-600">
                   {faq.answer}
                 </p>
               </div>
