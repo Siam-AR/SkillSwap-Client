@@ -24,7 +24,7 @@ export default function PaymentMethodsSection() {
       {/* Full Bleed Background */}
       <div className="absolute inset-y-0 bg-white -z-10" style={{ width: '100vw', left: 'calc(-50vw + 50%)' }}></div>
       {/* Header Structure */}
-      <div className="flex flex-col items-center px-6 sm:px-10 lg:px-16">
+      <div className="w-full max-w-7xl 2xl:max-w-[1500px] mx-auto flex flex-col items-center px-4 sm:px-6 lg:px-12">
         <div className="text-center">
           <h3 className="text-xs sm:text-sm font-semibold text-[#009689] uppercase tracking-wider">
             Payment Methods
