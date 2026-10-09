@@ -98,17 +98,18 @@ export default function HomeHero() {
         <div className="w-full lg:w-1/2 flex flex-col items-center lg:items-end mt-8 lg:mt-0">
           <p className="text-sm xl:text-base 2xl:text-lg font-medium text-white/80 mb-4 lg:mb-6">Popular Categories</p>
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 xl:gap-5 w-full lg:max-w-md xl:max-w-xl 2xl:max-w-3xl place-items-end">
-            {categories.slice(0, 8).map((cat) => (
-              <div 
+            {categories.slice(0, 8).map((cat, index) => (
+              <button 
                 key={cat.name} 
                 onClick={() => handleCategoryCardClick(cat.name)}
-                className="group flex flex-col items-center justify-center p-3 rounded-xl border border-white/20 bg-white/5 hover:bg-white/20 hover:border-white/40 transition-all cursor-pointer min-h-[88px] w-full xl:w-28 xl:h-24 2xl:w-36 2xl:h-28"
+                style={{ animationDelay: `${index * 0.35}s` }}
+                className="animate-float-wave group relative flex flex-col items-center justify-center p-3 rounded-2xl bg-white/10 backdrop-blur-md border border-white/15 hover:border-teal-400/60 hover:bg-white/20 transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-teal-500/20 active:scale-95 cursor-pointer min-h-[88px] w-full xl:w-28 xl:h-24 2xl:w-36 2xl:h-28"
               >
-                <cat.icon className="h-6 w-6 xl:w-6 xl:h-6 2xl:w-10 2xl:h-10 text-white mb-2" />
-                <span className="text-center text-xs xl:text-xs 2xl:text-sm font-medium text-white/90 group-hover:text-white line-clamp-1">
+                <cat.icon className="h-6 w-6 xl:w-6 xl:h-6 2xl:w-10 2xl:h-10 text-white mb-2 group-hover:text-teal-300 group-hover:scale-110 group-hover:-translate-y-0.5 transition-all duration-300" />
+                <span className="text-center text-xs xl:text-xs 2xl:text-sm font-medium text-white/90 group-hover:text-white transition-colors line-clamp-1 w-full">
                   {cat.name}
                 </span>
-              </div>
+              </button>
             ))}
           </div>
         </div>
