@@ -75,28 +75,28 @@ export default function LatestTasksSection({ tasks }) {
           return (
             <motion.div key={task._id} variants={cardVariants} className="h-full">
               <Link href={`/task/${task._id || task.id}`} className="block h-full outline-none">
-                <div className="bg-white rounded-2xl border border-slate-200/80 p-6 shadow-sm transition-all duration-300 ease-out hover:-translate-y-1.5 hover:shadow-xl hover:shadow-teal-900/5 hover:border-teal-500/40 cursor-pointer flex flex-col justify-between group h-full">
+                <div className="bg-white/70 backdrop-blur-md rounded-3xl border border-white/60 p-6 shadow-[0_4px_20px_rgba(0,0,0,0.03)] transition-all duration-300 ease-out hover:-translate-y-1.5 hover:shadow-[0_12px_30px_rgba(0,150,137,0.12)] hover:border-teal-300/80 cursor-pointer flex flex-col justify-between group h-full relative overflow-hidden">
                   
                   {/* 1. Header: Category Pill & Elevated Budget Badge */}
                   <div className="flex items-center justify-between gap-2 pb-4">
-                    <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-teal-50 text-[#009689] border border-teal-100">
-                      <Sparkles className="w-3 h-3 text-[#009689]"/>
+                    <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[11px] sm:text-xs font-semibold bg-teal-50/80 text-teal-700 border border-teal-100/50">
+                      {/* <Sparkles className="w-3.5 h-3.5 text-teal-500"/> */}
                       {categoryName}
                     </span>
 
-                    <div className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-slate-900 text-white text-xs font-bold">
+                    <div className="inline-flex items-center gap-1 px-3 py-1.5 rounded-full bg-gradient-to-br from-teal-500 to-[#009689] text-white shadow-sm shadow-teal-600/20 text-xs font-bold">
                       <span>${budgetAmount}</span>
-                      {budgetType && <span className="text-[10px] text-slate-400 font-medium">/{budgetType}</span>}
+                      {budgetType && <span className="text-[10px] text-teal-50 font-medium">/{budgetType}</span>}
                     </div>
                   </div>
 
                   {/* 2. Task Title & Description Snippet */}
-                  <div className="space-y-2 py-1 flex-1">
-                    <h3 className="text-lg font-semibold text-slate-900 leading-snug min-h-[3rem] group-hover:text-[#009689] transition-colors line-clamp-2">
+                  <div className="space-y-2.5 py-2 flex-1">
+                    <h3 className="text-lg font-bold text-slate-800 leading-snug min-h-[3rem] group-hover:text-[#009689] transition-colors line-clamp-2">
                       {task.title}
                     </h3>
                     
-                    <p className="text-sm text-slate-500 line-clamp-2 leading-relaxed min-h-[2.5rem]">
+                    <p className="text-sm text-slate-500/90 line-clamp-2 leading-relaxed min-h-[2.5rem]">
                       {task.description && task.description.trim().length > 0 
                         ? task.description 
                         : "No description provided for this task. Review scope requirements before submitting a proposal."}
@@ -104,23 +104,23 @@ export default function LatestTasksSection({ tasks }) {
                   </div>
 
                   {/* 3. Structured Metadata Strip */}
-                  <div className="flex items-center gap-4 text-xs text-slate-400 font-medium py-2 border-t border-slate-100 mt-4">
+                  <div className="flex items-center gap-3 text-xs text-slate-500/80 font-medium py-3 border-t border-slate-200/50 mt-4">
                     <div className="flex items-center gap-1.5">
                       <Clock className="w-3.5 h-3.5 text-slate-400"/>
                       <span>{timeAgo}</span>
                     </div>
                     <span className="w-1 h-1 rounded-full bg-slate-300" />
                     <div className="flex items-center gap-1.5">
-                      <Send className="w-3.5 h-3.5 text-slate-400"/>
-                      <span>{proposalsCount} props</span>
+                      <Send className="w-3 h-3 text-slate-400"/>
+                      <span>{proposalsCount} proposals</span>
                     </div>
                   </div>
 
                   {/* 4. Action Button Footer */}
-                  <div className="pt-2">
-                    <div className="w-full inline-flex items-center justify-center gap-1.5 py-2.5 px-4 min-h-[44px] rounded-xl border border-slate-200 text-slate-700 text-sm font-semibold lg:group-hover:bg-[#009689] lg:group-hover:text-white lg:group-hover:border-transparent transition-all duration-300 group/btn shadow-sm">
+                  <div className="pt-3">
+                    <div className="w-full inline-flex items-center justify-center gap-2 py-3 px-4 min-h-[44px] rounded-xl border border-slate-200/80 text-slate-700 bg-white/50 text-sm font-semibold lg:group-hover:bg-[#009689] lg:group-hover:text-white lg:group-hover:border-transparent lg:group-hover:shadow-md lg:group-hover:shadow-teal-900/10 transition-all duration-300 group/btn active:scale-[0.98]">
                       <span>Quick Apply</span>
-                      <ArrowUpRight className="w-4 h-4 text-slate-400 lg:group-hover/btn:text-white lg:group-hover/btn:translate-x-0.5 lg:group-hover/btn:-translate-y-0.5 transition-all"/>
+                      <ArrowUpRight className="w-4 h-4 text-slate-400 lg:group-hover/btn:text-white lg:group-hover/btn:translate-x-0.5 lg:group-hover/btn:-translate-y-0.5 transition-all duration-300"/>
                     </div>
                   </div>
 
