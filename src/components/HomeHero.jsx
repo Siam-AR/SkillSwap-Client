@@ -49,7 +49,8 @@ export default function HomeHero() {
         {/* Left Side: Text and Search */}
         <div className="w-full lg:w-1/2 flex flex-col items-center lg:items-start text-center lg:text-left">
           <h1 className="text-4xl sm:text-5xl md:text-6xl xl:text-6xl 2xl:text-7xl font-black leading-tight 2xl:leading-[1.1] tracking-tight text-white mb-6">
-            Your Project, Our Talent
+            <span className="block whitespace-nowrap">Your Project,</span>
+            <span className="block whitespace-nowrap">Our Talent</span>
           </h1>
           <p className="w-full max-w-2xl xl:max-w-xl 2xl:max-w-2xl text-base md:text-lg xl:text-lg 2xl:text-xl text-slate-200 mb-10 2xl:mt-4 2xl:mb-8">
             Find and hire expert freelancers to bring your projects to life. Explore a variety of services and skills.
