@@ -18,7 +18,7 @@ function HomePage({ data }) {
     <main className="flex flex-col">
       <Navbar />
       <DepthScrollStack
-        underlayClass="sticky top-[-30vh] lg:top-[-40vh] z-0"
+        underlayClass="sticky top-[-70%] z-0"
         statsComponent={
           <>
             <HomeHero />
