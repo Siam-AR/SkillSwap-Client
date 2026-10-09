@@ -1,8 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { FiSearch, FiPenTool, FiTrendingUp, FiEdit3, FiVideo, FiCamera, FiMonitor, FiCode, FiDatabase } from "react-icons/fi";
+import { FiSearch, FiPenTool, FiTrendingUp, FiEdit3, FiVideo, FiCamera, FiMonitor, FiCode, FiDatabase, FiChevronDown, FiCheck } from "react-icons/fi";
 
 const categories = [
   { name: "Graphic & Design", icon: FiPenTool },
@@ -19,6 +19,28 @@ export default function HomeHero() {
   const router = useRouter();
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("");
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const dropdownRef = useRef(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setIsDropdownOpen(false);
+      }
+    };
+    const handleEscape = (event) => {
+      if (event.key === "Escape") setIsDropdownOpen(false);
+    };
+
+    if (isDropdownOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+      document.addEventListener("keydown", handleEscape);
+    }
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("keydown", handleEscape);
+    };
+  }, [isDropdownOpen]);
 
   const handleSearch = (e) => {
     e.preventDefault();
@@ -82,18 +104,58 @@ export default function HomeHero() {
             
             <div className="hidden md:block w-px h-8 bg-slate-200 shrink-0"></div>
             
-            {/* Category Dropdown */}
-            <div className="flex items-center px-1 md:px-2 min-h-[44px]">
-              <select 
-                value={selectedCategory}
-                onChange={(e) => setSelectedCategory(e.target.value)}
-                className="bg-transparent px-1 md:px-3 py-2 text-xs md:text-sm xl:text-base 2xl:text-lg text-slate-600 focus:outline-none cursor-pointer border-none appearance-none md:pr-8 min-h-[44px] max-w-[80px] md:max-w-none text-ellipsis overflow-hidden whitespace-nowrap shrink-0"
+            {/* Category Custom Dropdown */}
+            <div className="relative flex items-center px-1 md:px-2 min-h-[44px]" ref={dropdownRef}>
+              <button 
+                type="button"
+                onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                className="flex items-center gap-1.5 md:gap-2 bg-transparent px-2 md:px-3 py-2 text-xs md:text-sm xl:text-base 2xl:text-lg text-slate-600 focus:outline-none cursor-pointer border-none min-h-[44px] shrink-0 hover:text-slate-900 transition-colors"
               >
-                <option value="">Categories</option>
-                {categories.map((c) => (
-                  <option key={c.name} value={c.name}>{c.name}</option>
-                ))}
-              </select>
+                <span className="max-w-[80px] md:max-w-[120px] text-ellipsis overflow-hidden whitespace-nowrap">
+                  {selectedCategory || "Categories"}
+                </span>
+                <FiChevronDown className={`w-4 h-4 text-slate-400 transition-transform duration-300 ${isDropdownOpen ? 'rotate-180' : ''}`} />
+              </button>
+
+              {/* Dropdown Menu Panel */}
+              {isDropdownOpen && (
+                <div className="absolute bottom-full left-0 mb-2 w-56 lg:w-64 z-50 bg-white/95 backdrop-blur-md border border-slate-200/80 rounded-2xl shadow-2xl shadow-slate-900/15 p-1.5 animate-in fade-in slide-in-from-bottom-2 duration-200">
+                  <ul className="flex flex-col gap-0.5">
+                    <li>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setSelectedCategory("");
+                          setIsDropdownOpen(false);
+                        }}
+                        className={`w-full flex items-center justify-between px-3 py-2 text-sm xl:text-base font-medium rounded-xl transition-colors ${!selectedCategory ? 'text-[#009689] bg-teal-50/80' : 'text-slate-700 hover:bg-teal-50 hover:text-teal-700'}`}
+                      >
+                        <span>All Categories</span>
+                        {!selectedCategory && <FiCheck className="w-4 h-4" />}
+                      </button>
+                    </li>
+                    <div className="w-full h-px bg-slate-100 my-1"></div>
+                    {categories.map((c) => (
+                      <li key={c.name}>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setSelectedCategory(c.name);
+                            setIsDropdownOpen(false);
+                          }}
+                          className={`w-full flex items-center justify-between px-3 py-2 text-sm xl:text-base font-medium rounded-xl transition-colors ${selectedCategory === c.name ? 'text-[#009689] bg-teal-50/80' : 'text-slate-700 hover:bg-teal-50 hover:text-teal-700'}`}
+                        >
+                          <div className="flex items-center gap-2">
+                            <c.icon className="w-4 h-4 opacity-70" />
+                            <span className="truncate">{c.name}</span>
+                          </div>
+                          {selectedCategory === c.name && <FiCheck className="w-4 h-4 shrink-0" />}
+                        </button>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
             </div>
             
             {/* Search Action */}
