@@ -17,9 +17,14 @@ function HomePage({ data }) {
   return (
     <main className="flex flex-col">
       <Navbar />
-      <HomeHero />
       <DepthScrollStack
-        statsComponent={<StatsSection stats={stats} />}
+        underlayClass="sticky top-[-30vh] lg:top-[-40vh] z-0"
+        statsComponent={
+          <>
+            <HomeHero />
+            <StatsSection stats={stats} />
+          </>
+        }
         sheetComponent={
           <>
             <FeatureServices tasks={JSON.parse(JSON.stringify(latestTasks))} />

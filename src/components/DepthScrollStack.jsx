@@ -3,7 +3,7 @@
 import { useRef } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 
-export default function DepthScrollStack({ statsComponent, sheetComponent }) {
+export default function DepthScrollStack({ statsComponent, sheetComponent, underlayClass = "sticky top-[72px] lg:top-[88px] z-0" }) {
   const sheetRef = useRef(null);
 
   // Track the scroll progress of the sheet.
@@ -37,7 +37,7 @@ export default function DepthScrollStack({ statsComponent, sheetComponent }) {
           willChange: "transform, opacity",
           transformOrigin: "top center",
         }}
-        className="sticky top-[72px] lg:top-[88px] z-0"
+        className={underlayClass}
       >
         {statsComponent}
       </motion.div>
