@@ -173,10 +173,18 @@ export default function HomeHero() {
             {categories.slice(0, 8).map((cat, index) => (
               <button 
                 key={cat.name} 
+                title={cat.name}
                 onClick={() => handleCategoryCardClick(cat.name)}
                 style={{ animationDelay: `${index * 0.35}s` }}
                 className="animate-float-wave group relative flex flex-col items-center justify-center p-3 rounded-2xl bg-white/10 backdrop-blur-md border border-white/15 hover:border-teal-400/60 hover:bg-white/20 transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-teal-500/20 active:scale-95 cursor-pointer min-h-[88px] w-full xl:w-28 xl:h-24 2xl:w-36 2xl:h-28"
               >
+                {/* Floating Tooltip */}
+                <div className="absolute -top-10 left-1/2 -translate-x-1/2 z-50 pointer-events-none opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 scale-95 group-hover:scale-100 bg-slate-900/90 text-white text-xs font-semibold py-1 px-2.5 rounded-lg shadow-xl border border-white/10 whitespace-nowrap flex flex-col items-center">
+                  {cat.name}
+                  {/* Tooltip Arrow */}
+                  <div className="absolute top-full w-2 h-2 -mt-[5px] bg-slate-900 border-r border-b border-white/10 rotate-45"></div>
+                </div>
+
                 <cat.icon className="h-6 w-6 xl:w-6 xl:h-6 2xl:w-10 2xl:h-10 text-white mb-2 group-hover:text-teal-300 group-hover:scale-110 group-hover:-translate-y-0.5 transition-all duration-300" />
                 <span className="text-center text-xs xl:text-xs 2xl:text-sm font-medium text-white/90 group-hover:text-white transition-colors line-clamp-1 w-full">
                   {cat.name}
