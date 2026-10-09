@@ -20,7 +20,7 @@ export default function TopFreelancers({ freelancers }) {
   };
 
   return (
-    <section className="w-full max-w-[1500px] 2xl:max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-12 2xl:px-16 py-12 space-y-6">
+    <section className="w-full max-w-7xl 2xl:max-w-[1500px] mx-auto px-4 sm:px-6 lg:px-12 py-12 space-y-6">
       {/* Header */}
       <div className="flex flex-col items-center text-center pb-4">
         <h2 className="text-4xl font-bold text-slate-900">Top  <span className="text-[#009689]">Freelancers</span></h2>

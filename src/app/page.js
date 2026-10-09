@@ -18,7 +18,7 @@ function HomePage({ data }) {
       <Navbar />
       <HomeHero />
       <StatsSection stats={stats} />
-      <div className="container mx-auto py-10 space-y-16">
+      <div className="w-full py-10 space-y-16">
         <FeatureServices tasks={JSON.parse(JSON.stringify(latestTasks))} />
         <TopFreelancers freelancers={JSON.parse(JSON.stringify(topFreelancers))} />
       </div>
@@ -26,7 +26,7 @@ function HomePage({ data }) {
       <div className="w-full flex flex-col gap-16 pb-16">
         <HowItWorks></HowItWorks>
         <LatestTasksSection tasks={JSON.parse(JSON.stringify(latestTasks))} />
-        <div className="container mx-auto">
+        <div className="w-full">
           <PaymentMethodsSection />
         </div>
       </div>

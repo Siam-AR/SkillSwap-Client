@@ -33,7 +33,7 @@ const steps = [
 export default function HowItWorks() {
   return (
     <section id="working-process" className="w-full bg-white relative z-10 py-12 lg:py-24">
-      <div className="max-w-7xl mx-auto px-6 sm:px-10 lg:px-16">
+      <div className="w-full max-w-7xl 2xl:max-w-[1500px] mx-auto px-4 sm:px-6 lg:px-12">
         {/* Header Structure */}
         <div className="flex flex-col items-center">
           <div className="text-center">

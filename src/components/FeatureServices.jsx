@@ -20,7 +20,7 @@ export default function FeatureServices({ tasks }) {
   });
 
   return (
-    <section className="mt-12 md:mt-20 w-full max-w-[1500px] 2xl:max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-12 2xl:px-16">
+    <section className="mt-12 md:mt-20 w-full max-w-7xl 2xl:max-w-[1500px] mx-auto px-4 sm:px-6 lg:px-12">
       <div className="text-center">
         <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-slate-900">Feature <span className="text-[#009689]">Services</span></h2>
         <p className="mt-3 text-slate-600 text-sm sm:text-base">

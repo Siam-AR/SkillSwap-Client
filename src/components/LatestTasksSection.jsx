@@ -42,7 +42,7 @@ export default function LatestTasksSection({ tasks }) {
 
   return (
     <section className="w-full py-12 md:py-16">
-      <div className="w-full max-w-[1500px] 2xl:max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-12 2xl:px-16 space-y-8">
+      <div className="w-full max-w-7xl 2xl:max-w-[1500px] mx-auto px-4 sm:px-6 lg:px-12 space-y-8">
         
         {/* Header */}
         <div className="flex flex-col items-center text-center gap-3">
