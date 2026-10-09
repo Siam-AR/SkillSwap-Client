@@ -17,9 +17,14 @@ function HomePage({ data }) {
     <main className="flex flex-col">
       <Navbar />
       <HomeHero />
-      <StatsSection stats={stats} />
-      <div className="w-full py-10 space-y-16">
-        <FeatureServices tasks={JSON.parse(JSON.stringify(latestTasks))} />
+      <div className="relative w-full">
+        <StatsSection stats={stats} />
+        <div className="w-full pt-10 pb-10">
+          <FeatureServices tasks={JSON.parse(JSON.stringify(latestTasks))} />
+        </div>
+      </div>
+      
+      <div className="w-full pb-10 space-y-16">
         <TopFreelancers freelancers={JSON.parse(JSON.stringify(topFreelancers))} />
       </div>
 

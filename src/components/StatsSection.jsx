@@ -77,7 +77,7 @@ export default function StatsSection({ stats }) {
   };
 
   return (
-    <section className="w-full relative z-20 py-6 md:py-16 bg-white border-y border-slate-100 shadow-[0_8px_30px_rgba(0,150,137,0.04)]">
+    <section className="w-full sticky top-[72px] lg:top-[88px] z-0 py-6 md:py-16 bg-white border-y border-slate-100 shadow-[0_8px_30px_rgba(0,150,137,0.04)]">
       <div className="w-full max-w-7xl 2xl:max-w-[1500px] mx-auto px-4 sm:px-6 lg:px-12">
         <motion.div
           variants={containerVariants}
