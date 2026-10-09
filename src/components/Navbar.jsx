@@ -328,7 +328,7 @@ const Navbar = () => {
           <button
             type="button"
             onClick={() => setIsMenuOpen((current) => !current)}
-            className={`flex lg:hidden h-11 w-11 items-center justify-center rounded-full border ${themeClasses.button}`}
+            className={`mobile-nav-only h-11 w-11 items-center justify-center rounded-full border ${themeClasses.button}`}
             aria-label="Toggle navigation menu"
             aria-expanded={isMenuOpen}
           >
@@ -348,7 +348,7 @@ const Navbar = () => {
             animate={{ height: "auto", opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
             transition={{ duration: 0.3, ease: "easeInOut" }}
-            className={`absolute left-0 right-0 top-full border-t shadow-xl lg:hidden overflow-hidden ${isDarkMode ? "border-slate-800" : "border-slate-200"} ${themeClasses.panel}`}
+            className={`absolute left-0 right-0 top-full border-t shadow-xl md:hidden overflow-hidden ${isDarkMode ? "border-slate-800" : "border-slate-200"} ${themeClasses.panel}`}
           >
             <div className="mx-auto flex max-w-7xl flex-col gap-2 px-4 py-4 sm:px-6 lg:px-8">
               {navItems.map((item) => (

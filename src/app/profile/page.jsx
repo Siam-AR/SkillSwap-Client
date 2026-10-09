@@ -7,6 +7,8 @@ import Footer from "@/components/Footer";
 
 import { useSession } from "@/lib/auth-client";
 import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { ArrowLeft } from "lucide-react";
 import EditProfileForm from "./EditProfileForm";
 
 function getInitials(name, email) {
@@ -46,6 +48,7 @@ export default function ProfilePage() {
   }, [isAuthenticated, sessionUser?.email, isEditing]);
 
   const user = fullUser || sessionUser || null;
+  const router = useRouter();
   const isPending = sessionPending || (isAuthenticated && isFetching && !fullUser);
 
   const avatarLabel = user?.name || "Freelancer";
@@ -64,7 +67,7 @@ export default function ProfilePage() {
             </div>
           </div>
         </section>
-        <Footer />
+      <Footer />
       </main>
     );
   }
@@ -87,7 +90,7 @@ export default function ProfilePage() {
             </div>
           </div>
         </section>
-        <Footer />
+      <Footer />
       </main>
     );
   }
@@ -95,9 +98,19 @@ export default function ProfilePage() {
   return (
     <main className="w-full max-w-full overflow-x-hidden min-h-screen bg-slate-50/70">
       <Navbar />
-
-      <section className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10 lg:py-14 space-y-8">
+      <section className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10 lg:py-14 space-y-6">
         
+        {/* Back Button */}
+        <div>
+          <button 
+            onClick={() => router.back()}
+            className="group flex items-center gap-2 text-sm font-semibold text-slate-500 hover:text-[#009689] transition-colors"
+          >
+            <ArrowLeft className="w-4 h-4 transition-transform group-hover:-translate-x-1" />
+            Back
+          </button>
+        </div>
+
         {isEditing ? (
           <EditProfileForm 
             initialUser={user} 

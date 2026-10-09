@@ -35,10 +35,15 @@ async function apiFetch(path, opts = {}) {
 
   if (!res.ok) {
     let body = null;
+    const textBody = await res.text();
     if (contentType.includes("application/json")) {
-      body = await res.json();
+      try {
+        body = JSON.parse(textBody);
+      } catch (e) {
+        body = textBody;
+      }
     } else {
-      body = await res.text();
+      body = textBody;
     }
 
     const message =
@@ -52,11 +57,16 @@ async function apiFetch(path, opts = {}) {
     throw err;
   }
 
+  const textBody = await res.text();
   if (contentType.includes("application/json")) {
-    return res.json();
+    try {
+      return JSON.parse(textBody);
+    } catch (e) {
+      return textBody;
+    }
   }
 
-  return res.text();
+  return textBody;
 }
 
 export async function getAuthMe() {
