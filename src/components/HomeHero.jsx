@@ -48,15 +48,25 @@ export default function HomeHero() {
         
         {/* Left Side: Text and Search */}
         <div className="w-full lg:w-1/2 flex flex-col items-center lg:items-start text-center lg:text-left">
-          <h1 className="text-4xl sm:text-5xl md:text-6xl xl:text-6xl 2xl:text-7xl font-black leading-tight 2xl:leading-[1.1] tracking-tight text-white mb-6">
+          <h1 
+            style={{ animationDelay: '100ms' }}
+            className="opacity-0 animate-fade-in-up text-4xl sm:text-5xl md:text-6xl xl:text-6xl 2xl:text-7xl font-black leading-tight 2xl:leading-[1.1] tracking-tight text-white mb-6"
+          >
             <span className="block whitespace-nowrap">Your Project,</span>
             <span className="block whitespace-nowrap">Our Talent</span>
           </h1>
-          <p className="w-full max-w-2xl xl:max-w-xl 2xl:max-w-2xl text-base md:text-lg xl:text-lg 2xl:text-xl text-slate-200 mb-10 2xl:mt-4 2xl:mb-8">
+          <p 
+            style={{ animationDelay: '250ms' }}
+            className="opacity-0 animate-fade-in-up w-full max-w-2xl xl:max-w-xl 2xl:max-w-2xl text-base md:text-lg xl:text-lg 2xl:text-xl text-slate-200 mb-10 2xl:mt-4 2xl:mb-8"
+          >
             Find and hire expert freelancers to bring your projects to life. Explore a variety of services and skills.
           </p>
 
-          <form onSubmit={handleSearch} className="w-full max-w-2xl xl:max-w-xl 2xl:max-w-3xl bg-white rounded-full p-1.5 md:p-2 xl:py-3.5 xl:px-6 2xl:py-4 2xl:px-6 shadow-xl flex flex-row items-center gap-1 md:gap-2 border border-slate-200 md:border-none">
+          <form 
+            onSubmit={handleSearch} 
+            style={{ animationDelay: '400ms' }}
+            className="opacity-0 animate-fade-in-up w-full max-w-2xl xl:max-w-xl 2xl:max-w-3xl bg-white rounded-full p-1.5 md:p-2 xl:py-3.5 xl:px-6 2xl:py-4 2xl:px-6 shadow-xl flex flex-row items-center gap-1 md:gap-2 border border-slate-200 transition-all duration-300 focus-within:ring-4 focus-within:ring-teal-500/20 focus-within:border-teal-400 focus-within:shadow-teal-900/10"
+          >
             
             {/* Search Input */}
             <div className="flex flex-1 items-center px-3 md:px-4 min-h-[44px]">
@@ -87,7 +97,7 @@ export default function HomeHero() {
             </div>
             
             {/* Search Action */}
-            <button type="submit" className="flex items-center justify-center w-11 h-11 md:w-auto md:h-auto md:px-7 md:py-3 xl:px-8 xl:py-3.5 rounded-full bg-[#009689] hover:bg-[#238B81] text-white font-semibold transition-all shrink-0 md:min-h-[44px]">
+            <button type="submit" className="flex items-center justify-center w-11 h-11 md:w-auto md:h-auto md:px-7 md:py-3 xl:px-8 xl:py-3.5 rounded-full bg-[#009689] hover:bg-[#238B81] text-white font-semibold transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-teal-500/30 active:scale-95 shrink-0 md:min-h-[44px]">
               <FiSearch className="h-4 w-4 md:hidden" />
               <span className="hidden md:inline text-sm xl:text-base 2xl:text-lg">Search</span>
             </button>
