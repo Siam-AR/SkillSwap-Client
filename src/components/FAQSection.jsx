@@ -89,7 +89,7 @@ export default function FAQSection() {
 
   return (
     <section className="w-full py-16 sm:py-24 relative z-10 bg-transparent">
-      <div className="w-full max-w-6xl 2xl:max-w-7xl mx-auto px-4 sm:px-6 lg:px-12">
+      <div className="w-full max-w-7xl 2xl:max-w-[1500px] mx-auto px-4 sm:px-6 lg:px-12">
         
         <div className="flex flex-col items-center text-center mb-12">
           <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900 text-center tracking-tight">
