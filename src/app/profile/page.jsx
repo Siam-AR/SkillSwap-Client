@@ -48,7 +48,10 @@ export default function ProfilePage() {
   }, [isAuthenticated, sessionUser?.email, isEditing]);
 
   const user = fullUser || sessionUser || null;
-  const isClient = String(user?.role || "").toLowerCase() === "client";
+  const normalizedRole = String(user?.role || "").toLowerCase();
+  const isClient = normalizedRole === "client";
+  const isAdmin = normalizedRole === "admin";
+  const hideFreelancerFields = isClient || isAdmin;
   const router = useRouter();
   const isPending = sessionPending || (isAuthenticated && isFetching && !fullUser);
 
@@ -123,8 +126,8 @@ export default function ProfilePage() {
           {/* Ambient Header Accent */}
           <div className="absolute top-0 left-0 right-0 h-32 bg-gradient-to-b from-teal-500/10 to-transparent pointer-events-none" />
           
-          <div className="relative flex flex-col sm:flex-row items-center sm:items-start justify-between gap-6">
-            <div className="flex flex-col sm:flex-row items-center sm:items-start gap-5 text-center sm:text-left">
+          <div className={`relative flex ${isAdmin ? 'flex-col items-center justify-center' : 'flex-col sm:flex-row items-center sm:items-start justify-between'} gap-6`}>
+            <div className={`flex ${isAdmin ? 'flex-col items-center text-center' : 'flex-col sm:flex-row items-center sm:items-start text-center sm:text-left'} gap-5`}>
               <div className="relative shrink-0">
                 {user?.image || user?.avatar ? (
                   <img src={user?.image || user?.avatar} alt={avatarLabel} className="relative w-24 h-24 sm:w-28 sm:h-28 rounded-full object-cover p-1 border-2 border-[#009689] shadow-md bg-white z-10" />
@@ -137,7 +140,14 @@ export default function ProfilePage() {
                 )}
                 
                 {/* Status Badge */}
-                {!isClient && (
+                {isAdmin ? (
+                  <div className="absolute -bottom-2 sm:-bottom-1 left-1/2 -translate-x-1/2 z-20">
+                    {/* <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-bold tracking-wide uppercase bg-purple-50 text-purple-700 border border-purple-200 shadow-sm whitespace-nowrap">
+                      <span className="w-2 h-2 rounded-full bg-purple-500" />
+                      Platform Administrator
+                    </span> */}
+                  </div>
+                ) : !isClient ? (
                   <div className="absolute -bottom-2 sm:-bottom-1 left-1/2 sm:left-auto sm:-right-2 -translate-x-1/2 sm:translate-x-0 z-20">
                     {(() => {
                       const status = user?.status || user?.availabilityStatus || "available";
@@ -165,18 +175,18 @@ export default function ProfilePage() {
                       );
                     })()}
                   </div>
-                )}
+                ) : null}
               </div>
               
               <div className="pt-2">
                 <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900">{avatarLabel}</h1>
                 <p className="text-sm sm:text-base font-semibold text-[#009689] mt-0.5">
-                  {user?.designation || (user?.role === "freelancer" ? "Freelancer Account" : "Client Account")}
+                  {user?.designation || (isAdmin ? "Platform Administrator" : user?.role === "freelancer" ? "Freelancer Account" : "Client Account")}
                 </p>
               </div>
             </div>
 
-            <div>
+            <div className={`flex flex-col ${isAdmin ? 'items-center mt-2' : 'items-end'} gap-3`}>
               <button 
                 onClick={() => setIsEditing(true)}
                 className="inline-flex px-5 py-2.5 rounded-xl bg-[#009689] hover:bg-[#238B81] text-white text-sm font-semibold shadow-md shadow-teal-900/15 transition-all"
@@ -185,10 +195,64 @@ export default function ProfilePage() {
               </button>
             </div>
           </div>
+          
+          {isAdmin && (
+            <div className="mt-6 flex flex-wrap justify-center gap-3">
+              <Link href="/admin/users" className="flex items-center gap-2 px-4 py-2 rounded-xl border border-slate-200 bg-slate-50 hover:bg-slate-100 transition-colors text-slate-700 font-semibold text-sm">
+                Manage Users
+              </Link>
+              <Link href="/admin/tasks" className="flex items-center gap-2 px-4 py-2 rounded-xl border border-slate-200 bg-slate-50 hover:bg-slate-100 transition-colors text-slate-700 font-semibold text-sm">
+                Moderate Tasks
+              </Link>
+              <Link href="/admin/analytics" className="flex items-center gap-2 px-4 py-2 rounded-xl border border-slate-200 bg-slate-50 hover:bg-slate-100 transition-colors text-slate-700 font-semibold text-sm">
+                View Analytics
+              </Link>
+            </div>
+          )}
 
           {/* Quick Metrics Strip */}
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-8 pt-6 border-t border-slate-100 text-center sm:text-left">
-            {!isClient ? (
+            {isAdmin ? (
+              <>
+                <div>
+                  <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Total Platform Users</p>
+                  <p className="text-base sm:text-lg font-bold text-slate-800">{user?.totalPlatformUsers || 0} Users</p>
+                </div>
+                <div>
+                  <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Active Tasks</p>
+                  <p className="text-base sm:text-lg font-bold text-slate-800">{user?.adminActiveTasksCount || 0} Listings</p>
+                </div>
+                <div>
+                  <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Total Volume</p>
+                  <p className="text-base sm:text-lg font-bold text-slate-800">${user?.totalPlatformVolume || 0}</p>
+                </div>
+                <div>
+                  <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Access Level</p>
+                  <p className="text-base sm:text-lg font-bold text-slate-800">Platform Superadmin</p>
+                </div>
+              </>
+            ) : isClient ? (
+              <>
+                <div>
+                  <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Tasks Posted</p>
+                  <p className="text-base sm:text-lg font-bold text-slate-800">{user?.postedTasksCount || 0} Tasks</p>
+                </div>
+                <div>
+                  <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Active Tasks</p>
+                  <p className="text-base sm:text-lg font-bold text-slate-800">{user?.activeTasksCount || 0} Tasks</p>
+                </div>
+                <div>
+                  <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Total Spent</p>
+                  <p className="text-base sm:text-lg font-bold text-slate-800">${user?.totalSpent || 0}</p>
+                </div>
+                <div>
+                  <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Member Since</p>
+                  <p className="text-base sm:text-lg font-bold text-slate-800">
+                    {user?.createdAt ? new Date(user.createdAt).toLocaleDateString("en-US", { month: "short", year: "numeric" }) : "Recently Joined"}
+                  </p>
+                </div>
+              </>
+            ) : (
               <>
                 <div>
                   <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Hourly Rate</p>
@@ -204,29 +268,14 @@ export default function ProfilePage() {
                     {user?.rating ? `★ ${Number(user.rating).toFixed(1)} (${user.reviewsCount || 0})` : "★ New (0)"}
                   </p>
                 </div>
-              </>
-            ) : (
-              <>
                 <div>
-                  <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Tasks Posted</p>
-                  <p className="text-base sm:text-lg font-bold text-slate-800">{user?.postedTasksCount || 0} Tasks</p>
-                </div>
-                <div>
-                  <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Active Tasks</p>
-                  <p className="text-base sm:text-lg font-bold text-slate-800">{user?.activeTasksCount || 0} Tasks</p>
-                </div>
-                <div>
-                  <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Total Spent</p>
-                  <p className="text-base sm:text-lg font-bold text-slate-800">${user?.totalSpent || 0}</p>
+                  <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Member Since</p>
+                  <p className="text-base sm:text-lg font-bold text-slate-800">
+                    {user?.createdAt ? new Date(user.createdAt).toLocaleDateString("en-US", { month: "short", year: "numeric" }) : "Recently Joined"}
+                  </p>
                 </div>
               </>
             )}
-            <div>
-              <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Member Since</p>
-              <p className="text-base sm:text-lg font-bold text-slate-800">
-                {user?.createdAt ? new Date(user.createdAt).toLocaleDateString("en-US", { month: "short", year: "numeric" }) : "Recently Joined"}
-              </p>
-            </div>
           </div>
         </div>
 
@@ -234,7 +283,7 @@ export default function ProfilePage() {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
           
           {/* Left Column (About & Bio) */}
-          <div className={`${isClient ? 'lg:col-span-12' : 'lg:col-span-7'} bg-white border border-slate-200/90 rounded-2xl p-6 shadow-sm space-y-4 h-fit`}>
+          <div className={`${hideFreelancerFields ? 'lg:col-span-12' : 'lg:col-span-7'} bg-white border border-slate-200/90 rounded-2xl p-6 shadow-sm space-y-4 h-fit`}>
             <h2 className="text-lg font-bold text-slate-900">About Me</h2>
             <div className="text-slate-600 text-sm sm:text-base leading-relaxed whitespace-pre-line">
               {user?.bio || <span className="italic text-slate-400">No bio added yet. Click edit profile to add your professional summary.</span>}
@@ -242,7 +291,7 @@ export default function ProfilePage() {
           </div>
 
           {/* Right Column (Skills & Expertise) */}
-          {!isClient && (
+          {!hideFreelancerFields && (
             <div className="lg:col-span-5 bg-white border border-slate-200/90 rounded-2xl p-6 shadow-sm space-y-4 h-fit">
               <h2 className="text-lg font-bold text-slate-900">Skills & Stack</h2>
               <div className="flex flex-wrap gap-2 max-w-full">

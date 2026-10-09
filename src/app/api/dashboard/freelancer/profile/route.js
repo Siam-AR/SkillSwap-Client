@@ -34,7 +34,9 @@ export async function GET(request) {
       return NextResponse.json({ success: false, message: "User not found" }, { status: 404 });
     }
 
-    if (String(user.role || "").toLowerCase() === "client") {
+    const normalizedRole = String(user.role || "").toLowerCase();
+
+    if (normalizedRole === "client") {
       const appDbName = process.env.APP_DB_NAME || process.env.AUTH_DB_NAME || "taskify";
       // Ensure we get the appDb if it's different. In most cases db.client is available.
       const appDb = db.client ? db.client.db(appDbName) : db;
@@ -65,6 +67,26 @@ export async function GET(request) {
       user.activeTasksCount = activeTasksCount;
       user.postedTasks = postedTasks.slice(0, 10);
       user.totalSpent = payoutAggregation.length ? payoutAggregation[0].total : 0;
+    } else if (normalizedRole === "admin") {
+      const appDbName = process.env.APP_DB_NAME || process.env.AUTH_DB_NAME || "taskify";
+      const appDb = db.client ? db.client.db(appDbName) : db;
+      
+      const tasksCollection = appDb.collection("tasks");
+      const paymentsCollection = appDb.collection("payments");
+
+      const totalUsers = await usersCollection.countDocuments();
+      const activeTasksCount = await tasksCollection.countDocuments({ status: { $in: ["open", "in progress"] } });
+
+      const payoutAggregation = await paymentsCollection
+        .aggregate([
+          { $match: { payment_status: { $in: ["complete", "completed", "paid"] } } },
+          { $group: { _id: null, total: { $sum: "$amount" } } },
+        ])
+        .toArray();
+
+      user.totalPlatformUsers = totalUsers;
+      user.adminActiveTasksCount = activeTasksCount;
+      user.totalPlatformVolume = payoutAggregation.length ? payoutAggregation[0].total : 0;
     }
 
     return NextResponse.json({ success: true, data: user });
@@ -81,7 +103,7 @@ export async function PATCH(request) {
       return NextResponse.json({ success: false, message: "Missing user identity" }, { status: 401 });
     }
 
-    if (userRole && userRole !== "freelancer" && userRole !== "client") {
+    if (userRole && !["freelancer", "client", "admin"].includes(userRole)) {
       return NextResponse.json({ success: false, message: "Invalid user role" }, { status: 403 });
     }
 

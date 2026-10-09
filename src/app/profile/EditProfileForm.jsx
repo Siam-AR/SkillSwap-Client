@@ -17,7 +17,10 @@ const normalizeSkills = (value) => {
 
 export default function EditProfileForm({ onCancel, onSuccess, initialUser }) {
   const router = useRouter();
-  const isClient = String(initialUser?.role || "").toLowerCase() === "client";
+  const normalizedRole = String(initialUser?.role || "").toLowerCase();
+  const isClient = normalizedRole === "client";
+  const isAdmin = normalizedRole === "admin";
+  const hideFreelancerFields = isClient || isAdmin;
   const [formState, setFormState] = useState({
     name: initialUser?.name || "",
     designation: initialUser?.designation || initialUser?.headline || "",
@@ -53,7 +56,7 @@ export default function EditProfileForm({ onCancel, onSuccess, initialUser }) {
       return;
     }
 
-    if (!isClient && (isNaN(hourlyRateValue) || hourlyRateValue < 0)) {
+    if (!hideFreelancerFields && (isNaN(hourlyRateValue) || hourlyRateValue < 0)) {
       setFeedback({ type: "error", message: "Hourly rate must be a valid positive number." });
       return;
     }
@@ -123,7 +126,7 @@ export default function EditProfileForm({ onCancel, onSuccess, initialUser }) {
 
       <form onSubmit={handleSubmit} className="space-y-6">
         {/* Row 1: Name and Title */}
-        <div className={`grid gap-6 ${isClient ? "sm:grid-cols-1" : "sm:grid-cols-2"}`}>
+        <div className={`grid gap-6 ${hideFreelancerFields ? "sm:grid-cols-1" : "sm:grid-cols-2"}`}>
           <label className="block text-sm font-semibold text-slate-800">
             Full Name
             <input
@@ -135,7 +138,7 @@ export default function EditProfileForm({ onCancel, onSuccess, initialUser }) {
             />
           </label>
 
-          {!isClient && (
+          {!hideFreelancerFields && (
             <label className="block text-sm font-semibold text-slate-800">
               Designation / Professional Title
               <input
@@ -180,7 +183,7 @@ export default function EditProfileForm({ onCancel, onSuccess, initialUser }) {
         </div>
 
         {/* Row 3: Rate, Status and Location */}
-        <div className={`grid gap-6 ${isClient ? "sm:grid-cols-1" : "sm:grid-cols-3"}`}>
+        <div className={`grid gap-6 ${hideFreelancerFields ? "sm:grid-cols-1" : "sm:grid-cols-3"}`}>
           <label className="block text-sm font-semibold text-slate-800">
             Location
             <input
@@ -192,7 +195,7 @@ export default function EditProfileForm({ onCancel, onSuccess, initialUser }) {
             />
           </label>
 
-          {!isClient && (
+          {!hideFreelancerFields && (
             <>
               <label className="block text-sm font-semibold text-slate-800">
                 Hourly Rate (USD)
@@ -236,7 +239,7 @@ export default function EditProfileForm({ onCancel, onSuccess, initialUser }) {
         </label>
 
         {/* Row 5: Skills */}
-        {!isClient && (
+        {!hideFreelancerFields && (
           <label className="block text-sm font-semibold text-slate-800">
             Skills (comma separated)
             <input
