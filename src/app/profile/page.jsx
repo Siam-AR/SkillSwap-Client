@@ -48,6 +48,7 @@ export default function ProfilePage() {
   }, [isAuthenticated, sessionUser?.email, isEditing]);
 
   const user = fullUser || sessionUser || null;
+  const isClient = String(user?.role || "").toLowerCase() === "client";
   const router = useRouter();
   const isPending = sessionPending || (isAuthenticated && isFetching && !fullUser);
 
@@ -136,33 +137,35 @@ export default function ProfilePage() {
                 )}
                 
                 {/* Status Badge */}
-                <div className="absolute -bottom-2 sm:-bottom-1 left-1/2 sm:left-auto sm:-right-2 -translate-x-1/2 sm:translate-x-0 z-20">
-                  {(() => {
-                    const status = user?.status || user?.availabilityStatus || "available";
-                    if (status === "busy") {
+                {!isClient && (
+                  <div className="absolute -bottom-2 sm:-bottom-1 left-1/2 sm:left-auto sm:-right-2 -translate-x-1/2 sm:translate-x-0 z-20">
+                    {(() => {
+                      const status = user?.status || user?.availabilityStatus || "available";
+                      if (status === "busy") {
+                        return (
+                          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-bold tracking-wide uppercase bg-amber-50 text-amber-700 border border-amber-200 shadow-sm whitespace-nowrap">
+                            <span className="w-2 h-2 rounded-full bg-amber-500" />
+                            Busy
+                          </span>
+                        );
+                      }
+                      if (status === "unavailable") {
+                        return (
+                          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-bold tracking-wide uppercase bg-rose-50 text-rose-700 border border-rose-200 shadow-sm whitespace-nowrap">
+                            <span className="w-2 h-2 rounded-full bg-rose-500" />
+                            Unavailable
+                          </span>
+                        );
+                      }
                       return (
-                        <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-bold tracking-wide uppercase bg-amber-50 text-amber-700 border border-amber-200 shadow-sm whitespace-nowrap">
-                          <span className="w-2 h-2 rounded-full bg-amber-500" />
-                          Busy
+                        <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-bold tracking-wide uppercase bg-emerald-50 text-emerald-700 border border-emerald-200 shadow-sm whitespace-nowrap">
+                          <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                          Available
                         </span>
                       );
-                    }
-                    if (status === "unavailable") {
-                      return (
-                        <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-bold tracking-wide uppercase bg-rose-50 text-rose-700 border border-rose-200 shadow-sm whitespace-nowrap">
-                          <span className="w-2 h-2 rounded-full bg-rose-500" />
-                          Unavailable
-                        </span>
-                      );
-                    }
-                    return (
-                      <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-bold tracking-wide uppercase bg-emerald-50 text-emerald-700 border border-emerald-200 shadow-sm whitespace-nowrap">
-                        <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                        Available
-                      </span>
-                    );
-                  })()}
-                </div>
+                    })()}
+                  </div>
+                )}
               </div>
               
               <div className="pt-2">
@@ -185,20 +188,39 @@ export default function ProfilePage() {
 
           {/* Quick Metrics Strip */}
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-8 pt-6 border-t border-slate-100 text-center sm:text-left">
-            <div>
-              <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Hourly Rate</p>
-              <p className="text-base sm:text-lg font-bold text-slate-800">{user?.hourlyRate ? `$${user.hourlyRate}/hr` : "Negotiable"}</p>
-            </div>
-            <div>
-              <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Completed Tasks</p>
-              <p className="text-base sm:text-lg font-bold text-slate-800">{user?.completedTasks ? `${user.completedTasks} Orders` : "0 Orders"}</p>
-            </div>
-            <div>
-              <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Rating Score</p>
-              <p className="text-base sm:text-lg font-bold text-slate-800 flex items-center justify-center sm:justify-start gap-1">
-                {user?.rating ? `★ ${Number(user.rating).toFixed(1)} (${user.reviewsCount || 0})` : "★ New (0)"}
-              </p>
-            </div>
+            {!isClient ? (
+              <>
+                <div>
+                  <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Hourly Rate</p>
+                  <p className="text-base sm:text-lg font-bold text-slate-800">{user?.hourlyRate ? `$${user.hourlyRate}/hr` : "Negotiable"}</p>
+                </div>
+                <div>
+                  <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Completed Tasks</p>
+                  <p className="text-base sm:text-lg font-bold text-slate-800">{user?.completedTasks ? `${user.completedTasks} Orders` : "0 Orders"}</p>
+                </div>
+                <div>
+                  <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Rating Score</p>
+                  <p className="text-base sm:text-lg font-bold text-slate-800 flex items-center justify-center sm:justify-start gap-1">
+                    {user?.rating ? `★ ${Number(user.rating).toFixed(1)} (${user.reviewsCount || 0})` : "★ New (0)"}
+                  </p>
+                </div>
+              </>
+            ) : (
+              <>
+                <div>
+                  <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Tasks Posted</p>
+                  <p className="text-base sm:text-lg font-bold text-slate-800">{user?.postedTasksCount || 0} Tasks</p>
+                </div>
+                <div>
+                  <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Active Tasks</p>
+                  <p className="text-base sm:text-lg font-bold text-slate-800">{user?.activeTasksCount || 0} Tasks</p>
+                </div>
+                <div>
+                  <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Total Spent</p>
+                  <p className="text-base sm:text-lg font-bold text-slate-800">${user?.totalSpent || 0}</p>
+                </div>
+              </>
+            )}
             <div>
               <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Member Since</p>
               <p className="text-base sm:text-lg font-bold text-slate-800">
@@ -212,7 +234,7 @@ export default function ProfilePage() {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
           
           {/* Left Column (About & Bio) */}
-          <div className="lg:col-span-7 bg-white border border-slate-200/90 rounded-2xl p-6 shadow-sm space-y-4 h-fit">
+          <div className={`${isClient ? 'lg:col-span-12' : 'lg:col-span-7'} bg-white border border-slate-200/90 rounded-2xl p-6 shadow-sm space-y-4 h-fit`}>
             <h2 className="text-lg font-bold text-slate-900">About Me</h2>
             <div className="text-slate-600 text-sm sm:text-base leading-relaxed whitespace-pre-line">
               {user?.bio || <span className="italic text-slate-400">No bio added yet. Click edit profile to add your professional summary.</span>}
@@ -220,20 +242,22 @@ export default function ProfilePage() {
           </div>
 
           {/* Right Column (Skills & Expertise) */}
-          <div className="lg:col-span-5 bg-white border border-slate-200/90 rounded-2xl p-6 shadow-sm space-y-4 h-fit">
-            <h2 className="text-lg font-bold text-slate-900">Skills & Stack</h2>
-            <div className="flex flex-wrap gap-2 max-w-full">
-              {user?.skills && user.skills.length > 0 ? (
-                user.skills.map((skill, index) => (
-                  <span key={index} className="max-w-full truncate bg-slate-50 text-slate-700 border border-slate-200 px-3 py-1.5 rounded-xl text-xs font-semibold">
-                    {skill}
-                  </span>
-                ))
-              ) : (
-                <span className="italic text-slate-400 text-sm">No skills added yet.</span>
-              )}
+          {!isClient && (
+            <div className="lg:col-span-5 bg-white border border-slate-200/90 rounded-2xl p-6 shadow-sm space-y-4 h-fit">
+              <h2 className="text-lg font-bold text-slate-900">Skills & Stack</h2>
+              <div className="flex flex-wrap gap-2 max-w-full">
+                {user?.skills && user.skills.length > 0 ? (
+                  user.skills.map((skill, index) => (
+                    <span key={index} className="max-w-full truncate bg-slate-50 text-slate-700 border border-slate-200 px-3 py-1.5 rounded-xl text-xs font-semibold">
+                      {skill}
+                    </span>
+                  ))
+                ) : (
+                  <span className="italic text-slate-400 text-sm">No skills added yet.</span>
+                )}
+              </div>
             </div>
-          </div>
+          )}
 
         </div>
         </>
