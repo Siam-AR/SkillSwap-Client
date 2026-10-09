@@ -1,4 +1,5 @@
 import Navbar from "@/components/Navbar";
+import DepthScrollStack from "@/components/DepthScrollStack";
 import { getHomepageData } from "@/lib/db";
 import HomeHero from "@/components/HomeHero";
 import FeatureServices from "@/components/FeatureServices";
@@ -17,16 +18,15 @@ function HomePage({ data }) {
     <main className="flex flex-col">
       <Navbar />
       <HomeHero />
-      <div className="relative w-full">
-        <StatsSection stats={stats} />
-        <div className="w-full pt-10 pb-10">
-          <FeatureServices tasks={JSON.parse(JSON.stringify(latestTasks))} />
-        </div>
-      </div>
-      
-      <div className="w-full pb-10 space-y-16">
-        <TopFreelancers freelancers={JSON.parse(JSON.stringify(topFreelancers))} />
-      </div>
+      <DepthScrollStack
+        statsComponent={<StatsSection stats={stats} />}
+        sheetComponent={
+          <>
+            <FeatureServices tasks={JSON.parse(JSON.stringify(latestTasks))} />
+            <TopFreelancers freelancers={JSON.parse(JSON.stringify(topFreelancers))} />
+          </>
+        }
+      />
 
       <div className="w-full flex flex-col gap-16 pb-16">
         <HowItWorks></HowItWorks>

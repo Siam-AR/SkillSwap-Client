@@ -21,7 +21,7 @@ export default function FeatureServices({ tasks }) {
   });
 
   return (
-    <section className="relative z-20 w-full bg-[#F0FDF9] rounded-t-[32px] lg:rounded-t-[40px] shadow-2xl shadow-black/10 border-t border-white/60 pt-16 lg:pt-24 pb-12 overflow-hidden">
+    <section className="w-full pt-16 lg:pt-24 pb-16 lg:pb-24 overflow-hidden">
       <div className="w-full max-w-7xl 2xl:max-w-[1500px] mx-auto px-4 sm:px-6 lg:px-12">
         <div className="text-center">
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-slate-900">Feature <span className="text-[#009689]">Services</span></h2>
