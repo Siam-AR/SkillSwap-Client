@@ -12,6 +12,7 @@ let clientPromise;
 
 if (!globalThis._mongoClientPromise) {
   const client = new MongoClient(uri);
+  globalThis._mongoClient = client;
   globalThis._mongoClientPromise = client.connect();
 }
 
