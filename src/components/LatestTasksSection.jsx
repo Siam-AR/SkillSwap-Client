@@ -49,6 +49,10 @@ export default function LatestTasksSection({ tasks }) {
           <p className="text-sm font-bold uppercase tracking-wider text-[#009689]">
             Latest Tasks
           </p>
+          <div className="relative flex items-center justify-center mt-2 w-48 mx-auto">
+            <div className="h-[1.5px] w-full bg-gradient-to-r from-transparent via-[#009689] to-transparent"></div>
+            <div className="absolute w-2 h-2 rounded-full bg-[#009689] ring-[3px] ring-[#F0FDF9]"></div>
+          </div>
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-slate-900 tracking-tight">
             Explore Recent Opportunities
           </h2>

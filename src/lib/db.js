@@ -90,12 +90,12 @@ export async function getHomepageData() {
   const latestTasks = await tasksCollection
     .find({ status: "open" })
     .sort({ createdAt: -1 })
-    .limit(40)
+    .limit(200)
     .toArray();
 
   const latestTasksWithClient = await attachClientInfo(latestTasks, authDb, reviewsCollection);
 
-  for (const task of latestTasksWithClient) {
+  await Promise.all(latestTasksWithClient.map(async (task) => {
     const taskIdStr = task._id?.toString() || task.id?.toString();
     if (taskIdStr) {
       task.proposalsCount = await proposalsCollection.countDocuments({
@@ -104,7 +104,7 @@ export async function getHomepageData() {
     } else {
       task.proposalsCount = 0;
     }
-  }
+  }));
 
   const freelancerUsers = await usersCollection
     .find({ role: { $regex: /^freelancer$/i } })
