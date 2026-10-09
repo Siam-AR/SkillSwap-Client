@@ -67,7 +67,6 @@ export default function ProfilePage() {
             </div>
           </div>
         </section>
-      <Footer />
       </main>
     );
   }
@@ -90,7 +89,6 @@ export default function ProfilePage() {
             </div>
           </div>
         </section>
-      <Footer />
       </main>
     );
   }
@@ -241,7 +239,6 @@ export default function ProfilePage() {
         </>
         )}
       </section>
-      <Footer />
     </main>
   );
 }
