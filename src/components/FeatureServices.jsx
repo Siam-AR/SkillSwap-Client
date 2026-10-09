@@ -12,12 +12,15 @@ export default function FeatureServices({ tasks }) {
   const [activeTab, setActiveTab] = useState("Development");
 
   const filteredTasks = tasks.filter((task) => {
-    // Map existing categories to tabs
-    if (activeTab === "Graphic & Design" && task.category === "Design") return true;
-    if (activeTab === "Development" && task.category === "Development") return true;
-    if (activeTab === "Writing" && task.category === "Writing") return true;
-    if (activeTab === "Digital Marketing" && task.category === "Marketing") return true;
-    return task.category === activeTab;
+    const taskCat = (task.category?.name || task.category || "").toLowerCase();
+    
+    // Map existing categories to tabs securely using substrings
+    if (activeTab === "Graphic & Design" && (taskCat.includes("design") || taskCat.includes("graphic"))) return true;
+    if (activeTab === "Development" && (taskCat.includes("development") || taskCat.includes("programming"))) return true;
+    if (activeTab === "Writing" && taskCat.includes("writing")) return true;
+    if (activeTab === "Digital Marketing" && (taskCat.includes("marketing") || taskCat.includes("digital"))) return true;
+    
+    return taskCat === activeTab.toLowerCase();
   });
 
   return (
